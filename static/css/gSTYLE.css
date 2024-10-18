@@ -1,0 +1,26 @@
+/* General body settings */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: 'Italianno', cursive;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+p {
+    font-family: 'Italianno', cursive;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+@media (min-width: 600px) {
+    .center-text {
+        font-size: 40px;
+    }
+}
+
+/* Scroll settings */
+html, body {
+    height: 100%; /* Allow scrolling */
+    overflow-y: auto; /* Enable vertical scroll */
+}

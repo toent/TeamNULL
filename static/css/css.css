@@ -1,0 +1,162 @@
+/* Container settings for the flag */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100vh; /* Full screen height */
+    position: relative;
+    overflow: hidden;
+    transition: transform 1s ease-in-out; /* Smooth transition */
+    z-index: 2; /* Ensure it's in front initially */
+}
+
+.bar {
+    flex: 1;
+    height: 100%;
+}
+
+.bar.green {
+    background-color: #008000;
+}
+
+.bar.white {
+    background-color: #ffffff;
+}
+
+.bar.red {
+    background-color: #FF0000;
+}
+
+.center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: black;
+    text-align: center;
+    transition: font-size 1s ease-in-out, transform 1s ease-in-out;
+    z-index: 3; /* Ensure text is in front of the flag */
+}
+
+
+
+/* Movement animation */
+.move-up {
+    transform: translateY(-75%);
+}
+
+.move-text-up {
+    top: 80%;
+    transform: translateX(-50%);
+}
+
+/* Boxes for navigation (initially behind the flag) */
+.boxes {
+    display: flex; /* Always keep them in the layout */
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    margin-top: -65vh; /* Move the boxes even lower (was -85vh) */
+    text-align: center;
+    opacity: 0; /* Invisible initially */
+    transform: translateY(180px); /* Further shift down (was 100px) */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    position: relative;
+    z-index: 1; /* Behind the flag */
+}
+
+.box {
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 15px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Italianno', cursive;
+    font-size: 20px;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.show-boxes {
+    opacity: 1; /* Make the boxes visible */
+    transform: translateY(0); /* Reset the transform for proper placement */
+}
+.pizza-card {
+    width: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #d6e039; /* Similar color to the one in the image */
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    margin: 20px;
+}
+
+.pizza-image {
+    width: 100%;
+    height: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.pizza-info {
+    padding: 15px;
+}
+
+.pizza-info p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: black;
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 15px;
+}
+
+button {
+    background-color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.order-btn {
+    background-color: white;
+    font-weight: bold;
+}
+
+.modify-btn {
+    background-color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #f1f1f1;
+}
+
+
+
