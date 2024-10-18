@@ -21,9 +21,11 @@
         </div>
     </div>
 
+    <!-- Boxes container for pizza cards -->
     <div class="boxes" id="boxes">
+
         <div class="pizza-card">
-            <img src="{{ url_for('static', filename='images/peperoni.jpeg') }}" alt="Pizza Image" class="pizza-image">
+            <img src="{{ url_for('static', filename='images/pepperoni.jpeg') }}" alt="Pizza Image" class="pizza-image">
             <div class="pizza-info">
                 <p>info bla bla bla bla</p>
                 <div class="details">
@@ -36,10 +38,55 @@
                 </div>
             </div>
         </div>
-        
+
+        <div class="pizza-card">
+            <img src="{{ url_for('static', filename='images/Margherita.jpeg') }}" alt="Pizza Image" class="pizza-image">
+            <div class="pizza-info">
+                <p>info bla bla bla bla</p>
+                <div class="details">
+                    <span>Allergens</span>
+                    <span>price</span>
+                </div>
+                <div class="buttons">
+                    <button class="order-btn">ORDER</button>
+                    <button class="modify-btn">MODIFY</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pizza-card">
+            <img src="{{ url_for('static', filename='images/Neapolitan.jpeg') }}" alt="Pizza Image" class="pizza-image">
+            <div class="pizza-info">
+                <p>info bla bla bla bla</p>
+                <div class="details">
+                    <span>Allergens</span>
+                    <span>price</span>
+                </div>
+                <div class="buttons">
+                    <button class="order-btn">ORDER</button>
+                    <button class="modify-btn">MODIFY</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pizza-card">
+            <img src="{{ url_for('static', filename='images/Romana.jpg') }}" alt="Pizza Image" class="pizza-image">
+            <div class="pizza-info">
+                <p>info bla bla bla bla</p>
+                <div class="details">
+                    <span>Allergens</span>
+                    <span>price</span>
+                </div>
+                <div class="buttons">
+                    <button class="order-btn">ORDER</button>
+                    <button class="modify-btn">MODIFY</button>
+                </div>
+            </div>
+        </div>
+
     </div>
-    
-    <script src="{{url_for('static', filename='/js/js.js')}}"></script>
+
+    <script src="{{ url_for('static', filename='js/js.js') }}"></script>
 
 </body>
 </html>
