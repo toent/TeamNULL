@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Mario & Luigi's Pizzeria</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/order.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gSTYLE.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container" id="color-container">
+        <div class="bar-container">
+            <div class="bar green"></div>
+            <div class="bar white"></div>
+            <div class="bar red"></div>
+        </div>
+        <div class="center-text" id="center-text">
+            <p>Confirm Your Order</p>
+        </div>
+    
+        
+    <div class="order-summary">
+        <h2>Pizza Selection</h2>
+        <p><strong>Pizza:</strong> {{ pizza_name }}</p>
+        <p><strong>Price:</strong> {{ pizza_price }} euro</p>
+        <img src="{{ url_for('static', filename=pizza_image) }}" alt="{{ pizza_name }}" class="pizza-image">
+    </div>
+
+    <form id="order-form" class="order-form">
+        <input type="hidden" name="pizza_name" value="{{ pizza_name }}">
+        <input type="hidden" name="pizza_price" value="{{ pizza_price }}">
+
+        <h2>Your Name</h2>
+        <label for="customer_name">Name</label>
+        <input type="text" id="customer_name" name="customer_name" required>
+
+        <h2>Order Quantity</h2>
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" value="1" min="1" required>
+
+        <button type="submit" class="confirm-btn">Place Order</button>
+    </form>
+</div>
+
+    <script>
+        document.getElementById('order-form').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const pizzaName = this.pizza_name.value;
+            const pizzaPrice = parseFloat(this.pizza_price.value);
+            const customerName = this.customer_name.value;
+            const quantity = parseInt(this.quantity.value);
+            const totalPrice = (pizzaPrice * quantity).toFixed(2); 
+
+            alert(`Order Details:\n\nCustomer Name: ${customerName}\nPizza: ${pizzaName}\nQuantity: ${quantity}\nTotal Price: ${totalPrice} euro`);
+
+            this.submit(); 
+        });
+    </script>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

@@ -1,0 +1,151 @@
+.bar-container {
+    display: flex;
+    height: 50px; 
+}
+
+
+.bar {
+    flex: 1; 
+    height: 100%; 
+}
+
+.bar.green {
+    background-color: #008000; 
+}
+
+.bar.white {
+    background-color: #ffffff; 
+}
+
+.bar.red {
+    background-color: #FF0000; 
+}
+
+
+.container {
+    max-width: 600px; 
+    margin: 20px auto; 
+    padding: 20px;
+    background-color: #ffde59; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.center-text {
+    display: flex;             
+    align-items: center;     
+    justify-content: center;  
+    height: 100%;             
+    font-size: 30px;          
+}
+
+
+h1 {
+    text-align: center; /* Center the main heading */
+    font-family: 'Italianno', cursive;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+h2 {
+    
+    margin-top: 20px; 
+    font-family: 'Italianno', cursive;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+/* Order summary styling */
+.order-summary {
+    border: 1px solid #d9534f; 
+    padding: 15px; 
+    border-radius: 5px; 
+    background-color: #e9d276;
+    margin-bottom: 20px; 
+}
+
+.pizza-image {
+    width: 300px;
+    height: auto;
+    float: right; 
+    margin-left: 20px;
+    border-radius: 8px;
+    position: relative;
+    top: -250px;
+}
+
+
+/* Input and label styles */
+label {
+    font-size: 30px;
+    display: block; 
+    margin: 10px 0 5px; 
+    font-weight: bold; 
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"] {
+    width: 100%;
+    padding: 10px; 
+    border: 1px solid #ccc;
+    border-radius: 4px; 
+    box-sizing: border-box; 
+}
+
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus {
+    outline: none; 
+}
+
+
+.confirm-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none; 
+    padding: 12px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    width: 100%;
+    font-size: 16px; 
+    transition: background-color 0.3s; 
+}
+
+.confirm-btn:hover {
+    background-color: #c9302c; 
+}
+
+/* Flash messages styling */
+.flashes {
+    background-color: #ffde59;
+    border: 1px solid #d6e9c6; 
+    color: #3c763d; 
+    padding: 10px; 
+    border-radius: 5px; 
+    margin-top: 20px; 
+}
+
+.flashes li {
+    margin: 5px 0; 
+}
+
+/* Responsive design adjustments */
+@media (min-width: 600px) {
+    .center-text {
+        font-size: 40px;
+    }
+
+    h1 {
+        font-size: 60px; 
+    }
+
+    h2 {
+        font-size: 48px;
+    }
+
+    p {
+        font-size: 50px; 
+    }
+}
