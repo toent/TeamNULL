@@ -1,5 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
+from classes.Order import Order
 from classes.Product import Product
+from classes.OrderLine import OrderLine
 
 app = Flask(__name__)
 app.secret_key = 'secret_key' 
@@ -10,6 +12,8 @@ pizzas = [
     Product("Neapolitan", 10.0, ['San Marzano tomatoes, Mozzarella di bufala, Fresh basil, Olive oil'], ['gluten', 'milk'], 'images/Neapolitan.jpeg'),
     Product("Romana", 10.0, ['Tomatoes, Mozzarella, Oregano, Anchovies (or other toppings)'], ['gluten', 'milk'], 'images/Romana.jpg')
 ]
+
+fohOrderLineList = []
 
 @app.route('/')
 def index():
@@ -27,6 +31,67 @@ def order():
     else:
         flash("Pizza not found!")
         return redirect(url_for('index'))
+    
+@app.route("/foh-create-order", methods=['POST', 'GET'])
+def fohOrder():
+
+    
+    try:
+        addedPizzaName = request.form.get("addedPizza")
+        addedPizzaQuantity = request.form.get("addedQuantity")
+        print(addedPizzaQuantity)
+        selectedPizza = next((pizza for pizza in pizzas if pizza['name'] == addedPizzaName), None)
+
+        if(selectedPizza != None and addedPizzaQuantity != None):
+
+            createdProduct = Product(selectedPizza['name'], selectedPizza['price'], selectedPizza['description'], selectedPizza['allergens'])
+            createdOrderline = OrderLine(createdProduct, addedPizzaQuantity)
+
+            if (len(fohOrderLineList) > 0):
+                lineCount = 0
+                for line in fohOrderLineList:
+                    if (line.product == createdOrderline.product and lineCount == 0):
+                        line.quantity += 1
+                        lineCount += 1
+                        print("Added Extra")
+                        print(len(fohOrderLineList))
+                        print(fohOrderLineList)
+
+                if(lineCount == 0):
+                    fohOrderLineList.append(createdOrderline)    
+                    lineCount += 1   
+                    print("Added New") 
+                    print(len(fohOrderLineList))
+                    print(fohOrderLineList)
+            else:
+                fohOrderLineList.append(createdOrderline)       
+                print("Added New") 
+                print(len(fohOrderLineList))
+                print(fohOrderLineList)
+            
+            # if(fohOrderLineList.index(selectedPizza['name']) == ValueError):
+            #     if(addedPizzaQuantity > 0):
+            #         print(createdOrderline)
+            #         fohOrderLineList.append(createdOrderline)
+            #         print(fohOrderLineList)   
+            #     else:
+            #         print("REMOVING")
+            #         fohOrderLineList.remove(createdOrderline)
+            # else:
+            #     try:
+            #         pizzaIndex = fohOrderLineList.index(selectedPizza)
+            #         fohOrderLineList[pizzaIndex].quantity = fohOrderLineList[pizzaIndex].quantity + 1
+            #     except ValueError as a:
+            #         print(a)
+    except ValueError as b:
+        print(f"failed {b}")
+        fohOrderLineList.clear()
+
+
+
+    print(addedPizzaName)
+    # currently holding place holder values
+    return render_template('fohOrderPage.html', completionCount = 4, tableNumber = 12, filteredProducts = pizzas, orderList = fohOrderLineList)
 
 
 
