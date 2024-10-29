@@ -1,0 +1,45 @@
+.orderScreen {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+.orderListing {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 350px;
+}
+
+.orderSelect {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 350px;
+}
+
+.productSelection {
+    display: flex;
+    justify-content: center;
+    width: 350px;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.orderedProduct {
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.productFilters{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+}
+
+.tableNr{
+    margin: 0px;
+}
