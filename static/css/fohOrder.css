@@ -4,6 +4,13 @@ body{
     background-size: cover;
 }
 
+.wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 12%;
+    transform: scale(1.75,1.75);
+}
+
 .orderScreen {
     display: flex;
     flex-direction: row;
@@ -49,7 +56,6 @@ button{
     flex-wrap: wrap;
 } 
 
-
 .productSelection > form > button{
     background-color: beige;
     font-size: 25px;
@@ -70,11 +76,30 @@ button{
     margin-top: 5px;
     margin-bottom: 5px;
     padding: 5px;
-    background-color: #F7C80C;
+    background-color: #f7c80c92;
     border-radius: 8px;
 }
 
-.orderedProduct > form > button{
+.orderL{
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    align-items: center;
+}
+
+.orderL > p{
+    padding-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.orderR{
+    display: flex;
+    justify-content: end;
+    margin-left: auto;
+}
+
+.orderR > form > button{
     background-color: #d4ae16;
     font-size: 35px;
     text-align-last: center;
@@ -82,15 +107,15 @@ button{
     width: 40px;
     height: 40px;
     margin-right: 5px;
+    margin-top: 10px;
     border-radius: 8px;
 }
 
-.orderedProduct > p{
+.orderR > p{
     padding-right: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
 
 .productFilters{
     display: flex;
