@@ -16,7 +16,7 @@ from classes.Product import Product
 class Order:
 
     # region Constructors
-    def __init__(self, products, notes):
+    def __init__(self, products, notes, table):
         """
         This class represents an order.
         :param products: A list of OrderLine objects that represent the products being ordered.
@@ -28,6 +28,7 @@ class Order:
         self.timeFinished = None
         self.currentStatus = 'Submitted'
         self.notes = notes
+        self.table = table
 
     # endregion
 
