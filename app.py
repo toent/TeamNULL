@@ -5,10 +5,10 @@ app = Flask(__name__)
 app.secret_key = 'secret_key' 
 
 pizzas = [
-    Product("Pepperoni", 10.0, ['Tomatoes, Garlic, Herbs, Mozzarella, Pepperoni'], ['images/'], 'images/pepperoni.jpeg'),
-    Product("Margherita", 10.0, ['Tomatoes, Mozzarella, Fresh basil, Olive oil'], ['images/'], 'images/Margherita.jpeg'),
-    Product("Neapolitan", 10.0, ['San Marzano tomatoes, Mozzarella di bufala, Fresh basil, Olive oil'], ['images/'], 'images/Neapolitan.jpeg'),
-    Product("Romana", 10.0, ['Tomatoes, Mozzarella, Oregano, Anchovies (or other toppings)'], ['images/'], 'images/Romana.jpg')
+    Product("Pepperoni", 10.0, ['Tomatoes, Garlic, Herbs, Mozzarella, Pepperoni'], ['gluten', 'milk'], 'images/pepperoni.jpeg'),
+    Product("Margherita", 10.0, ['Tomatoes, Mozzarella, Fresh basil, Olive oil'], ['gluten', 'milk'], 'images/Margherita.jpeg'),
+    Product("Neapolitan", 10.0, ['San Marzano tomatoes, Mozzarella di bufala, Fresh basil, Olive oil'], ['gluten', 'milk'], 'images/Neapolitan.jpeg'),
+    Product("Romana", 10.0, ['Tomatoes, Mozzarella, Oregano, Anchovies (or other toppings)'], ['gluten', 'milk'], 'images/Romana.jpg')
 ]
 
 @app.route('/')
