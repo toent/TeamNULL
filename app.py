@@ -97,17 +97,26 @@ def fohOrder():
     except:
         addedPizzaQuantity = 0
 
+    print(tableNumber)
     print(addedPizzaName)
     print(addedPizzaQuantity)
 
     selectedPizza = next((pizza for pizza in dataManager.products if pizza.name == addedPizzaName), None)
 
     if(isOrderDone):
-        newOrder = Order(fohOrderLineList, "Order by Mario", tableNumber)
-        print(f"ORDER IS DONE YIPEE -> order: {newOrder}")
-        # no clue how to add it to the datamanager
-        return redirect(url_for("fohOverview"))
-
+        if(len(fohOrderLineList) > 0):
+            newOrder = Order(fohOrderLineList, "Order by Mario", tableNumber)
+            print(f"ORDER IS DONE YIPEE -> order: {newOrder}")
+            # no clue how to add it to the datamanager -> this is currently not working -> CURRENTLY CRASHES ENTIRE SERVER -> REQUIRES DELETION OF STORAGE TO FIX
+            # try:
+            #     dataManager.orders.append(newOrder)
+            #     dataManager.saveOrders()
+            # except AttributeError as e:
+            #     print(f"ERROR: {e}")
+            fohOrderLineList.clear()
+            return redirect(url_for("fohOverview"))
+        else:
+            isOrderDone = False
 
     if selectedPizza:
         existingOrderLine = next((line for line in fohOrderLineList if line.product.name == selectedPizza.name), None)
@@ -140,7 +149,7 @@ def modify():
     flash(f"You are modifying the {pizza_name} pizza!")
     return redirect(url_for('index'))
 
-@app.route('/fohOverview')
+@app.route('/fohOverview', methods=['POST', 'GET'])
 def fohOverview():
     return render_template('overview.html')
 
