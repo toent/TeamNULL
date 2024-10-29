@@ -32,7 +32,7 @@ class OrderLine:
         }
 
     def fromDict(self, dict):
-        self.product = Product('', 0, [], [])
+        self.product = Product('', 0, [], [], [])
         self.product.fromDict(dict['product'])
         self.quantity = dict['quantity']
 

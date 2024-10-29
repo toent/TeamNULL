@@ -35,61 +35,31 @@ def order():
 @app.route("/foh-create-order", methods=['POST', 'GET'])
 def fohOrder():
 
+    addedPizzaName = request.form.get("addedPizza")
     
     try:
-        addedPizzaName = request.form.get("addedPizza")
-        addedPizzaQuantity = request.form.get("addedQuantity")
-        print(addedPizzaQuantity)
-        selectedPizza = next((pizza for pizza in pizzas if pizza['name'] == addedPizzaName), None)
-
-        if(selectedPizza != None and addedPizzaQuantity != None):
-
-            createdProduct = Product(selectedPizza['name'], selectedPizza['price'], selectedPizza['description'], selectedPizza['allergens'])
-            createdOrderline = OrderLine(createdProduct, addedPizzaQuantity)
-
-            if (len(fohOrderLineList) > 0):
-                lineCount = 0
-                for line in fohOrderLineList:
-                    if (line.product == createdOrderline.product and lineCount == 0):
-                        line.quantity += 1
-                        lineCount += 1
-                        print("Added Extra")
-                        print(len(fohOrderLineList))
-                        print(fohOrderLineList)
-
-                if(lineCount == 0):
-                    fohOrderLineList.append(createdOrderline)    
-                    lineCount += 1   
-                    print("Added New") 
-                    print(len(fohOrderLineList))
-                    print(fohOrderLineList)
-            else:
-                fohOrderLineList.append(createdOrderline)       
-                print("Added New") 
-                print(len(fohOrderLineList))
-                print(fohOrderLineList)
-            
-            # if(fohOrderLineList.index(selectedPizza['name']) == ValueError):
-            #     if(addedPizzaQuantity > 0):
-            #         print(createdOrderline)
-            #         fohOrderLineList.append(createdOrderline)
-            #         print(fohOrderLineList)   
-            #     else:
-            #         print("REMOVING")
-            #         fohOrderLineList.remove(createdOrderline)
-            # else:
-            #     try:
-            #         pizzaIndex = fohOrderLineList.index(selectedPizza)
-            #         fohOrderLineList[pizzaIndex].quantity = fohOrderLineList[pizzaIndex].quantity + 1
-            #     except ValueError as a:
-            #         print(a)
-    except ValueError as b:
-        print(f"failed {b}")
-        fohOrderLineList.clear()
-
-
+        addedPizzaQuantity = int(request.form.get("addedQuantity"))
+    except ValueError as a:
+        print(f"ERROR: {a}")
 
     print(addedPizzaName)
+    print(addedPizzaQuantity)
+    
+    selectedPizza = next((pizza for pizza in pizzas if pizza.name == addedPizzaName), None)
+
+    if selectedPizza:
+        existingOrderLine = next((line for line in fohOrderLineList if line.product.name == selectedPizza.name), None)
+        if existingOrderLine:
+            new_quantity = existingOrderLine.quantity + addedPizzaQuantity
+            if new_quantity > 0:
+                existingOrderLine.quantity = new_quantity
+            else:
+                fohOrderLineList.remove(existingOrderLine)
+        else:
+            if addedPizzaQuantity > 0:
+                createdOrderline = OrderLine(selectedPizza, addedPizzaQuantity)
+                fohOrderLineList.append(createdOrderline)
+
     # currently holding place holder values
     return render_template('fohOrderPage.html', completionCount = 4, tableNumber = 12, filteredProducts = pizzas, orderList = fohOrderLineList)
 
@@ -100,6 +70,10 @@ def modify():
     pizza_name = request.form.get('pizza_name')
     flash(f"You are modifying the {pizza_name} pizza!")
     return redirect(url_for('index'))
+
+@app.routre('/fohOverview')
+def fohOverview():
+    return render_template('overveiw.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

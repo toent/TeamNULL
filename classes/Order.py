@@ -66,15 +66,17 @@ class Order:
             'timeCreated': self.timeCreated.strftime('%Y-%m-%d %H:%M:%S'),
             'timeFinished': self.timeFinished.strftime('%Y-%m-%d %H:%M:%S') if self.timeFinished else None,
             'currentStatus': self.currentStatus,
-            'notes': self.notes
+            'notes': self.notes,
+            'table': self.table
         }
 
     def fromDict(self, dict):
         self.orderID = dict['orderID']
-        self.products = [OrderLine(Product('', 0, [],[]), 0).fromDict(product) for product in dict['products']]
+        self.products = [OrderLine(Product('', 0, [],[], []), 0).fromDict(product) for product in dict['products']]
         self.timeCreated = datetime.strptime(dict['timeCreated'], '%Y-%m-%d %H:%M:%S')
         self.timeFinished = datetime.strptime(dict['timeFinished'], '%Y-%m-%d %H:%M:%S') if dict['timeFinished'] else None
         self.currentStatus = dict['currentStatus']
         self.notes = dict['notes']
+        self.table = dict['table']
 
     # endregion

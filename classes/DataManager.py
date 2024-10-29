@@ -1,4 +1,6 @@
 import json
+from classes.Order import Order
+from classes.Product import Product
 
 
 # This class is responsible for managing the data of the application and storing it in json files.
@@ -12,6 +14,8 @@ class DataManager:
         self.productFile = 'storage/products.json'
         self.orders = []
         self.products = []
+        self.loadProducts()
+        self.loadOrders()
 
     # endregion
 
@@ -22,10 +26,13 @@ class DataManager:
         """
         try:
             with open(self.orderFile, 'r') as file:
-                self.orders = json.load(file)
+                orders = json.load(file)
+                for order in orders:
+                    newOrder = Order([], '', 0)
+                    newOrder.fromDict(order)
+                    self.orders.append(newOrder)
         except FileNotFoundError:
-            self.orders = []
-            print(f"DataManager: {self.orderFile} file not found")
+            print('Data Manager: Could not load orders. File not found')
 
     def saveOrders(self):
         """
@@ -41,9 +48,13 @@ class DataManager:
         """
         try:
             with open(self.productFile, 'r') as file:
-                self.products = json.load(file)
+                products = json.load(file)
+                for prod in products:
+                    product = Product("", 0, [], [], [])
+                    product.fromDict(prod)
+                    self.products.append(product)
         except FileNotFoundError:
-            self.products = []
+            print('Data Manager: Could not load products. File not found')
 
     def saveProducts(self):
         """
