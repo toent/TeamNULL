@@ -1,8 +1,27 @@
+body{
+    background: url(/static/images/fohBackground.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .orderScreen {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    /* align-items: center; */
+    padding: 10px;
+    margin:auto;
+    width: 700px;
+    background-color: #ffde59ca;
+    border-radius: 8px; 
+}
+
+button{
+    background-color: beige;
+    border: none;
+    border-radius: 5px;
+    font-size: 25px;
+    font-family: 'Italianno', cursive;
+    font-weight: bold;
 }
 
 .orderListing {
@@ -10,6 +29,7 @@
     flex-direction: column;
     flex-wrap: wrap;
     width: 350px;
+    margin-right: 3px;
 }
 
 .orderSelect {
@@ -17,14 +37,28 @@
     flex-direction: column;
     flex-wrap: wrap;
     width: 350px;
+    margin-left: 3px;
 }
 
 .productSelection {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    margin-left: 20px;
     width: 350px;
     flex-direction: row;
     flex-wrap: wrap;
+} 
+
+
+.productSelection > form > button{
+    background-color: beige;
+    font-size: 25px;
+    text-align-last: center;
+    border: none;
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    border-radius: 8px;
 }
 
 .orderedProduct {
@@ -33,6 +67,22 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #F7C80C;
+    border-radius: 8px;
+}
+
+.orderedProduct > form > button{
+    background-color: #d4ae16;
+    font-size: 35px;
+    text-align-last: center;
+    border: none;
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    border-radius: 8px;
 }
 
 .orderedProduct > p{
@@ -41,14 +91,26 @@
     margin-bottom: 5px;
 }
 
-.orderedProduct > button{
-    margin-right: 5px;
-}
 
 .productFilters{
     display: flex;
     justify-content: center;
     padding-bottom: 10px;
+}
+
+.productFilters > button{
+    border: none;
+    background-color: beige;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+
+.priceTotal{
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .tableNr{

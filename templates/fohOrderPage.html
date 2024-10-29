@@ -11,7 +11,6 @@
 <body>
     <div class="topBar">
         <img class="logoImage"/>
-        <p class="amountCompleted">{{ completionCount }} Completed</p>
     </div>
     <div class="orderScreen">
         <div class="orderListing">
@@ -32,7 +31,16 @@
                     </form>
                 </div>
             {% endfor %}
-            <button class="acceptOrderButton">✔</button>
+            
+            <p class="priceTotal">Total: &#8364;{{priceTotal}}</p>
+
+            <form action="{{ url_for('fohOrder') }}" method="POST">
+                <input type="hidden" name="confirmOrder" value="True">
+                <div class="orderListing">
+                    <button type="submit"> ✔</button>   
+                </div>
+                
+            </form>
         </div>
         <div class="orderSelect">
             <div class="productFilters">

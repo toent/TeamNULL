@@ -69,17 +69,45 @@ def order():
 
 @app.route("/foh-create-order", methods=['POST', 'GET'])
 def fohOrder():
+
+    global tableNumber
+
+    isOrderDone = False
+
+    priceTotal = 0
+
     addedPizzaName = request.form.get("addedPizza")
 
     try:
+        isOrderDone = bool(request.form.get("confirmOrder"))
+    except:
+        print("Couldn't Get Order Status!")
+ 
+    try:
+        newTableNumber = request.args.get('tableNumber')
+        newTableNumber = request.form.get('tableNumber')
+
+        if(newTableNumber != None):
+            tableNumber = newTableNumber
+    except:
+        print("Couldn't Update Table Number!")
+
+    try:
         addedPizzaQuantity = int(request.form.get("addedQuantity"))
-    except ValueError as a:
-        print(f"ERROR: {a}")
+    except:
+        addedPizzaQuantity = 0
 
     print(addedPizzaName)
     print(addedPizzaQuantity)
 
     selectedPizza = next((pizza for pizza in dataManager.products if pizza.name == addedPizzaName), None)
+
+    if(isOrderDone):
+        newOrder = Order(fohOrderLineList, "Order by Mario", tableNumber)
+        print(f"ORDER IS DONE YIPEE -> order: {newOrder}")
+        # no clue how to add it to the datamanager
+        return redirect(url_for("fohOverview"))
+
 
     if selectedPizza:
         existingOrderLine = next((line for line in fohOrderLineList if line.product.name == selectedPizza.name), None)
@@ -94,8 +122,15 @@ def fohOrder():
                 createdOrderline = OrderLine(selectedPizza, addedPizzaQuantity)
                 fohOrderLineList.append(createdOrderline)
 
+    if(len(fohOrderLineList) > 0):
+        for product in fohOrderLineList:
+            priceTotal += product.product.price * product.quantity
+    else:
+        priceTotal = 0
+
+
     # currently holding place holder values
-    return render_template('fohOrderPage.html', completionCount=4, tableNumber=12, filteredProducts=dataManager.products,
+    return render_template('fohOrderPage.html', priceTotal=priceTotal , tableNumber=tableNumber, filteredProducts=dataManager.products,
                            orderList=fohOrderLineList)
 
 
@@ -107,8 +142,6 @@ def modify():
 
 @app.route('/fohOverview')
 def fohOverview():
-    tableNumber = request.form.get('tableNumber')
-
     return render_template('overview.html')
 
 if __name__ == '__main__':
