@@ -9,11 +9,12 @@ import json
 class Product:
 
     # region Constructors
-    def __init__(self, name, price, ingredients, allergens):
+    def __init__(self, name, price, ingredients, allergens, images):
         self.name = name
         self.price = price
         self.ingredients = ingredients
         self.allergens = allergens
+        self.images = images
 
     # endregion
 
