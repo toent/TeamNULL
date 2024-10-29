@@ -69,12 +69,19 @@ def order():
 
 @app.route("/foh-create-order", methods=['POST', 'GET'])
 def fohOrder():
+    priceTotal = 0
+
     addedPizzaName = request.form.get("addedPizza")
 
     try:
+        tableNumber = request.form.get('tableNumber')
+    except:
+        tableNumber = 1
+
+    try:
         addedPizzaQuantity = int(request.form.get("addedQuantity"))
-    except ValueError as a:
-        print(f"ERROR: {a}")
+    except:
+        addedPizzaQuantity = 0
 
     print(addedPizzaName)
     print(addedPizzaQuantity)
@@ -94,8 +101,14 @@ def fohOrder():
                 createdOrderline = OrderLine(selectedPizza, addedPizzaQuantity)
                 fohOrderLineList.append(createdOrderline)
 
+    if(len(fohOrderLineList) > 0):
+        for product in fohOrderLineList:
+            priceTotal += product.product.price * product.quantity
+    else:
+        priceTotal = 0
+
     # currently holding place holder values
-    return render_template('fohOrderPage.html', completionCount=4, tableNumber=12, filteredProducts=dataManager.products,
+    return render_template('fohOrderPage.html', priceTotal=priceTotal , tableNumber=tableNumber, filteredProducts=dataManager.products,
                            orderList=fohOrderLineList)
 
 

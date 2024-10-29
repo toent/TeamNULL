@@ -11,7 +11,6 @@
 <body>
     <div class="topBar">
         <img class="logoImage"/>
-        <p class="amountCompleted">{{ completionCount }} Completed</p>
     </div>
     <div class="orderScreen">
         <div class="orderListing">
@@ -32,6 +31,7 @@
                     </form>
                 </div>
             {% endfor %}
+            <p class="priceTotal">Total: &#8364;{{priceTotal}}</p>
             <button class="acceptOrderButton">✔</button>
         </div>
         <div class="orderSelect">
