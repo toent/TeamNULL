@@ -13,35 +13,37 @@
     <table style="width: 100%;">
         <tr style="height: 33vh;">
             <td>
-                <div class="italiana-regular">1</div>
+                <form action="{{ url_for('fohOrder') }}">
+                    <input type="hidden" name="tableNumber" value="1">
+                    <button type="submit">1</button>
             </td>
             <td>
-                <div class="italiana-regular">2</div>
+                <a class="italiana-regular">2</a>
             </td>
             <td>
-                <div class="italiana-regular">3</div>
-            </td>
-        </tr>
-        <tr style="height: 33vh;">
-            <td>
-                <div class="italiana-regular">4</div>
-            </td>
-            <td>
-                <div class="italiana-regular">5</div>
-            </td>
-            <td>
-                <div class="italiana-regular">6</div>
+                <a class="italiana-regular">3</a>
             </td>
         </tr>
         <tr style="height: 33vh;">
             <td>
-                <div class="italiana-regular">7</div>
+                <a class="italiana-regular">4</a>
             </td>
             <td>
-                <div class="italiana-regular">8</div>
+                <a class="italiana-regular">5</a>
             </td>
             <td>
-                <div class="italiana-regular">9</div>
+                <a class="italiana-regular">6</a>
+            </td>
+        </tr>
+        <tr style="height: 33vh;">
+            <td>
+                <a class="italiana-regular">7</a>
+            </td>
+            <td>
+                <a class="italiana-regular">8</a>
+            </td>
+            <td>
+                <a class="italiana-regular">9</a>
             </td>
         </tr>
     </table>
