@@ -18,11 +18,18 @@ button{
     font-weight: bold;
 }
 
+.topBar{
+    background-color: #f3d24fbd;
+}
+
 .wrapper{
     display: flex;
     justify-content: center;
-    margin-top: 12%;
-    transform: scale(1.75,1.75);
+    margin-top: 5%;
+}
+
+.logoImage{
+    width: 8% ;
 }
 
 .orderScreen {
@@ -31,16 +38,17 @@ button{
     justify-content: center;
     padding: 10px;
     margin:auto;
-    width: 700px;
+    width: 60%;
     background-color: #ffde59ca;
     border-radius: 8px; 
+    flex-wrap: wrap;
 }
 
 .orderListing {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 350px;
+    width: 45%;
     margin-right: 3px;
 }
 
@@ -48,15 +56,15 @@ button{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 350px;
+    width: 45%;
     margin-left: 3px;
 }
 
 .productSelection {
     display: flex;
     justify-content: flex-start;
-    margin-left: 20px;
-    width: 350px;
+    margin-left: 8%;
+    width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
 } 
@@ -93,6 +101,7 @@ button{
 }
 
 .orderL > p{
+    font-size: 35px;
     padding-right: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -126,6 +135,7 @@ button{
     display: flex;
     justify-content: center;
     padding-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .productFilters > button{
@@ -137,7 +147,6 @@ button{
     margin-left: 2px;
 }
 
-
 .priceTotal{
     margin-top: 5px;
     margin-bottom: 5px;
@@ -145,4 +154,43 @@ button{
 
 .tableNr{
     margin: 0px;
+}
+
+/* @media only screen and (max-height: 1200px) {
+    .wrapper{
+        margin-top: 20%;
+    }
+}
+
+@media only screen and (max-height: 1000px) {
+    .wrapper{
+        margin-top: 5%;
+        transform: scale(1.2,1.2);
+    }
+
+    .orderScreen{
+        width: 80%;
+    }
+} */
+
+@media only screen and (max-width: 800px){
+
+    .wrapper{
+        transform: scale(1,1);
+    }
+
+    .orderScreen {
+        flex-direction: column-reverse;
+        width: 90%;
+        margin-bottom: 5%;
+    }
+
+    .orderListing {
+        width: 100%;
+    }
+
+    .orderSelect {
+        width: 95%;
+    }
+
 }

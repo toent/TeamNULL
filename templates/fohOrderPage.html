@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
     <title>Front of House - Order Table</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gSTYLE.css') }}">
@@ -16,10 +17,10 @@
     
 </head>
 <body>
+    <div class="topBar">
+        <a href="{{ url_for('fohOverview') }}"><img class="logoImage" src="{{url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png')}}"/></a>
+    </div>
     <div class="wrapper">
-        <div class="topBar">
-            <img class="logoImage"/>
-        </div>
         <div class="orderScreen">
             <div class="orderListing">
                 <p class="tableNr">Table {{ tableNumber }}'s order</p>
