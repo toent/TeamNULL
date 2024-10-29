@@ -79,7 +79,7 @@ def fohOrder():
     print(addedPizzaName)
     print(addedPizzaQuantity)
 
-    selectedPizza = next((pizza for pizza in pizzas if pizza.name == addedPizzaName), None)
+    selectedPizza = next((pizza for pizza in dataManager.products if pizza.name == addedPizzaName), None)
 
     if selectedPizza:
         existingOrderLine = next((line for line in fohOrderLineList if line.product.name == selectedPizza.name), None)
@@ -95,7 +95,7 @@ def fohOrder():
                 fohOrderLineList.append(createdOrderline)
 
     # currently holding place holder values
-    return render_template('fohOrderPage.html', completionCount=4, tableNumber=12, filteredProducts=pizzas,
+    return render_template('fohOrderPage.html', completionCount=4, tableNumber=12, filteredProducts=dataManager.products,
                            orderList=fohOrderLineList)
 
 
