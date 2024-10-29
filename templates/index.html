@@ -12,79 +12,59 @@
 </head>
 <body>
 
-    <div class="container" id="color-container">
-        <div class="bar green"></div>
-        <div class="bar white"></div>
-        <div class="bar red"></div>
+
+        <div class="container" id="color-container">
+            <div class="bar green"></div>
+            <div class="bar white"></div>
+            <div class="bar red"></div>
         <div class="center-text" id="center-text">
-            <p>Welcome to <br> Mario & Luigi's pizzeria</p>
+            <p>Welcome to <br> Mario & Luigi's Pizzeria</p>
         </div>
     </div>
 
     <!-- Boxes container for pizza cards -->
     <div class="boxes" id="boxes">
-
+        {% for pizza in pizzas %}
         <div class="pizza-card">
-            <img src="{{ url_for('static', filename='images/pepperoni.jpeg') }}" alt="Pizza Image" class="pizza-image">
+            <img src="{{ url_for('static', filename=pizza.image) }}" alt="{{ pizza.name }} Image" class="pizza-image">
             <div class="pizza-info">
-                <p>info bla bla bla bla</p>
+                <p>{{ pizza.description }}</p>
                 <div class="details">
                     <span>Allergens</span>
-                    <span>price</span>
+                    <div class="allergen-icons">
+                        {% for allergen in pizza.allergens %}
+                        <img src="{{ url_for('static', filename='images/' + allergen + '.png') }}" alt="{{ allergen }}" class="allergen-icon">
+                        {% endfor %}
+                    </div>
+                    <span>Price: {{ pizza.price }} euro</span>
                 </div>
                 <div class="buttons">
-                    <button class="order-btn">ORDER</button>
-                    <button class="modify-btn">MODIFY</button>
+                        <!-- Order button form -->
+                        <form action="{{ url_for('order') }}" method="POST">
+                            <input type="hidden" name="pizza_name" value="{{ pizza.name }}">
+                            <button type="submit" class="order-btn">ORDER</button>
+                        </form>
+                    <!-- Modify button form -->
+                    <form action="{{ url_for('modify') }}" method="POST">
+                        <input type="hidden" name="pizza_name" value="{{ pizza.name }}">
+                        <button type="submit" class="modify-btn">MODIFY</button>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <div class="pizza-card">
-            <img src="{{ url_for('static', filename='images/Margherita.jpeg') }}" alt="Pizza Image" class="pizza-image">
-            <div class="pizza-info">
-                <p>info bla bla bla bla</p>
-                <div class="details">
-                    <span>Allergens</span>
-                    <span>price</span>
-                </div>
-                <div class="buttons">
-                    <button class="order-btn">ORDER</button>
-                    <button class="modify-btn">MODIFY</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="pizza-card">
-            <img src="{{ url_for('static', filename='images/Neapolitan.jpeg') }}" alt="Pizza Image" class="pizza-image">
-            <div class="pizza-info">
-                <p>info bla bla bla bla</p>
-                <div class="details">
-                    <span>Allergens</span>
-                    <span>price</span>
-                </div>
-                <div class="buttons">
-                    <button class="order-btn">ORDER</button>
-                    <button class="modify-btn">MODIFY</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="pizza-card">
-            <img src="{{ url_for('static', filename='images/Romana.jpg') }}" alt="Pizza Image" class="pizza-image">
-            <div class="pizza-info">
-                <p>info bla bla bla bla</p>
-                <div class="details">
-                    <span>Allergens</span>
-                    <span>price</span>
-                </div>
-                <div class="buttons">
-                    <button class="order-btn">ORDER</button>
-                    <button class="modify-btn">MODIFY</button>
-                </div>
-            </div>
-        </div>
-
+        {% endfor %}
     </div>
+
+    <!-- Flash messages display -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
 
     <script src="{{ url_for('static', filename='js/js.js') }}"></script>
 
