@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
 
 from classes.DataManager import DataManager
+from classes.Order import Order
 from classes.OrderLine import OrderLine
 from classes.Product import Product
 
@@ -12,9 +13,10 @@ dataManager = DataManager()
 
 def initialize():
     """
-    This method will initialize the application.
+    This method will initialize the application. It currently has a hardcoded dataset for testing purposes.
     """
-    if dataManager.products.count() < 1:
+    # If there are no products in the data manager, add some.
+    if len(dataManager.products) < 1:
         dataManager.products = [
             Product("Pepperoni", 10.0, ['Tomatoes, Garlic, Herbs, Mozzarella, Pepperoni'], ['gluten', 'milk'],
                     'images/pepperoni.jpeg'),
@@ -25,20 +27,35 @@ def initialize():
             Product("Romana", 10.0, ['Tomatoes, Mozzarella, Oregano, Anchovies (or other toppings)'], ['gluten', 'milk'],
                     'images/Romana.jpg')
         ]
-        dataManager.saveProducts()
+        dataManager.saveProducts() # Save the products to the products.json file.
+
+    # If there are no orders in the data manager, add some.
+    if len(dataManager.orders) < 1:
+        dataManager.orders = [
+            Order([OrderLine(dataManager.products[0], 2)], 'Please don''t let Marcos cook it', 4),
+            Order([OrderLine(dataManager.products[1], 1)], 'Please don''t let Marcos cook it', 5),
+            Order([OrderLine(dataManager.products[2], 3)], 'Please don''t let Marcos cook it', 6),
+            Order([OrderLine(dataManager.products[3], 4)], 'Please don''t let Marcos cook it', 7)
+        ]
+        # Change the status of the orders.
+        dataManager.orders[0].nextStatus()
+        dataManager.orders[0].nextStatus()
+        dataManager.orders[1].nextStatus()
+        dataManager.orders[2].nextStatus()
+        dataManager.saveOrders() # Save the orders to the orders.json file.
 
 fohOrderLineList = []
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', pizzas=pizzas)
+    return render_template('index.html', pizzas=dataManager.products)
 
 
 @app.route('/order', methods=['POST'])
 def order():
     pizza_name = request.form.get('pizza_name')
-    selected_pizza = next((pizza for pizza in pizzas if pizza.name == pizza_name), None)
+    selected_pizza = next((pizza for pizza in dataManager.products if pizza.name == pizza_name), None)
 
     if selected_pizza:
         pizza_price = selected_pizza.price
