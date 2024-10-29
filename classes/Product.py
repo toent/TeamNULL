@@ -30,7 +30,8 @@ class Product:
             'name': self.name,
             'price': self.price,
             'ingredients': self.ingredients,
-            'allergens': self.allergens
+            'allergens': self.allergens,
+            'images': self.images
         }
 
     def fromDict(self, dict):
@@ -38,4 +39,5 @@ class Product:
         self.price = dict['price']
         self.ingredients = dict['ingredients']
         self.allergens = dict['allergens']
+        self.images = dict['images']
     # endregion

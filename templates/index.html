@@ -28,22 +28,22 @@
         <div class="pizza-card">
             <img src="{{ url_for('static', filename=pizza.images) }}" alt="{{ pizza.name }} Image" class="pizza-image">
             <div class="pizza-info">
-                <p>{{ pizza.description }}</p>
+                <p>Ingredients: {{ pizza.ingredients | join(', ') }}</p> 
                 <div class="details">
                     <span>Allergens</span>
                     <div class="allergen-icons">
                         {% for allergen in pizza.allergens %}
-                        <img src="{{ url_for('static', filename='images/' + allergen + '.png') }}" alt="{{ allergen }}" class="allergen-icon">
+                            <img src="{{ url_for('static', filename='images/' + allergen + '.png') }}" alt="{{ allergen }}" class="allergen-icon">
                         {% endfor %}
                     </div>
                     <span>Price: {{ pizza.price }} euro</span>
                 </div>
                 <div class="buttons">
-                        <!-- Order button form -->
-                        <form action="{{ url_for('order') }}" method="POST">
-                            <input type="hidden" name="pizza_name" value="{{ pizza.name }}">
-                            <button type="submit" class="order-btn">ORDER</button>
-                        </form>
+                    <!-- Order button form -->
+                    <form action="{{ url_for('order') }}" method="POST">
+                        <input type="hidden" name="pizza_name" value="{{ pizza.name }}">
+                        <button type="submit" class="order-btn">ORDER</button>
+                    </form>
                     <!-- Modify button form -->
                     <form action="{{ url_for('modify') }}" method="POST">
                         <input type="hidden" name="pizza_name" value="{{ pizza.name }}">
@@ -54,6 +54,7 @@
         </div>
         {% endfor %}
     </div>
+    
 
     <!-- Flash messages display -->
     {% with messages = get_flashed_messages() %}
