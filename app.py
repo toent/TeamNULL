@@ -107,8 +107,6 @@ def modify():
 
 @app.route('/fohOverview')
 def fohOverview():
-    tableNumber = request.form.get('tableNumber')
-
     return render_template('overview.html')
 
 if __name__ == '__main__':
