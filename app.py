@@ -71,9 +71,9 @@ def modify():
     flash(f"You are modifying the {pizza_name} pizza!")
     return redirect(url_for('index'))
 
-@app.routre('/fohOverview')
+@app.route('/fohOverview')
 def fohOverview():
-    return render_template('overveiw.html')
+    return render_template('overview.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
