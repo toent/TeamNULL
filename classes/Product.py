@@ -1,3 +1,5 @@
+import json
+
 # This class represents a product.
 # Attributes:
 # - name: str - The name of the product.
@@ -21,4 +23,18 @@ class Product:
 
     def __repr__(self):
         return f'{self.name} - {self.price}'
+
+    def toDict(self):
+        return {
+            'name': self.name,
+            'price': self.price,
+            'ingredients': self.ingredients,
+            'allergens': self.allergens
+        }
+
+    def fromDict(self, dict):
+        self.name = dict['name']
+        self.price = dict['price']
+        self.ingredients = dict['ingredients']
+        self.allergens = dict['allergens']
     # endregion
