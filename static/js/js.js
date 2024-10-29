@@ -1,7 +1,7 @@
 // Initial animation trigger after 5 seconds
 setTimeout(function() {
     // Update the center text
-    document.getElementById('center-text').innerHTML = "<p>Mario & Luigi's Pizzeria</p>";
+    document.getElementById('center-text').innerHTML = "<h1>Mario & Luigi's Pizzeria</h1>";
 
     // Animate the flag and text moving upwards
     document.getElementById('color-container').classList.add('move-up');
