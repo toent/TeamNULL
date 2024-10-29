@@ -26,7 +26,7 @@
     <div class="boxes" id="boxes">
         {% for pizza in pizzas %}
         <div class="pizza-card">
-            <img src="{{ url_for('static', filename=pizza.image) }}" alt="{{ pizza.name }} Image" class="pizza-image">
+            <img src="{{ url_for('static', filename=pizza.images) }}" alt="{{ pizza.name }} Image" class="pizza-image">
             <div class="pizza-info">
                 <p>{{ pizza.description }}</p>
                 <div class="details">

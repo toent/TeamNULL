@@ -1,6 +1,9 @@
 from datetime import datetime
 from random import Random
 
+from classes.OrderLine import OrderLine
+from classes.Product import Product
+
 
 # This class represents an order.
 # Attributes:
@@ -13,18 +16,19 @@ from random import Random
 class Order:
 
     # region Constructors
-    def __init__(self, products, notes):
+    def __init__(self, products, notes, table):
         """
         This class represents an order.
         :param products: A list of OrderLine objects that represent the products being ordered.
         :param notes: A string with any notes that the customer might have.
         """
-        self.orderID = Random().randint(1000, 9999)
+        self.orderID = Random().randint(10000000, 99999999)
         self.products = products
         self.timeCreated = datetime.now()
         self.timeFinished = None
         self.currentStatus = 'Submitted'
         self.notes = notes
+        self.table = table
 
     # endregion
 
@@ -54,5 +58,23 @@ class Order:
         :return: bool - True if the order is finished, False otherwise.
         """
         return self.currentStatus == 'Finished'
+
+    def toDict(self):
+        return {
+            'orderID': self.orderID,
+            'products': [product.toDict() for product in self.products],
+            'timeCreated': self.timeCreated.strftime('%Y-%m-%d %H:%M:%S'),
+            'timeFinished': self.timeFinished.strftime('%Y-%m-%d %H:%M:%S') if self.timeFinished else None,
+            'currentStatus': self.currentStatus,
+            'notes': self.notes
+        }
+
+    def fromDict(self, dict):
+        self.orderID = dict['orderID']
+        self.products = [OrderLine(Product('', 0, [],[]), 0).fromDict(product) for product in dict['products']]
+        self.timeCreated = datetime.strptime(dict['timeCreated'], '%Y-%m-%d %H:%M:%S')
+        self.timeFinished = datetime.strptime(dict['timeFinished'], '%Y-%m-%d %H:%M:%S') if dict['timeFinished'] else None
+        self.currentStatus = dict['currentStatus']
+        self.notes = dict['notes']
 
     # endregion
