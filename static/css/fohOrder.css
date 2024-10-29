@@ -1,3 +1,9 @@
+body{
+    background: url(/static/images/fohBackground.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .orderScreen {
     display: flex;
     flex-direction: row;
@@ -5,15 +11,17 @@
     padding: 10px;
     margin:auto;
     width: 700px;
-    background-color: #ffde59;
+    background-color: #ffde59ca;
     border-radius: 8px; 
-    /* align-items: center; */
 }
 
 button{
+    background-color: beige;
+    border: none;
+    border-radius: 5px;
+    font-size: 25px;
     font-family: 'Italianno', cursive;
     font-weight: bold;
-    font-size: 25px;
 }
 
 .orderListing {
@@ -34,15 +42,18 @@ button{
 
 .productSelection {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    margin-left: 20px;
     width: 350px;
     flex-direction: row;
     flex-wrap: wrap;
-}
+} 
 
 
 .productSelection > form > button{
-    background-color: #d4ae16;
+    background-color: beige;
+    font-size: 25px;
+    text-align-last: center;
     border: none;
     width: 100px;
     height: 100px;
@@ -65,6 +76,8 @@ button{
 
 .orderedProduct > form > button{
     background-color: #d4ae16;
+    font-size: 35px;
+    text-align-last: center;
     border: none;
     width: 40px;
     height: 40px;
@@ -83,6 +96,15 @@ button{
     display: flex;
     justify-content: center;
     padding-bottom: 10px;
+}
+
+.productFilters > button{
+    border: none;
+    background-color: beige;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-right: 2px;
+    margin-left: 2px;
 }
 
 

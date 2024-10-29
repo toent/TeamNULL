@@ -31,8 +31,16 @@
                     </form>
                 </div>
             {% endfor %}
+            
             <p class="priceTotal">Total: &#8364;{{priceTotal}}</p>
-            <button class="acceptOrderButton">✔</button>
+
+            <form action="{{ url_for('fohOrder') }}" method="POST">
+                <input type="hidden" name="confirmOrder" value="True">
+                <div class="orderListing">
+                    <button type="submit"> ✔</button>   
+                </div>
+                
+            </form>
         </div>
         <div class="orderSelect">
             <div class="productFilters">
