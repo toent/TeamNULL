@@ -1,8 +1,5 @@
 import json
-from itertools import product
-
 from classes.Order import Order
-from classes.OrderLine import OrderLine
 from classes.Product import Product
 
 
@@ -53,7 +50,7 @@ class DataManager:
             with open(self.productFile, 'r') as file:
                 products = json.load(file)
                 for prod in products:
-                    product = Product("", 0, [],[],[])
+                    product = Product("", 0, [], [], [])
                     product.fromDict(prod)
                     self.products.append(product)
         except FileNotFoundError:
