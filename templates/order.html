@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation - Mario & Luigi's Pizzeria</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/order.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/order.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gSTYLE.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,17 +12,16 @@
 </head>
 <body>
 
-    <div class="container" id="color-container">
-        <div class="bar-container">
-            <div class="bar green"></div>
-            <div class="bar white"></div>
-            <div class="bar red"></div>
-        </div>
-        <div class="center-text" id="center-text">
-            <p>Confirm Your Order</p>
-        </div>
-    
-        
+<div class="container" id="color-container">
+    <div class="bar-container">
+        <div class="bar green"></div>
+        <div class="bar white"></div>
+        <div class="bar red"></div>
+    </div>
+    <div class="center-text" id="center-text">
+        <p>Confirm Your Order</p>
+    </div>
+
     <div class="order-summary">
         <h2>Pizza Selection</h2>
         <p><strong>Pizza:</strong> {{ pizza_name }}</p>
@@ -46,30 +45,58 @@
     </form>
 </div>
 
-    <script>
-        document.getElementById('order-form').addEventListener('submit', function(event) {
-            event.preventDefault(); 
+<!-- The Modal -->
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Order Details</h2>
+        <p id="modal-message"></p>
+        <button id="confirm-order" class="confirm-btn">Confirm Order</button>
+    </div>
+</div>
 
-            const pizzaName = this.pizza_name.value;
-            const pizzaPrice = parseFloat(this.pizza_price.value);
-            const customerName = this.customer_name.value;
-            const quantity = parseInt(this.quantity.value);
-            const totalPrice = (pizzaPrice * quantity).toFixed(2); 
+<script>
+    const modal = document.getElementById("orderModal");
+    const span = document.getElementsByClassName("close")[0];
+    const modalMessage = document.getElementById("modal-message");
+    const confirmOrderBtn = document.getElementById("confirm-order");
 
-            alert(`Order Details:\n\nCustomer Name: ${customerName}\nPizza: ${pizzaName}\nQuantity: ${quantity}\nTotal Price: ${totalPrice} euro`);
+    document.getElementById('order-form').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-            this.submit(); 
-        });
-    </script>
+        const pizzaName = this.pizza_name.value;
+        const pizzaPrice = parseFloat(this.pizza_price.value);
+        const customerName = this.customer_name.value;
+        const quantity = parseInt(this.quantity.value);
+        const totalPrice = (pizzaPrice * quantity).toFixed(2);
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class="flashes">
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
+        modalMessage.innerHTML = `Customer Name: ${customerName}<br>Pizza: ${pizzaName}<br>Quantity: ${quantity}<br>Total Price: ${totalPrice} euro`;
+        modal.style.display = "block";
+    });
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    confirmOrderBtn.onclick = function() {
+        document.getElementById('order-form').submit();
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="flashes">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
 </body>
 </html>
