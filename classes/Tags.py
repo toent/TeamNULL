@@ -9,8 +9,11 @@ class Tags:
         self.loadTags()
         self.saveTags()
 
+    
     def loadTags(self):
-
+        """
+        This method will load the tags from the tags.json file.
+        """
         try:
             with open(self.tagsFile, 'r') as file:
                 self.tagDict = json.load(file)
@@ -19,7 +22,9 @@ class Tags:
             print(f"Tags File Not Found: {a}")
 
     def saveTags(self):
-
+        """
+        This method will save the tags to the tags.json file.
+        """
         with open(self.tagsFile, 'w') as file:
             json.dump(self.tagDict, file)
 

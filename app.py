@@ -88,12 +88,12 @@ def order():
 def fohOrder():
     global tableNumber
 
+    # Initialize variables from tag class    
     filteredProducts = list(dataManager.products)
-
     filterKeys = tags.tagKeys
     filterDict = tags.tagDict
 
-    # Initialize variables
+    # Initialize variables from Forms
     currentTag = request.form.get("selectedTag")
     isOrderDone = bool(request.form.get("confirmOrder"))
     newTableNumber = request.form.get('tableNumber')
