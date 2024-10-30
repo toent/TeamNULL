@@ -38,7 +38,7 @@ class Order:
         This method will return a string representation of the order with all of the order information.
         :return:
         """
-        return f'Order ID: {self.orderID}\n Products: {self.products}\n Time Created: {self.timeCreated}\n Time Finished: {self.timeFinished}\n Current Status: {self.currentStatus}\n Notes: {self.notes}'
+        return f'Order ID: {self.orderID}\n Products: {self.products}\n Time Created: {self.timeCreated}\n Time Finished: {self.timeFinished}\n {self.table}\n Current Status: {self.currentStatus}\n Notes: {self.notes}'
 
     def __repr__(self):
         return f'{self.orderID} - {self.currentStatus}'
