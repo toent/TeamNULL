@@ -66,14 +66,14 @@ def order():
         if selected_pizza:
             pizza_price = selected_pizza.price
             pizza_image = selected_pizza.images
-            return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price, pizza_image=pizza_image)
+            return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price,
+                                   pizza_image=pizza_image)
         else:
             flash("Pizza not found!")
             return redirect(url_for('index'))
-    
+
     # Handle GET request for cart link navigation
     return render_template('order.html')
-
 
 
 @app.route("/foh-create-order", methods=['POST', 'GET'])
@@ -122,7 +122,6 @@ def fohOrder():
     # Render the template
     return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber,
                            filteredProducts=dataManager.products, orderList=fohOrderLineList)
-
 
 
 @app.route('/modify', methods=['POST'])
