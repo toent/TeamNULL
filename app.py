@@ -106,6 +106,7 @@ def fohOrder():
     if(isOrderDone):
         if(len(fohOrderLineList) > 0):
             newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
+            print(newOrder.toDict())
             print(f"ORDER IS DONE YIPEE -> order: {newOrder}")
             # no clue how to add it to the datamanager -> this is currently not working -> CURRENTLY CRASHES ENTIRE SERVER -> REQUIRES DELETION OF STORAGE TO FIX
             try:
