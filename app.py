@@ -52,7 +52,7 @@ def initialize():
         dataManager.saveOrders()  # Save the orders to the orders.json file.
 
     if len(tags.tagDict) < 1:
-        tags.tagDict = {"tag-pizza": ["Margherita","Pepperoni","Neapolitan","Romana"], "tag-pasta":["Bolognese","Carbonara"], "tag-salad":["Caesar"], "tag-desert":["Gelato"], "tag-drinks":["Cola","Fanta","Sprite","Milkshake"],"tag-vegetarian":["Margherita","Neapolitan","Romana"]}
+        tags.tagDict = {"tag-pizza": ["Margherita","Pepperoni","Neapolitan","Romana"], "tag-pasta":["Bolognese","Carbonara"], "tag-salad":["Caesar"], "tag-desert":["Gelato"], "tag-drinks":["Cola","Fanta","Sprite","Milkshake"],"tag-vegetarian":["Margherita","Neapolitan","Romana"], "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"]}
         tags.saveTags()
 
 
