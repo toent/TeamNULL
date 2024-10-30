@@ -53,18 +53,24 @@ def index():
     return render_template('index.html', pizzas=dataManager.products)
 
 
-@app.route('/order', methods=['POST'])
+@app.route('/order', methods=['GET', 'POST'])
 def order():
-    pizza_name = request.form.get('pizza_name')
-    selected_pizza = next((pizza for pizza in dataManager.products if pizza.name == pizza_name), None)
+    if request.method == 'POST':
+        # Get pizza details from form submission
+        pizza_name = request.form.get('pizza_name')
+        selected_pizza = next((pizza for pizza in dataManager.products if pizza.name == pizza_name), None)
 
-    if selected_pizza:
-        pizza_price = selected_pizza.price
-        pizza_image = selected_pizza.images
-        return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price, pizza_image=pizza_image)
-    else:
-        flash("Pizza not found!")
-        return redirect(url_for('index'))
+        if selected_pizza:
+            pizza_price = selected_pizza.price
+            pizza_image = selected_pizza.images
+            return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price, pizza_image=pizza_image)
+        else:
+            flash("Pizza not found!")
+            return redirect(url_for('index'))
+    
+    # Handle GET request for cart link navigation
+    return render_template('order.html')
+
 
 
 @app.route("/foh-create-order", methods=['POST', 'GET'])

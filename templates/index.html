@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}">
 
 </head>
 <body>
@@ -28,12 +28,20 @@
         </div>
     </div>
 
+    <!-- Define a global JavaScript variable for the order URL -->
+    <script>
+        const orderUrl = "{{ url_for('order') }}"; // This will render as a URL
+    </script>
+
     <div class="cart">
-        <a href="#">
+        <a href="{{ url_for('order') }}"> <!-- Link to the order route -->
             <img src="{{ url_for('static', filename='images/cart.png') }}" alt="Cart">
         </a>
         <span class="cart-count">0</span>
+        <div class="cart-details"></div> <!-- Container for order details -->
     </div>
+    
+    
     
 
     <!-- Boxes container for pizza cards -->
