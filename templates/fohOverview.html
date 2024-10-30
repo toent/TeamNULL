@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoH Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fohOverviewStyle.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="mainContainer">
+        <div class="table1">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="1">
+            <button class="{{ table1Status }}" type="submit">1</button></form>
+        </div>
+        <div class="table2">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="2">
+            <button class="{{ table2Status }}"  type="submit">2</button></form>
+        </div>
+        <div class="table3">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="3">
+            <button class="{{ table3Status }}"  type="submit">3</button></form>
+        </div>
+        <div class="table4">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="4">
+            <button class="{{ table4Status }}"  type="submit">4</button></form>
+        </div>
+        <div class="table5">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="5">
+            <button class="{{ table5Status }}"  type="submit">5</button></form>
+        </div>
+        <div class="table6">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="6">
+            <button class="{{ table6Status }}"  type="submit">6</button></form>
+        </div>
+        <div class="table7">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="7">
+            <button class="{{ table7Status }}"  type="submit">7</button></form>
+        </div>
+        <div class="table8">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="8">
+            <button class="{{ table8Status }}"  type="submit">8</button></form>
+        </div>
+        <div class="table9">
+            <form class="formContainer" action="{{ url_for('fohOrder') }}" method="POST">
+            <input type="hidden" name="tableNumber" value="9">
+            <button class="{{ table9Status }}"  type="submit">9</button></form>
+        </div>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,149 @@
+body {
+  background: url(/static/images/fohBackground.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+header {
+  background-color: #ffde59ca;
+}
+
+.table1, .table2, .table3, .table4, .table5, .table6, .table7, .table8, .table9, .tableFinished, .tableReady, .tableSubmitted {
+  font-size: 7vw;
+}
+
+.mainContainer {
+  display: flex;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  height: 90vh;
+  width: 90vw;
+  background-color: #ffde59ca;
+  border-radius: 8px;
+}
+
+.table1 {
+  display: block;
+  position: absolute;
+  height: 150px;
+  width: 450px;
+  left: 15%;
+  top: 10%;
+  border-radius: 8px;
+}
+
+.table2 {
+  display: block;
+  position: absolute;
+  height: 150px;
+  width: 450px;
+  left: 55%;
+  top: 10%;
+  border-radius: 8px;
+}
+
+.table3 {
+  display: block;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 15%;
+  top: 40%;
+  border-radius: 150px;
+}
+
+.table4 {
+  display: block;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 35%;
+  top: 40%;
+  border-radius: 150px;
+}
+
+.table5 {
+  display: block;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 55%;
+  top: 40%;
+  border-radius: 150px;
+}
+
+.table6 {
+  display: block;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 15%;
+  top: 70%;
+  border-radius: 150px;
+}   
+
+.table7 {
+  display: block;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 35%;
+  top: 70%;
+  border-radius: 150px;
+} 
+.table8 {
+  display: block;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 55%;
+  top: 70%;
+  border-radius: 150px;
+} 
+.table9 {
+  display: block;
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  left: 75%;
+  top: 50%;
+  border-radius: 150px;
+} 
+
+/* style of the form divs to ensure the appropriate button sizing */
+.formContainer {
+  display: block;
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
+}
+
+/* general style of table items */
+.tableSubmitted, .tableReady, .tableFinished {
+  display: block;
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
+  font-family: "Italiana", serif;
+  font-weight: 1000;
+  font-style: normal;
+}
+
+/* specific style for tables with a submitted order */
+.tableSubmitted {
+  color: lightgrey;
+  background-color: #008000;  
+}
+
+/* fpecific style for tables with a ready order */
+.tableReady {
+  color: lightgrey;
+  background-color: #FF0000;
+}
+
+/* specific style for tables with a finished order or no orders */
+.tableFinished {
+  color: black;
+  background-color: #ffde59ca;
+}
