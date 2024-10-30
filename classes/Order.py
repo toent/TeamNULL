@@ -66,7 +66,7 @@ class Order:
     def toDict(self):
         return {
             'orderID': self.orderID,
-            'products': [product.toDict() for product in self.products],
+            'products': [product.toDict() for product in self.products if product],
             'timeCreated': self.timeCreated.strftime('%Y-%m-%d %H:%M:%S'),
             'timeFinished': self.timeFinished.strftime('%Y-%m-%d %H:%M:%S') if self.timeFinished else 0,
             'currentStatus': self.currentStatus,

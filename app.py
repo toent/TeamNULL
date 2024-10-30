@@ -12,6 +12,7 @@ dataManager = DataManager()
 
 tableNumber = 1
 
+
 def initialize():
     """
     This method will initialize the application. It currently has a hardcoded dataset for testing purposes.
@@ -25,10 +26,11 @@ def initialize():
                     'images/Margherita.jpeg'),
             Product("Neapolitan", 10.0, ['San Marzano tomatoes, Mozzarella di bufala, Fresh basil, Olive oil'],
                     ['gluten', 'milk'], 'images/Neapolitan.jpeg'),
-            Product("Romana", 10.0, ['Tomatoes, Mozzarella, Oregano, Anchovies (or other toppings)'], ['gluten', 'milk'],
+            Product("Romana", 10.0, ['Tomatoes, Mozzarella, Oregano, Anchovies (or other toppings)'],
+                    ['gluten', 'milk'],
                     'images/Romana.jpg')
         ]
-        dataManager.saveProducts() # Save the products to the products.json file.
+        dataManager.saveProducts()  # Save the products to the products.json file.
 
     # If there are no orders in the data manager, add some.
     if len(dataManager.orders) < 1:
@@ -43,7 +45,8 @@ def initialize():
         dataManager.orders[0].nextStatus()
         dataManager.orders[1].nextStatus()
         dataManager.orders[2].nextStatus()
-        dataManager.saveOrders() # Save the orders to the orders.json file.
+        dataManager.saveOrders()  # Save the orders to the orders.json file.
+
 
 fohOrderLineList = []
 
@@ -69,79 +72,51 @@ def order():
 
 @app.route("/foh-create-order", methods=['POST', 'GET'])
 def fohOrder():
-
     global tableNumber
 
-    isOrderDone = False
-
-    priceTotal = 0
-
+    # Initialize variables
+    isOrderDone = bool(request.form.get("confirmOrder"))
+    newTableNumber = request.form.get('tableNumber')
     addedPizzaName = request.form.get("addedPizza")
+    addedPizzaQuantity = max(0, int(request.form.get("addedQuantity", 0)))
 
-    try:
-        isOrderDone = bool(request.form.get("confirmOrder"))
-    except:
-        print("Couldn't Get Order Status!")
- 
-    try:
-        newTableNumber = request.args.get('tableNumber')
-        newTableNumber = request.form.get('tableNumber')
+    # Update the table number if provided
+    if newTableNumber:
+        tableNumber = newTableNumber
 
-        if(newTableNumber != None):
-            tableNumber = newTableNumber
-    except:
-        print("Couldn't Update Table Number!")
+    # Debugging
+    print(f"Table Number: {tableNumber}, Added Pizza: {addedPizzaName}, Added Quantity: {addedPizzaQuantity}")
 
-    try:
-        addedPizzaQuantity = int(request.form.get("addedQuantity"))
-    except:
-        addedPizzaQuantity = 0
-
-    print(tableNumber)
-    print(addedPizzaName)
-    print(addedPizzaQuantity)
-
+    # Retrieve selected pizza
     selectedPizza = next((pizza for pizza in dataManager.products if pizza.name == addedPizzaName), None)
 
-    if(isOrderDone):
-        if(len(fohOrderLineList) > 0):
-            newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
-            print(newOrder.toDict())
-            print(f"ORDER IS DONE YIPEE -> order: {newOrder}")
-            # no clue how to add it to the datamanager -> this is currently not working -> CURRENTLY CRASHES ENTIRE SERVER -> REQUIRES DELETION OF STORAGE TO FIX
-            try:
-                dataManager.orders.append(newOrder)
-                dataManager.saveOrders()
-            except AttributeError as e:
-                print(f"ERROR: {e}")
-            fohOrderLineList.clear()
-            return redirect(url_for("fohOverview"))
-        else:
-            isOrderDone = False
+    # Finalize the order if it is done
+    if isOrderDone and fohOrderLineList:
+        newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
+        print(newOrder.toDict())
+        dataManager.orders.append(newOrder)
+        dataManager.saveOrders()
+        fohOrderLineList.clear()
+        return redirect(url_for("fohOverview"))  # Redirect to the overview page
 
-    if selectedPizza:
+    # Handle pizza addition to the order
+    if selectedPizza and addedPizzaQuantity > 0:
         existingOrderLine = next((line for line in fohOrderLineList if line.product.name == selectedPizza.name), None)
+
         if existingOrderLine:
-            new_quantity = existingOrderLine.quantity + addedPizzaQuantity
-            if new_quantity > 0:
-                existingOrderLine.quantity = new_quantity
-            else:
+            existingOrderLine.quantity += addedPizzaQuantity
+            if existingOrderLine.quantity <= 0:
                 fohOrderLineList.remove(existingOrderLine)
         else:
-            if addedPizzaQuantity > 0:
-                createdOrderline = OrderLine(selectedPizza, addedPizzaQuantity)
-                fohOrderLineList.append(createdOrderline)
+            fohOrderLineList.append(OrderLine(selectedPizza, addedPizzaQuantity))
 
-    if(len(fohOrderLineList) > 0):
-        for product in fohOrderLineList:
-            priceTotal += product.product.price * product.quantity
-    else:
-        priceTotal = 0
+    # Calculate the total price
+    priceTotal = sum(line.product.price * line.quantity for line in fohOrderLineList)
 
+    # Render the template
+    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber,
+                           filteredProducts=dataManager.products, orderList=fohOrderLineList)
 
-    # currently holding place holder values
-    return render_template('fohOrderPage.html', priceTotal=priceTotal , tableNumber=tableNumber, filteredProducts=dataManager.products,
-                           orderList=fohOrderLineList)
 
 
 @app.route('/modify', methods=['POST'])
@@ -150,13 +125,18 @@ def modify():
     flash(f"You are modifying the {pizza_name} pizza!")
     return redirect(url_for('index'))
 
+
 @app.route('/fohOverview', methods=['POST', 'GET'])
 def fohOverview():
     return render_template('overview.html')
 
+
 @app.route('/orderDisplay', methods=['GET'])
 def orderDisplay():
-    return render_template('orderDisplay.html', orders=dataManager.orders)
+    openOrders = [order for order in dataManager.orders if order.status == 'Submitted']
+    readyOrders = [order for order in dataManager.orders if order.status == 'Ready']
+    return render_template('orderDisplay.html', openOrders=openOrders, readyOrders=readyOrders)
+
 
 if __name__ == '__main__':
     initialize()
