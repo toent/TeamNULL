@@ -8,7 +8,7 @@ header {
   background-color: #ffde59ca;
 }
 
-.table1, .table2, .table3, .table4, .table5, .table6, .table7, .table8, .table9, .tableFinished, .tableReady, .tableSubmitted {
+.table1, .table2, .table3, .table4, .table5, .table6, .table7, .table8, .table9, .Finished, .Ready, .Submitted {
   font-size: 7vw;
 }
 
@@ -120,7 +120,7 @@ header {
 }
 
 /* general style of table items */
-.tableSubmitted, .tableReady, .tableFinished {
+.Submitted, .Ready, .Finished {
   display: block;
   height: inherit;
   width: inherit;
@@ -131,19 +131,19 @@ header {
 }
 
 /* specific style for tables with a submitted order */
-.tableSubmitted {
-  color: lightgrey;
-  background-color: #008000;  
+.Submitted {
+  color: black;
+  background-color: lightgrey;  
 }
 
 /* fpecific style for tables with a ready order */
-.tableReady {
+.Ready {
   color: lightgrey;
-  background-color: #FF0000;
+  background-color: #008000;
 }
 
 /* specific style for tables with a finished order or no orders */
-.tableFinished {
+.Finished {
   color: black;
   background-color: #ffde59ca;
 }

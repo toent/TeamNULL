@@ -149,10 +149,54 @@ def modify():
     flash(f"You are modifying the {pizza_name} pizza!")
     return redirect(url_for('index'))
 
+def tableStatusCheck(tempTableStatus,tempOrder):
+    if tempOrder.currentStatus == "Ready":
+        tempTableStatus = "Ready"
+    elif tempOrder.currentStatus == "Submitted" and tempTableStatus != "Ready":
+        tempTableStatus = "Submitted"
+    elif tempTableStatus != "Ready" and tempTableStatus != "Submitted":
+        tempTableStatus = "Finished"
+    
+    return tempTableStatus
+
 # route for the FoH table overview page 
 @app.route('/fohOverview', methods=['POST', 'GET'])
 def fohOverview():
-    return render_template('fohOverview.html', table1Status = "", table2Status = "", table3Status = "", table4Status = "", table5Status = "", table6Status = "", table7Status = "", table8Status = "", table9Status = "")
+    table1Status = "Finished"
+    table2Status = "Finished"
+    table3Status = "Finished"
+    table4Status = "Finished"
+    table5Status = "Finished"
+    table6Status = "Finished"
+    table7Status = "Finished"
+    table8Status = "Finished"
+    table9Status = "Finished"
+
+
+    for order in dataManager.orders:
+        match order.table:
+            case 1:
+                table1Status = tableStatusCheck(table1Status,order)
+            case 2:
+                table2Status = tableStatusCheck(table2Status,order)
+            case 3:
+                table3Status = tableStatusCheck(table3Status,order)
+            case 4:
+                table4Status = tableStatusCheck(table4Status,order)
+            case 5:
+                table5Status = tableStatusCheck(table5Status,order)
+            case 6:
+                table6Status = tableStatusCheck(table6Status,order)
+            case 7:
+                table7Status = tableStatusCheck(table7Status,order)
+            case 8:
+                table8Status = tableStatusCheck(table8Status,order)
+            case 9:
+                table9Status = tableStatusCheck(table9Status,order)
+
+    # order of highest to lowerst priority = order ready, order submitted, order finished
+    
+    return render_template('fohOverview.html', table1Status = table1Status, table2Status = table2Status, table3Status = table3Status, table4Status = table4Status, table5Status = table5Status, table6Status = table6Status, table7Status = table7Status, table8Status = table8Status, table9Status = table9Status)
 
 
 @app.route('/orderDisplay', methods=['GET'])
