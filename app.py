@@ -1,3 +1,5 @@
+from crypt import methods
+
 from flask import Flask, render_template, url_for, request, redirect, flash
 
 from classes.DataManager import DataManager
@@ -110,6 +112,10 @@ def fohOverview():
     tableNumber = request.form.get('tableNumber')
 
     return render_template('overview.html')
+
+@app.route('/orderDisplay', methods=['GET'])
+def orderDisplay():
+    return render_template('orderDisplay.html', orders=dataManager.orders)
 
 if __name__ == '__main__':
     initialize()
