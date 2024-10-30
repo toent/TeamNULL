@@ -25,7 +25,7 @@ class Order:
         self.orderID = Random().randint(10000000, 99999999)
         self.products = products
         self.timeCreated = datetime.now()
-        self.timeFinished = None
+        self.timeFinished = 0
         self.currentStatus = 'Submitted'
         self.notes = notes
         self.table = table
@@ -64,7 +64,7 @@ class Order:
             'orderID': self.orderID,
             'products': [product.toDict() for product in self.products],
             'timeCreated': self.timeCreated.strftime('%Y-%m-%d %H:%M:%S'),
-            'timeFinished': self.timeFinished.strftime('%Y-%m-%d %H:%M:%S') if self.timeFinished else None,
+            'timeFinished': self.timeFinished.strftime('%Y-%m-%d %H:%M:%S') if self.timeFinished else 0,
             'currentStatus': self.currentStatus,
             'notes': self.notes,
             'table': self.table
