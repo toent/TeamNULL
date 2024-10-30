@@ -6,19 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bohOrderDisplay.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="topNav">
-            <div class="logo">
-                <a href="{{ url_for('index') }}">Mario & Luigi's Pizzeria</a>
+<header>
+    <div class="topNav">
+        <a class="title" href="{{ url_for('index') }}">Mario & Luigi's Pizzeria</a>
+    </div>
+
+</header>
+<main>
+    <div id="container">
+        {% for order in openOrders %}
+        <div class="block">
+            <div class="orderTop">
+                <h2>{{ order.orderID }}</h2>
+                <p>Table {{ order.table }} {{ order.timeCreated }}</p>
+            </div>
+            <div class="orderItems">
+                {% for orderline in order.products %}
+                <div class="orderItem">
+                    <h3>{{ orderline.quantity }} {{ orderline.product.name }}</h3>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="orderNotes">
+                <h3>Notes from Customer:</h3>
+                <p class="notes">{{ order.notes }}</p>
             </div>
         </div>
-
-    </header>
-    <main>
-
-    </main>
+        {% endfor %}
+    </div>
+    </div>
+</main>
 
 </body>
 </html>

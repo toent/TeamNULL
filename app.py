@@ -41,7 +41,8 @@ def initialize():
             Order([OrderLine(dataManager.products[0], 2)], 'Please don''t let Marcos cook it', 4),
             Order([OrderLine(dataManager.products[1], 1)], 'Please don''t let Marcos cook it', 5),
             Order([OrderLine(dataManager.products[2], 3)], 'Please don''t let Marcos cook it', 6),
-            Order([OrderLine(dataManager.products[3], 4)], 'Please don''t let Marcos cook it', 7)
+            Order([OrderLine(dataManager.products[3], 4), OrderLine(dataManager.products[2], 2)], 'Please don''t let Marcos cook it', 7),
+            Order([OrderLine(dataManager.products[2], 2), OrderLine(dataManager.products[1], 3)], 'Please don''t let Marcos cook it', 8),
         ]
         # Change the status of the orders.
         dataManager.orders[0].nextStatus()
@@ -73,14 +74,14 @@ def order():
         if selected_pizza:
             pizza_price = selected_pizza.price
             pizza_image = selected_pizza.images
-            return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price, pizza_image=pizza_image)
+            return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price,
+                                   pizza_image=pizza_image)
         else:
             flash("Pizza not found!")
             return redirect(url_for('index'))
-    
+
     # Handle GET request for cart link navigation
     return render_template('order.html')
-
 
 
 @app.route("/foh-create-order", methods=['POST', 'GET'])
@@ -142,7 +143,6 @@ def fohOrder():
     # Render the template
     return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList)
 
-
 @app.route('/modify', methods=['POST'])
 def modify():
     pizza_name = request.form.get('pizza_name')
@@ -157,8 +157,8 @@ def fohOverview():
 
 @app.route('/orderDisplay', methods=['GET'])
 def orderDisplay():
-    openOrders = [order for order in dataManager.orders if order.status == 'Submitted']
-    readyOrders = [order for order in dataManager.orders if order.status == 'Ready']
+    openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted']
+    readyOrders = [order for order in dataManager.orders if order.currentStatus == 'Ready']
     return render_template('orderDisplay.html', openOrders=openOrders, readyOrders=readyOrders)
 
 
