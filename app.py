@@ -38,7 +38,8 @@ def initialize():
             Order([OrderLine(dataManager.products[0], 2)], 'Please don''t let Marcos cook it', 4),
             Order([OrderLine(dataManager.products[1], 1)], 'Please don''t let Marcos cook it', 5),
             Order([OrderLine(dataManager.products[2], 3)], 'Please don''t let Marcos cook it', 6),
-            Order([OrderLine(dataManager.products[3], 4)], 'Please don''t let Marcos cook it', 7)
+            Order([OrderLine(dataManager.products[3], 4), OrderLine(dataManager.products[2], 2)], 'Please don''t let Marcos cook it', 7),
+            Order([OrderLine(dataManager.products[2], 2), OrderLine(dataManager.products[1], 3)], 'Please don''t let Marcos cook it', 8),
         ]
         # Change the status of the orders.
         dataManager.orders[0].nextStatus()
@@ -138,8 +139,8 @@ def fohOverview():
 
 @app.route('/orderDisplay', methods=['GET'])
 def orderDisplay():
-    openOrders = [order for order in dataManager.orders if order.status == 'Submitted']
-    readyOrders = [order for order in dataManager.orders if order.status == 'Ready']
+    openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted']
+    readyOrders = [order for order in dataManager.orders if order.currentStatus == 'Ready']
     return render_template('orderDisplay.html', openOrders=openOrders, readyOrders=readyOrders)
 
 
