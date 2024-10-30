@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import Flask, render_template, url_for, request, redirect, flash
 
+from classes.Tags import Tags
 from classes.DataManager import DataManager
 from classes.Order import Order
 from classes.OrderLine import OrderLine
@@ -11,6 +12,8 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 dataManager = DataManager()
+
+tags = Tags()
 
 tableNumber = 1
 
@@ -50,6 +53,10 @@ def initialize():
         dataManager.orders[2].nextStatus()
         dataManager.saveOrders()  # Save the orders to the orders.json file.
 
+    if len(tags.tagDict) < 1:
+        tags.tagDict = {"tag-pizza": ["Margherita","Pepperoni","Neapolitan","Romana"], "tag-pasta":["Bolognese","Carbonara"], "tag-salad":["Caesar"], "tag-desert":["Gelato"], "tag-drinks":["Cola","Fanta","Sprite","Milkshake"],"tag-vegetarian":["Margherita","Neapolitan","Romana"], "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"]}
+        tags.saveTags()
+
 
 fohOrderLineList = []
 
@@ -83,11 +90,17 @@ def order():
 def fohOrder():
     global tableNumber
 
-    # Initialize variables
+    # Initialize variables from tag class    
+    filteredProducts = list(dataManager.products)
+    filterKeys = tags.tagKeys
+    filterDict = tags.tagDict
+
+    # Initialize variables from Forms
+    currentTag = request.form.get("selectedTag")
     isOrderDone = bool(request.form.get("confirmOrder"))
     newTableNumber = request.form.get('tableNumber')
     addedPizzaName = request.form.get("addedPizza")
-    addedPizzaQuantity = max(0, int(request.form.get("addedQuantity", 0)))
+    addedPizzaQuantity = max(-1, int(request.form.get("addedQuantity", 0)))
 
     # Update the table number if provided
     if newTableNumber:
@@ -95,6 +108,13 @@ def fohOrder():
 
     # Debugging
     print(f"Table Number: {tableNumber}, Added Pizza: {addedPizzaName}, Added Quantity: {addedPizzaQuantity}")
+
+    # Filter products if a valid tag is selected
+    if currentTag and currentTag in filterKeys:
+        # Create a new list with products that match the filter
+        filteredProducts = [product for product in dataManager.products if product.name in filterDict[currentTag]]
+    # If no valid tag is provided, filteredProducts will stay as all products by default
+    print(filteredProducts)
 
     # Retrieve selected pizza
     selectedPizza = next((pizza for pizza in dataManager.products if pizza.name == addedPizzaName), None)
@@ -109,7 +129,7 @@ def fohOrder():
         return redirect(url_for("fohOverview"))  # Redirect to the overview page
 
     # Handle pizza addition to the order
-    if selectedPizza and addedPizzaQuantity > 0:
+    if selectedPizza and addedPizzaQuantity != 0:
         existingOrderLine = next((line for line in fohOrderLineList if line.product.name == selectedPizza.name), None)
 
         if existingOrderLine:
@@ -123,9 +143,7 @@ def fohOrder():
     priceTotal = sum(line.product.price * line.quantity for line in fohOrderLineList)
 
     # Render the template
-    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber,
-                           filteredProducts=dataManager.products, orderList=fohOrderLineList)
-
+    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList)
 
 @app.route('/modify', methods=['POST'])
 def modify():
@@ -133,10 +151,10 @@ def modify():
     flash(f"You are modifying the {pizza_name} pizza!")
     return redirect(url_for('index'))
 
-
+# route for the FoH table overview page 
 @app.route('/fohOverview', methods=['POST', 'GET'])
 def fohOverview():
-    return render_template('overview.html')
+    return render_template('fohOverview.html', table1Status = "", table2Status = "", table3Status = "", table4Status = "", table5Status = "", table6Status = "", table7Status = "", table8Status = "", table9Status = "")
 
 
 @app.route('/orderDisplay', methods=['GET'])
