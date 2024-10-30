@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, render_template, url_for, request, redirect, flash
 
 from classes.Tags import Tags
@@ -164,10 +166,19 @@ def fohOverview():
 
 @app.route('/orderDisplay', methods=['GET'])
 def orderDisplay():
-    openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted']
-    readyOrders = [order for order in dataManager.orders if order.currentStatus == 'Ready']
-    return render_template('orderDisplay.html', openOrders=openOrders, readyOrders=readyOrders)
+    openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted' or order.currentStatus == 'Ready']
+    currentTime = datetime.now()
+    return render_template('orderDisplay.html', openOrders=openOrders, currentTime=currentTime)
 
+
+@app.route('/markDone', methods=['Post'])
+def markDone():
+    orderID = int(request.form.get('orderID'))
+    order = next((order for order in dataManager.orders if order.orderID == orderID), None)
+    if order:
+        order.nextStatus()
+        dataManager.saveOrders()
+    return redirect(url_for('orderDisplay'))
 
 if __name__ == '__main__':
     initialize()
