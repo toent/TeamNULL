@@ -6,14 +6,14 @@
     <title>Order Confirmation - Mario & Luigi's Pizzeria</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/order.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gSTYLE.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}">
 </head>
 <body>
 
@@ -24,84 +24,80 @@
         <div class="bar red"></div>
     </div>
     <div class="center-text" id="center-text">
-        <p>Confirm Your Order</p>
+        <p>Your Cart</p>
+        <div class="cart-items"></div>
+        <p class="total-price-container">Total Price: <span class="total-price">0</span> &euro;</p>
     </div>
 
-    <div class="order-summary">
-        <h2>Pizza Selection</h2>
-        <h2><strong>Pizza:</strong> {{ pizza_name }}</h2>
-        <h2><strong>Price:</strong> {{ pizza_price }} &euro;</h2>
-        <img src="{{ url_for('static', filename=pizza_image) }}" alt="{{ pizza_name }}" class="pizza-image">
-    </div>
+    <!-- Confirm Order Button to open modal -->
+    <button class="open-confirm-modal confirm-btn">Confirm Order</button>
 
-    <form id="order-form" class="order-form">
-        <input type="hidden" name="pizza_name" value="{{ pizza_name }}">
-        <input type="hidden" name="pizza_price" value="{{ pizza_price }}">
-
-        <h2>Your Name</h2>
-        <label for="customer_name">Name</label>
-        <input type="text" id="customer_name" name="customer_name" required>
-
-        <h2>Order Quantity</h2>
-        <label for="quantity">Quantity</label>
-        <input type="number" id="quantity" name="quantity" value="1" min="1" required>
-
-        <button type="submit" class="confirm-btn">Place Order</button>
-    </form>
-</div>
-
-<!-- The Modal -->
-<div id="orderModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Order Details</h2>
-        <p id="modal-message"></p>
-        <button id="confirm-order" class="confirm-btn">Confirm Order</button>
+    <!-- The Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Order Confirmation</h2>
+            <p id="modal-message">Do you want to confirm your order?</p>
+            <!-- Confirm Button inside the Modal -->
+            <button id="modal-confirm-order" class="confirm-btn">Confirm Order</button>
+        </div>
     </div>
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Elements for cart display
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const totalPriceDisplay = document.querySelector('.total-price');
+
+    let totalPrice = 0;
+
+    // Display each cart item and calculate total price
+    cartItemsContainer.innerHTML = cartItems.map(item => {
+        totalPrice += item.price;
+        return `<div class="cart-item">
+                    <strong>${item.name}</strong><br>
+                    Price: ${item.price} &euro;
+                </div>`;
+    }).join('');
+    totalPriceDisplay.textContent = totalPrice.toFixed(2);
+
+    // Modal handling elements
     const modal = document.getElementById("orderModal");
-    const span = document.getElementsByClassName("close")[0];
-    const modalMessage = document.getElementById("modal-message");
-    const confirmOrderBtn = document.getElementById("confirm-order");
+    const closeModalButton = modal.querySelector(".close");
+    const openModalButton = document.querySelector(".open-confirm-modal");
+    const modalConfirmButton = document.getElementById("modal-confirm-order");
 
-    document.getElementById('order-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const pizzaName = this.pizza_name.value;
-        const pizzaPrice = parseFloat(this.pizza_price.value);
-        const customerName = this.customer_name.value;
-        const quantity = parseInt(this.quantity.value);
-        const totalPrice = (pizzaPrice * quantity).toFixed(2);
-
-        modalMessage.innerHTML = `Customer Name: ${customerName}<br>Pizza: ${pizzaName}<br>Quantity: ${quantity}<br>Total Price: ${totalPrice} euro`;
+    // Open modal on "Confirm Order" button click
+    openModalButton.addEventListener('click', () => {
         modal.style.display = "block";
     });
 
-    span.onclick = function() {
+    // Close modal when "X" is clicked
+    closeModalButton.addEventListener('click', () => {
         modal.style.display = "none";
-    }
+    });
 
-    confirmOrderBtn.onclick = function() {
-        document.getElementById('order-form').submit();
-    }
-
+    // Close modal if clicked outside of content
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
-    }
+    };
+
+    // Confirm order and clear cart in modal
+    modalConfirmButton.addEventListener('click', () => {
+        // Clear cart
+        localStorage.removeItem('cartItems');
+
+        
+        // Close modal and redirect or update the page as needed
+        modal.style.display = "none";
+        window.location.reload(); // Reload to clear the cart display
+    });
+});
 </script>
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul class="flashes">
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
 </body>
 </html>

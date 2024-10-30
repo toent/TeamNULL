@@ -66,13 +66,22 @@ def order():
         if selected_pizza:
             pizza_price = selected_pizza.price
             pizza_image = selected_pizza.images
-            return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price, pizza_image=pizza_image)
+            # Get the quantity from the form (default to 1 if not provided)
+            quantity = request.form.get('quantity', 1, type=int)
+
+            # Pass all necessary data to the order_summary template
+            return render_template('order.html', 
+                                   pizza_name=pizza_name, 
+                                   pizza_price=pizza_price, 
+                                   quantity=quantity, 
+                                   pizza_image=pizza_image)
         else:
             flash("Pizza not found!")
             return redirect(url_for('index'))
-    
+
     # Handle GET request for cart link navigation
     return render_template('order.html')
+
 
 
 
