@@ -93,7 +93,7 @@
                         <form action="{{ url_for('fohOrder') }}" method="POST">
                             <input type="hidden" name="addedPizza" value="{{ product.name }}">
                             <input type="hidden" name="addedQuantity" value="1">
-                            <button type="submit" class="productButton">{{ product.name }}</button>
+                            <button type="submit" class="{{selectButtonClass[product.name][0]}}">{{ product.name }}</button>
                         </form>
                     {% endfor %}
                 </div>

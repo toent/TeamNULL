@@ -12,6 +12,9 @@ app.secret_key = 'secret_key'
 dataManager = DataManager()
 
 tags = Tags()
+productTagRel = {}
+
+fohOrderLineList = []
 
 tableNumber = 1
 
@@ -51,12 +54,29 @@ def initialize():
         dataManager.orders[2].nextStatus()
         dataManager.saveOrders()  # Save the orders to the orders.json file.
 
+    # If there are no tags found, add some
+    # LEAVE VEGETARIAN TAG LAST!!!!!!!!-----------------------------------------------------------------------------------------------------------
     if len(tags.tagDict) < 1:
-        tags.tagDict = {"tag-pizza": ["Margherita","Pepperoni","Neapolitan","Romana"], "tag-pasta":["Bolognese","Carbonara"], "tag-salad":["Caesar"], "tag-desert":["Gelato"], "tag-drinks":["Cola","Fanta","Sprite","Milkshake"],"tag-vegetarian":["Margherita","Neapolitan","Romana"], "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"]}
+        tags.tagDict = {
+            "tag-pizza": ["Margherita", "Pepperoni", "Neapolitan", "Romana"],
+            "tag-pasta": ["Bolognese", "Carbonara"],
+            "tag-salad": ["Caesar"],
+            "tag-desert": ["Gelato"],
+            "tag-drinks": ["Cola", "Fanta", "Sprite", "Milkshake"],
+            "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"],
+            "tag-vegetarian": ["Margherita", "Neapolitan", "Romana"]
+        }
         tags.saveTags()
 
+    # Setup relations between products and tags
+    for product in dataManager.products:
+        productTagRel[product.name] = []
+        for tag, product_list in tags.tagDict.items():
+            if product.name in product_list:
+                productTagRel[product.name].append(tag)
 
-fohOrderLineList = []
+    print(productTagRel)
+
 
 
 @app.route('/')
@@ -141,7 +161,7 @@ def fohOrder():
     priceTotal = sum(line.product.price * line.quantity for line in fohOrderLineList)
 
     # Render the template
-    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList)
+    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList, selectButtonClass=productTagRel)
 
 @app.route('/modify', methods=['POST'])
 def modify():
