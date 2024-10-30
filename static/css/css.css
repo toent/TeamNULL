@@ -92,7 +92,7 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #ffde59; 
+    background-color: #f1ead0; 
     text-align: center;
     font-family: 'Arial', sans-serif;
     margin: 20px;
@@ -180,7 +180,7 @@ button:hover {
 
 /* Cart image styling */
 .cart img {
-    width: 40px; /* Adjust size as needed */
+    width: 80px; /* Adjust size as needed */
     height: auto; /* Maintains aspect ratio */
 }
 
@@ -195,5 +195,28 @@ button:hover {
     border-radius: 50%;
     padding: 5px 10px;
     font-weight: bold;
+}
+.cart-details {
+    display: none; /* Hidden initially */
+    background-color: #f1ead0;
+    padding: 10px;
+    position: absolute;
+    top: 50px; /* Adjust position based on design */
+    right: 0;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    color: black;
+    max-height: 300px; /* Limit height if needed */
+    overflow-y: auto;
+}
+
+.cart:hover .cart-details {
+    display: block; /* Display details on hover */
+}
+
+.cart-item {
+    margin-bottom: 10px;
 }
 
