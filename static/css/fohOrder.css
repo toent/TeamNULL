@@ -138,7 +138,7 @@ button{
     flex-wrap: wrap;
 }
 
-.productFilters > button{
+.productFilters > form > button{
     border: none;
     background-color: beige;
     border-radius: 5px;

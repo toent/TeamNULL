@@ -41,7 +41,7 @@ class Order:
         return f'Order ID: {self.orderID}\n Products: {self.products}\n Time Created: {self.timeCreated}\n Time Finished: {self.timeFinished}\n {self.table}\n Current Status: {self.currentStatus}\n Notes: {self.notes}'
 
     def __repr__(self):
-        return f'{self.orderID} - {self.currentStatus}'
+        return f'Order ID: {self.orderID}\n Products: {self.products}\n Time Created: {self.timeCreated}\n Time Finished: {self.timeFinished}\n {self.table}\n Current Status: {self.currentStatus}\n Notes: {self.notes}'
 
     def nextStatus(self):
         """
@@ -66,7 +66,7 @@ class Order:
     def toDict(self):
         return {
             'orderID': self.orderID,
-            'products': [product.toDict() for product in self.products],
+            'products': [product.toDict() for product in self.products if product],
             'timeCreated': self.timeCreated.strftime('%Y-%m-%d %H:%M:%S'),
             'timeFinished': self.timeFinished.strftime('%Y-%m-%d %H:%M:%S') if self.timeFinished else 0,
             'currentStatus': self.currentStatus,
@@ -76,11 +76,15 @@ class Order:
 
     def fromDict(self, dict):
         self.orderID = dict['orderID']
-        self.products = [OrderLine(Product('', 0, [],[], []), 0).fromDict(product) for product in dict['products']]
         self.timeCreated = datetime.strptime(dict['timeCreated'], '%Y-%m-%d %H:%M:%S')
         self.timeFinished = datetime.strptime(dict['timeFinished'], '%Y-%m-%d %H:%M:%S') if dict['timeFinished'] else None
         self.currentStatus = dict['currentStatus']
         self.notes = dict['notes']
         self.table = dict['table']
+
+        for orderLine in dict['products']:
+            orderL = OrderLine(Product('', 0, [], [], []), 0)
+            orderL.fromDict(orderLine)
+            self.products.append(orderL)
 
     # endregion

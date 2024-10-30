@@ -24,36 +24,40 @@ window.addEventListener('scroll', function() {
         boxes.classList.add('show-boxes');
     }
 });
-//cart
+
 // Initialize cart count
 let cartCount = 0;
 
-// Get cart count element
+// Get cart count and cart details elements
 const cartCountDisplay = document.querySelector('.cart-count');
+const cartDetailsDisplay = document.querySelector('.cart-details');
 
-// Event listener for "Add to Cart" button
-document.getElementById("addToCartBtn").addEventListener("click", function(event) {
-    event.preventDefault();
-
-    // Increment cart count
-    cartCount++;
-    cartCountDisplay.textContent = cartCount;
-
-    // Get product details
-    const selectedCapacity = document.getElementById('capacity').value;
-    const selectedPrice = document.querySelector('.price-value').getAttribute("data-price");
-    const customerName = document.getElementById('customer_name').value;
-
-    // Total price calculation (assuming quantity is 1 for simplicity)
-    const quantity = 1;
-    const totalPrice = (parseFloat(selectedPrice) * quantity).toFixed(2);
-
-    // Display message in modal
-    modalMessage.innerHTML = `
-        Customer Name: ${customerName}<br>
-        Quantity: ${quantity}<br>
-        Total Price: ${totalPrice} &euro;.
-    `;
-    modal.style.display = "block";
+// Event listener for cart image to navigate to the order page
+document.querySelector('.cart img').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default link behavior
+    window.location.href = orderUrl; // Use the pre-defined order URL
 });
 
+// Attach event listeners to each "Order" button
+document.querySelectorAll('.order-btn').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Increment cart count
+        cartCount++;
+        cartCountDisplay.textContent = cartCount;
+
+        // Get pizza details from form inputs
+        const form = event.target.closest('form');
+        const pizzaName = form.querySelector('input[name="pizza_name"]').value;
+        const pizzaPrice = form.closest('.pizza-info').querySelector('.details span:last-child').textContent;
+
+        // Update cart details
+        cartDetailsDisplay.innerHTML += `
+            <div class="cart-item">
+                <strong>${pizzaName}</strong><br>
+                <strong>${pizzaPrice}</strong>
+            </div>
+        `;
+    });
+});

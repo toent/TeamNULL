@@ -40,7 +40,7 @@ class DataManager:
         This method will save the orders to the orders.json file.
         """
         with open(self.orderFile, 'w') as file:
-            json.dump([order.toDict() for order in self.orders], file)
+            json.dump([order.toDict() for order in self.orders if order], file)
 
     def loadProducts(self):
         """
