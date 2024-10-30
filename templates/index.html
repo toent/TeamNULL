@@ -13,6 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+
 </head>
 <body>
 
@@ -25,6 +27,14 @@
             <h1>Welcome to <br> Mario & Luigi's Pizzeria</h1>
         </div>
     </div>
+
+    <div class="cart">
+        <a href="#">
+            <img src="{{ url_for('static', filename='images/cart.png') }}" alt="Cart">
+        </a>
+        <span class="cart-count">0</span>
+    </div>
+    
 
     <!-- Boxes container for pizza cards -->
     <div class="boxes" id="boxes">
