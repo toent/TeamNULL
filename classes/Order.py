@@ -10,8 +10,8 @@ from classes.Product import Product
 # - orderID: int - The ID of the order.
 # - products: list - A list of OrderLine objects that represent the products being ordered.
 # - timeCreated: datetime - The date and time when the order was created.
-# - timeFinished: datetime - The date and time when the order was finished.
-# - currentStatus: str - The current status of the order. It can be 'Submitted', 'In Progress' or 'Finished'.
+# - timeFinished: datetime - The date and time when the order was ready.
+# - currentStatus: str - The current status of the order. It can be 'Submitted', 'Ready' or 'Finished'.
 # - notes: str - Any notes that the customer might have.
 class Order:
 
@@ -34,7 +34,11 @@ class Order:
 
     # region Methods
     def __str__(self):
-        return f'{self.orderID} - {self.currentStatus}'
+        """
+        This method will return a string representation of the order with all of the order information.
+        :return:
+        """
+        return f'Order ID: {self.orderID}\n Products: {self.products}\n Time Created: {self.timeCreated}\n Time Finished: {self.timeFinished}\n {self.table}\n Current Status: {self.currentStatus}\n Notes: {self.notes}'
 
     def __repr__(self):
         return f'{self.orderID} - {self.currentStatus}'
@@ -42,11 +46,11 @@ class Order:
     def nextStatus(self):
         """
         This method will change the status of the order to the next one.
-        If the order is already finished, it will raise a ValueError exception.
+        If the order is already delivered, it will raise a ValueError exception.
         """
         if self.currentStatus == 'Submitted':
-            self.currentStatus = 'In Progress'
-        elif self.currentStatus == 'In Progress':
+            self.currentStatus = 'Ready'
+        elif self.currentStatus == 'Ready':
             self.currentStatus = 'Finished'
             self.timeFinished = datetime.now()
         else:
