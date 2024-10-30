@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, render_template, url_for, request, redirect, flash
 
 from classes.Tags import Tags
@@ -52,7 +54,7 @@ def initialize():
         dataManager.saveOrders()  # Save the orders to the orders.json file.
 
     if len(tags.tagDict) < 1:
-        tags.tagDict = {"tag-pizza": ["Margherita","Pepperoni","Neapolitan","Romana"], "tag-pasta":["Bolognese","Carbonara"], "tag-salad":["Caesar"], "tag-desert":["Gelato"], "tag-drinks":["Cola","Fanta","Sprite","Milkshake"],"tag-vegetarian":["Margherita","Neapolitan","Romana"]}
+        tags.tagDict = {"tag-pizza": ["Margherita","Pepperoni","Neapolitan","Romana"], "tag-pasta":["Bolognese","Carbonara"], "tag-salad":["Caesar"], "tag-desert":["Gelato"], "tag-drinks":["Cola","Fanta","Sprite","Milkshake"],"tag-vegetarian":["Margherita","Neapolitan","Romana"], "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"]}
         tags.saveTags()
 
 
@@ -74,7 +76,14 @@ def order():
         if selected_pizza:
             pizza_price = selected_pizza.price
             pizza_image = selected_pizza.images
-            return render_template('order.html', pizza_name=pizza_name, pizza_price=pizza_price,
+            # Get the quantity from the form (default to 1 if not provided)
+            quantity = request.form.get('quantity', 1, type=int)
+
+            # Pass all necessary data to the order_summary template
+            return render_template('order.html', 
+                                   pizza_name=pizza_name, 
+                                   pizza_price=pizza_price, 
+                                   quantity=quantity, 
                                    pizza_image=pizza_image)
         else:
             flash("Pizza not found!")
@@ -88,12 +97,12 @@ def order():
 def fohOrder():
     global tableNumber
 
+    # Initialize variables from tag class    
     filteredProducts = list(dataManager.products)
-
     filterKeys = tags.tagKeys
     filterDict = tags.tagDict
 
-    # Initialize variables
+    # Initialize variables from Forms
     currentTag = request.form.get("selectedTag")
     isOrderDone = bool(request.form.get("confirmOrder"))
     newTableNumber = request.form.get('tableNumber')
@@ -201,10 +210,19 @@ def fohOverview():
 
 @app.route('/orderDisplay', methods=['GET'])
 def orderDisplay():
-    openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted']
-    readyOrders = [order for order in dataManager.orders if order.currentStatus == 'Ready']
-    return render_template('orderDisplay.html', openOrders=openOrders, readyOrders=readyOrders)
+    openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted' or order.currentStatus == 'Ready']
+    currentTime = datetime.now()
+    return render_template('orderDisplay.html', openOrders=openOrders, currentTime=currentTime)
 
+
+@app.route('/markDone', methods=['Post'])
+def markDone():
+    orderID = int(request.form.get('orderID'))
+    order = next((order for order in dataManager.orders if order.orderID == orderID), None)
+    if order:
+        order.nextStatus()
+        dataManager.saveOrders()
+    return redirect(url_for('orderDisplay'))
 
 if __name__ == '__main__':
     initialize()

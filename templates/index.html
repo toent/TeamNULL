@@ -40,10 +40,7 @@
         <span class="cart-count">0</span>
         <div class="cart-details"></div> <!-- Container for order details -->
     </div>
-    
-    
-    
-
+ 
     <!-- Boxes container for pizza cards -->
     <div class="boxes" id="boxes">
         {% for pizza in pizzas %}
@@ -61,17 +58,18 @@
                     <span>Price: {{ pizza.price }} &euro;</span>
                 </div>
                 <div class="buttons">
-                    <!-- Order button form -->
-                    <form action="{{ url_for('order') }}" method="POST">
-                        <input type="hidden" name="pizza_name" value="{{ pizza.name }}">
-                        <button type="submit" class="order-btn">ORDER</button>
-                    </form>
-                    <!-- Modify button form -->
+                    <button type="button" class="order-btn" 
+                            data-name="{{ pizza.name }}" 
+                            data-price="{{ pizza.price }}" 
+                            data-ingredients="{{ pizza.ingredients | join(', ') }}"
+                            data-allergens="{{ pizza.allergens | join(', ') }}">ORDER</button>
+                
                     <form action="{{ url_for('modify') }}" method="POST">
                         <input type="hidden" name="pizza_name" value="{{ pizza.name }}">
                         <button type="submit" class="modify-btn">MODIFY</button>
                     </form>
                 </div>
+                
             </div>
         </div>
         {% endfor %}

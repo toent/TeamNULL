@@ -63,7 +63,7 @@ button{
 .productSelection {
     display: flex;
     justify-content: flex-start;
-    margin-left: 8%;
+    margin-left: 8%; 
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
@@ -71,6 +71,8 @@ button{
 
 .productSelection > form > button{
     background-color: beige;
+    /* background-image: url(/static/images/buttonPizzaOverlay.png);                                     ADDING AN ICON FOR FOOD BUTTONS */
+    background-size: cover;
     font-size: 15px;
     text-align-last: center;
     border: none;

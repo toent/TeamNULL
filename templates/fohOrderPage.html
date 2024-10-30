@@ -14,7 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
-    
+
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}">
 </head>
 <body>
     <div class="topBar">
@@ -54,6 +55,10 @@
             </div>
             <div class="orderSelect">
                 <div class="productFilters">
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value="tag-starter">
+                        <button class="pizzaFilter">Starter Filter</button>
+                    </form>
                     <form action="{{ url_for('fohOrder') }}" method="POST">
                         <input type="hidden" name="selectedTag" value="tag-pizza">
                         <button class="pizzaFilter">Pizza Filter</button>
