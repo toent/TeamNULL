@@ -29,15 +29,15 @@
                         <div class="orderL"><p>{{ orderLine.product.name }}</p></div>
                         <div class="orderR">                    
                             <form action="{{ url_for('fohOrder') }}" method="POST">
-                            <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
-                            <input type="hidden" name="addedQuantity" value="-1">
-                            <button type="submit">-</button>
+                                <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
+                                <input type="hidden" name="addedQuantity" value="-1">
+                                <button type="submit">-</button>
                             </form>
                             <p>{{ orderLine.quantity }}</p>
                             <form action="{{ url_for('fohOrder') }}" method="POST">
-                            <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
-                            <input type="hidden" name="addedQuantity" value="1">
-                            <button type="submit">+</button>
+                                <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
+                                <input type="hidden" name="addedQuantity" value="1">
+                                <button type="submit">+</button>
                             </form>
                         </div>
                     </div>
@@ -50,18 +50,38 @@
                     <div class="orderListing">
                         <button type="submit"> ✔</button>   
                     </div>
-                    
                 </form>
             </div>
             <div class="orderSelect">
                 <div class="productFilters">
-                    <button class="pizzaFilter">Pizza Filter</button>
-                    <button class="pastaFilter">Pasta Filter</button>
-                    <button class="saladFilter">Salad Filter</button>
-                    <button class="desertFilter">Desert Filter</button>
-                    <button class="drinksFilter">Drinks Filter</button>
-                    <button class="vegFilter">Vegetarian Filter</button>
-                    <button class="removeFilter">✘</button>
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value="tag-pizza">
+                        <button class="pizzaFilter">Pizza Filter</button>
+                    </form>
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value="tag-pasta">
+                        <button class="pastaFilter">Pasta Filter</button>
+                    </form>
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value="tag-salad">
+                        <button class="saladFilter">Salad Filter</button>
+                    </form>
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value="tag-desert">
+                        <button class="desertFilter">Desert Filter</button>
+                    </form>
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value="tag-drinks">
+                        <button class="drinksFilter">Drinks Filter</button>
+                    </form>
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value="tag-vegetarian">
+                        <button class="vegFilter">Vegetarian Filter</button>
+                    </form>
+                    <form action="{{ url_for('fohOrder') }}" method="POST">
+                        <input type="hidden" name="selectedTag" value=>
+                        <button class="removeFilter">✘</button>
+                    </form>
                 </div>
                 <div class="productSelection">
                     {% for product in filteredProducts %}
