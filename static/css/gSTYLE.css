@@ -6,9 +6,23 @@ body {
     font-family: 'Italianno', cursive;
     overflow-x: hidden; /* Prevent horizontal scrolling */
 }
-
-p {
+h1{
     font-family: 'Italianno', cursive;
+    font-weight: bold;
+    font-size: 40px;
+}
+h2{
+    font-family: 'Italianno', cursive;
+    font-weight: bold;
+    font-size: 40px;
+}
+span{
+    font-family: "Italiana", serif;
+    font-weight: bold;
+    font-size: 18px;
+}
+p {
+    font-family: "Italiana", serif;
     font-weight: bold;
     font-size: 40px;
 }

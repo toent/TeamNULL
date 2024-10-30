@@ -1,30 +1,83 @@
+body{
+    background: url(/static/images/fohBackground.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+p{
+    font-family: 'Italianno', cursive;
+    font-weight: bold;
+}
+
+button{
+    background-color: beige;
+    border: none;
+    border-radius: 5px;
+    font-size: 25px;
+    font-family: "Italiana", serif;
+    font-weight: bold;
+}
+
+.topBar{
+    background-color: #f3d24fbd;
+}
+
+.wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+
+.logoImage{
+    width: 8% ;
+}
+
 .orderScreen {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    /* align-items: center; */
+    padding: 10px;
+    margin:auto;
+    width: 60%;
+    background-color: #ffde59ca;
+    border-radius: 8px; 
+    flex-wrap: wrap;
 }
 
 .orderListing {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 350px;
+    width: 45%;
+    margin-right: 3px;
 }
 
 .orderSelect {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 350px;
+    width: 45%;
+    margin-left: 3px;
 }
 
 .productSelection {
     display: flex;
-    justify-content: center;
-    width: 350px;
+    justify-content: flex-start;
+    margin-left: 8%;
+    width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
+} 
+
+.productSelection > form > button{
+    background-color: beige;
+    font-size: 15px;
+    text-align-last: center;
+    border: none;
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    border-radius: 8px;
 }
 
 .orderedProduct {
@@ -33,24 +86,111 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #f7c80c92;
+    border-radius: 8px;
 }
 
-.orderedProduct > p{
+.orderL{
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    align-items: center;
+}
+
+.orderL > p{
+    font-size: 35px;
     padding-right: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.orderedProduct > button{
+.orderR{
+    display: flex;
+    justify-content: end;
+    margin-left: auto;
+}
+
+.orderR > form > button{
+    background-color: #d4ae16;
+    font-size: 35px;
+    text-align-last: center;
+    border: none;
+    width: 40px;
+    height: 40px;
     margin-right: 5px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+.orderR > p{
+    padding-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .productFilters{
     display: flex;
     justify-content: center;
     padding-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.productFilters > button{
+    border: none;
+    background-color: beige;
+    border-radius: 5px;
+    font-size: 15px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.priceTotal{
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .tableNr{
     margin: 0px;
+}
+
+/* @media only screen and (max-height: 1200px) {
+    .wrapper{
+        margin-top: 20%;
+    }
+}
+
+@media only screen and (max-height: 1000px) {
+    .wrapper{
+        margin-top: 5%;
+        transform: scale(1.2,1.2);
+    }
+
+    .orderScreen{
+        width: 80%;
+    }
+} */
+
+@media only screen and (max-width: 800px){
+
+    .wrapper{
+        transform: scale(1,1);
+    }
+
+    .orderScreen {
+        flex-direction: column-reverse;
+        width: 90%;
+        margin-bottom: 5%;
+    }
+
+    .orderListing {
+        width: 100%;
+    }
+
+    .orderSelect {
+        width: 95%;
+    }
+
 }

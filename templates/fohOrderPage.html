@@ -1,56 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Order Table</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/fohOrder.css') }}"> 
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <title>Front of House - Order Table</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gSTYLE.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fohOrder.css') }}"> 
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+    
 </head>
 <body>
     <div class="topBar">
-        <img class="logoImage"/>
-        <p class="amountCompleted">{{ completionCount }} Completed</p>
+        <a href="{{ url_for('fohOverview') }}"><img class="logoImage" src="{{url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png')}}"/></a>
     </div>
-    <div class="orderScreen">
-        <div class="orderListing">
-            <p class="tableNr">Table {{ tableNumber }}'s order</p>
-            {% for orderLine in orderList %}
-                <div class="orderedProduct">
-                    <p>{{ orderLine.product.name }}</p>
-                    <form action="{{ url_for('fohOrder') }}" method="POST">
-                        <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
-                        <input type="hidden" name="addedQuantity" value="-1">
-                        <button type="submit">-</button>
-                    </form>
-                    <p>{{ orderLine.quantity }}</p>
-                    <form action="{{ url_for('fohOrder') }}" method="POST">
-                        <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
-                        <input type="hidden" name="addedQuantity" value="1">
-                        <button type="submit">+</button>
-                    </form>
-                </div>
-            {% endfor %}
-            <button class="acceptOrderButton">✔</button>
-        </div>
-        <div class="orderSelect">
-            <div class="productFilters">
-                <button class="pizzaFilter">Pizza Filter</button>
-                <button class="drinksFilter">Drinks Filter</button>
-                <button class="vegFilter">Vegetarian Filter</button>
-                <button class="removeFilter">✘</button>
-            </div>
-            <div class="productSelection">
-                {% for product in filteredProducts %}
-                    <form action="{{ url_for('fohOrder') }}" method="POST">
-                        <input type="hidden" name="addedPizza" value="{{ product.name }}">
-                        <input type="hidden" name="addedQuantity" value="1">
-                        <button type="submit" class="productButton">{{ product.name }}</button>
-                    </form>
+    <div class="wrapper">
+        <div class="orderScreen">
+            <div class="orderListing">
+                <p class="tableNr">Table {{ tableNumber }}'s order</p>
+                {% for orderLine in orderList %}
+                    <div class="orderedProduct">
+                        <div class="orderL"><p>{{ orderLine.product.name }}</p></div>
+                        <div class="orderR">                    
+                            <form action="{{ url_for('fohOrder') }}" method="POST">
+                            <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
+                            <input type="hidden" name="addedQuantity" value="-1">
+                            <button type="submit">-</button>
+                            </form>
+                            <p>{{ orderLine.quantity }}</p>
+                            <form action="{{ url_for('fohOrder') }}" method="POST">
+                            <input type="hidden" name="addedPizza" value="{{ orderLine.product.name }}">
+                            <input type="hidden" name="addedQuantity" value="1">
+                            <button type="submit">+</button>
+                            </form>
+                        </div>
+                    </div>
                 {% endfor %}
+                
+                <p class="priceTotal">Total: &#8364;{{priceTotal}}</p>
+
+                <form action="{{ url_for('fohOrder') }}" method="POST">
+                    <input type="hidden" name="confirmOrder" value="True">
+                    <div class="orderListing">
+                        <button type="submit"> ✔</button>   
+                    </div>
+                    
+                </form>
             </div>
-        </div>
+            <div class="orderSelect">
+                <div class="productFilters">
+                    <button class="pizzaFilter">Pizza Filter</button>
+                    <button class="drinksFilter">Drinks Filter</button>
+                    <button class="vegFilter">Vegetarian Filter</button>
+                    <button class="removeFilter">✘</button>
+                </div>
+                <div class="productSelection">
+                    {% for product in filteredProducts %}
+                        <form action="{{ url_for('fohOrder') }}" method="POST">
+                            <input type="hidden" name="addedPizza" value="{{ product.name }}">
+                            <input type="hidden" name="addedQuantity" value="1">
+                            <button type="submit" class="productButton">{{ product.name }}</button>
+                        </form>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>        
     </div>
+
 </body>
 </html>

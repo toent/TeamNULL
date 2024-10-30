@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -24,8 +28,8 @@
 
     <div class="order-summary">
         <h2>Pizza Selection</h2>
-        <p><strong>Pizza:</strong> {{ pizza_name }}</p>
-        <p><strong>Price:</strong> {{ pizza_price }} euro</p>
+        <h2><strong>Pizza:</strong> {{ pizza_name }}</h2>
+        <h2><strong>Price:</strong> {{ pizza_price }} &euro;</h2>
         <img src="{{ url_for('static', filename=pizza_image) }}" alt="{{ pizza_name }}" class="pizza-image">
     </div>
 
