@@ -24,3 +24,36 @@ window.addEventListener('scroll', function() {
         boxes.classList.add('show-boxes');
     }
 });
+//cart
+// Initialize cart count
+let cartCount = 0;
+
+// Get cart count element
+const cartCountDisplay = document.querySelector('.cart-count');
+
+// Event listener for "Add to Cart" button
+document.getElementById("addToCartBtn").addEventListener("click", function(event) {
+    event.preventDefault();
+
+    // Increment cart count
+    cartCount++;
+    cartCountDisplay.textContent = cartCount;
+
+    // Get product details
+    const selectedCapacity = document.getElementById('capacity').value;
+    const selectedPrice = document.querySelector('.price-value').getAttribute("data-price");
+    const customerName = document.getElementById('customer_name').value;
+
+    // Total price calculation (assuming quantity is 1 for simplicity)
+    const quantity = 1;
+    const totalPrice = (parseFloat(selectedPrice) * quantity).toFixed(2);
+
+    // Display message in modal
+    modalMessage.innerHTML = `
+        Customer Name: ${customerName}<br>
+        Quantity: ${quantity}<br>
+        Total Price: ${totalPrice} &euro;.
+    `;
+    modal.style.display = "block";
+});
+
