@@ -145,6 +145,7 @@ button{
     font-size: 15px;
     margin-right: 2px;
     margin-left: 2px;
+    margin-bottom: 4px;
 }
 
 .priceTotal{
@@ -156,22 +157,6 @@ button{
     margin: 0px;
 }
 
-/* @media only screen and (max-height: 1200px) {
-    .wrapper{
-        margin-top: 20%;
-    }
-}
-
-@media only screen and (max-height: 1000px) {
-    .wrapper{
-        margin-top: 5%;
-        transform: scale(1.2,1.2);
-    }
-
-    .orderScreen{
-        width: 80%;
-    }
-} */
 
 @media only screen and (max-width: 800px){
 
