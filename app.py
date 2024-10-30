@@ -149,10 +149,10 @@ def modify():
     flash(f"You are modifying the {pizza_name} pizza!")
     return redirect(url_for('index'))
 
-
+# route for the FoH table overview page 
 @app.route('/fohOverview', methods=['POST', 'GET'])
 def fohOverview():
-    return render_template('overview.html')
+    return render_template('fohOverview.html', table1Status = "", table2Status = "", table3Status = "", table4Status = "", table5Status = "", table6Status = "", table7Status = "", table8Status = "", table9Status = "")
 
 
 @app.route('/orderDisplay', methods=['GET'])
