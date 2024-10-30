@@ -4,7 +4,10 @@ body {
     padding: 0;
     background-color: white;
     font-family: 'Italianno', cursive;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+    background-image: url("/static/images/background.jpg");
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center; 
 }
 h1{
     font-family: 'Italianno', cursive;
