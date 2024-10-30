@@ -105,14 +105,14 @@ def fohOrder():
 
     if(isOrderDone):
         if(len(fohOrderLineList) > 0):
-            newOrder = Order(fohOrderLineList, "Order by Mario", tableNumber)
+            newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
             print(f"ORDER IS DONE YIPEE -> order: {newOrder}")
             # no clue how to add it to the datamanager -> this is currently not working -> CURRENTLY CRASHES ENTIRE SERVER -> REQUIRES DELETION OF STORAGE TO FIX
-            # try:
-            #     dataManager.orders.append(newOrder)
-            #     dataManager.saveOrders()
-            # except AttributeError as e:
-            #     print(f"ERROR: {e}")
+            try:
+                dataManager.orders.append(newOrder)
+                dataManager.saveOrders()
+            except AttributeError as e:
+                print(f"ERROR: {e}")
             fohOrderLineList.clear()
             return redirect(url_for("fohOverview"))
         else:
@@ -152,6 +152,10 @@ def modify():
 @app.route('/fohOverview', methods=['POST', 'GET'])
 def fohOverview():
     return render_template('overview.html')
+
+@app.route('/orderDisplay', methods=['GET'])
+def orderDisplay():
+    return render_template('orderDisplay.html', orders=dataManager.orders)
 
 if __name__ == '__main__':
     initialize()
