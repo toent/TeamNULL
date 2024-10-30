@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Order Display</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bohOrderDisplay.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
@@ -18,10 +19,13 @@
 <main>
     <div id="container">
         {% for order in openOrders %}
-        <div class="block">
+        {% set elapsed_time = (currentTime - order.timeCreated).total_seconds() %}
+        {% set minutes = elapsed_time // 60 %}
+        {% set seconds = elapsed_time % 60 %}
+        <div class="{{ 'blockSubmitted' if order.currentStatus == 'Submitted' else 'blockReady' }}">
             <div class="orderTop">
                 <h2>{{ order.orderID }}</h2>
-                <p>Table {{ order.table }} {{ order.timeCreated }}</p>
+                <p>Table {{ order.table }} {{ minutes|int }}:{{ seconds|int }}</p>
             </div>
             <div class="orderItems">
                 {% for orderline in order.products %}
@@ -33,6 +37,12 @@
             <div class="orderNotes">
                 <h3>Notes from Customer:</h3>
                 <p class="notes">{{ order.notes }}</p>
+            </div>
+            <div class="doneButton">
+                <form action="{{ url_for('markDone') }}" method="post">
+                    <input type="hidden" name="orderID" value="{{ order.orderID }}">
+                    <button type="submit">{{ 'Ready' if order.currentStatus == 'Submitted' else 'Finished' }}</button>
+                </form>
             </div>
         </div>
         {% endfor %}
