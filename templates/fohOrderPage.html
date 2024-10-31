@@ -48,6 +48,7 @@
 
                 <form action="{{ url_for('fohOrder') }}" method="POST">
                     <input type="hidden" name="confirmOrder" value="True">
+                    <input type="text" class="notes" name="orderNotes" placeholder="Add notes to the order...">
                     <div class="orderListing">
                         <button type="submit"> ✔</button>   
                     </div>
