@@ -1,0 +1,110 @@
+body{
+    background: url(/static/images/fohBackground.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.smallText{
+    font-size: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-right: 15px;
+}
+
+.recenter{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.wrapper{
+    margin-top: 2%;
+}
+
+.backGroundDiv{
+    background-color: #ffde59ca;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    width: 80%;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.inputField{
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.headText{
+    font-size: 50px;
+}
+
+.specialField{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#ingredientsInput{
+    width: auto;
+    height: auto;
+    min-width: 22ch;
+    max-width: 400ch;
+}
+
+#allergensInput{
+    width: auto;
+    height: auto;
+    min-width: 22ch;
+    max-width: 400ch;
+}
+
+.dragText {
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#drop-area {
+    width: 200px;
+    height: 200px;
+    margin: 10px auto;
+    text-align: center;
+    line-height: 200px;
+    border: 2px dashed #ccc;
+    cursor: pointer;
+  }
+  
+#preview-container {
+    text-align: center;
+}
+
+#drop-area.drag-over {
+    background-color: #eeeeee80;
+}
+
+.preview-image {
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    border: none;
+}
+
+.createProductButton{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}

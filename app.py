@@ -1,6 +1,8 @@
+import os
 from datetime import datetime
 
 from flask import Flask, render_template, url_for, request, redirect, flash
+from werkzeug.utils import secure_filename
 
 from classes.Tags import Tags
 from classes.DataManager import DataManager
@@ -8,12 +10,19 @@ from classes.Order import Order
 from classes.OrderLine import OrderLine
 from classes.Product import Product
 
+imageUploadFolder = '/static/images'
+allowedImageFiles = {'png', 'jpg', 'jpeg'}
+
+
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 dataManager = DataManager()
 
 tags = Tags()
+productTagRel = {}
+
+fohOrderLineList = []
 
 tableNumber = 1
 
@@ -53,13 +62,32 @@ def initialize():
         dataManager.orders[2].nextStatus()
         dataManager.saveOrders()  # Save the orders to the orders.json file.
 
+    # If there are no tags found, add some
     if len(tags.tagDict) < 1:
-        tags.tagDict = {"tag-pizza": ["Margherita","Pepperoni","Neapolitan","Romana"], "tag-pasta":["Bolognese","Carbonara"], "tag-salad":["Caesar"], "tag-desert":["Gelato"], "tag-drinks":["Cola","Fanta","Sprite","Milkshake"],"tag-vegetarian":["Margherita","Neapolitan","Romana"], "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"]}
+        tags.tagDict = {
+            "tag-pizza": ["Margherita", "Pepperoni", "Neapolitan", "Romana"],   #these are all object tags which all will have their own icon in the foh order screen, therefore always leave them before the content tags
+            "tag-pasta": ["Bolognese", "Carbonara"],
+            "tag-salad": ["Caesar"],
+            "tag-desert": ["Gelato"],
+            "tag-drinks": ["Cola", "Fanta", "Sprite", "Milkshake"],
+            "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"],
+            "tag-vegetarian": ["Margherita", "Neapolitan", "Romana"]            #the content tags start from here (vegetarian)
+        }
         tags.saveTags()
 
+    # Setup relations between products and tags
 
-fohOrderLineList = []
+    setupTagRels()
 
+    print(productTagRel)
+
+def setupTagRels():
+    for product in dataManager.products:
+        productTagRel[product.name] = []
+        for tag, product_list in tags.tagDict.items():
+            if product.name in product_list:
+                productTagRel[product.name].append(tag)
+    return productTagRel
 
 @app.route('/')
 def index():
@@ -151,7 +179,7 @@ def fohOrder():
     priceTotal = sum(line.product.price * line.quantity for line in fohOrderLineList)
 
     # Render the template
-    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList)
+    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList, selectButtonClass=productTagRel)
 
 @app.route('/modify', methods=['POST'])
 def modify():
@@ -182,9 +210,8 @@ def fohOverview():
     table8Status = "Finished"
     table9Status = "Finished"
 
-
     for order in dataManager.orders:
-        match order.table:
+        match int(order.table):
             case 1:
                 table1Status = tableStatusCheck(table1Status,order)
             case 2:
@@ -204,8 +231,6 @@ def fohOverview():
             case 9:
                 table9Status = tableStatusCheck(table9Status,order)
 
-    # order of highest to lowerst priority = order ready, order submitted, order finished
-    
     return render_template('fohOverview.html', table1Status = table1Status, table2Status = table2Status, table3Status = table3Status, table4Status = table4Status, table5Status = table5Status, table6Status = table6Status, table7Status = table7Status, table8Status = table8Status, table9Status = table9Status)
 
 
@@ -224,6 +249,59 @@ def markDone():
         order.nextStatus()
         dataManager.saveOrders()
     return redirect(url_for('orderDisplay'))
+
+@app.route('/manageproducts', methods=['POST', 'GET'])
+def manageProduct():
+    processedIngredients = []
+    processedAllergens = []
+    sourceProductDict = {}
+    
+    selectedProduct = request.form.get('selectedProduct')
+    print(f"Selected Product: {selectedProduct}")
+
+    if selectedProduct != (None or "NewProduct"):
+        for product in dataManager.products:
+            if product.name == selectedProduct:
+                 sourceProductDict = product
+    else:
+        sourceProductDict = {"name": "NewProduct", "price": 0.00, "ingredients": "", "allergens": "", "images": "images/"}
+           
+
+    productName = request.form.get('productName')
+    productPrice = request.form.get('productPrice')
+    productIngredients = request.form.get('productIngredients')
+    productAllergens = request.form.get('productAllergens')
+    productImageName = request.form.get('productImage')
+    productImage = request.files['productImage']
+
+    # convert ingredients and allergens into proper format
+    if productIngredients:
+        processedIngredients = productIngredients.removeprefix("['").removesuffix("']").split(", ")
+        for i in range(len(processedIngredients)):
+            processedIngredients[i] = processedIngredients[i].capitalize()
+
+    if productAllergens:
+        processedAllergens = productAllergens.removeprefix("['").removesuffix("']").split("', '")
+        for i in range(len(processedAllergens)):
+            processedAllergens[i] = processedAllergens[i].capitalize()
+
+    # DEBUGGING
+    print(f"Product Name: {productName}")
+    print(f"Product Price: {productPrice}")
+    print(f"Product Ingredients:{productIngredients}")
+    print(f"Processed Ingredients: {processedIngredients}")
+    print(f"Product Allergens:{productAllergens}")
+    print(f"Processed Allergens: {processedAllergens}")
+    print(f"Product Image: {productImageName}")
+
+    if productImage and allowedImage(productImageName):
+        imageFileName = secure_filename(productImageName)
+        productImage.save(os.path.join(imageUploadFolder, imageFileName))
+
+    return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict)
+
+def allowedImage(imageFileName):
+    return '.' in imageFileName and imageFileName.rsplit('.', 1)[1].lower() in allowedImageFiles
 
 if __name__ == '__main__':
     initialize()
