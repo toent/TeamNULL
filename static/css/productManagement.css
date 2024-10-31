@@ -4,6 +4,15 @@ body{
     background-size: cover;
 }
 
+button{
+    border: none;
+    background-color: beige;
+    border-radius: 5px;
+    font-size: 15px;
+    font-family: "Italiana", serif;
+    font-weight: bold;
+}
+
 .smallText{
     font-size: 25px;
     margin-top: 10px;
@@ -56,17 +65,15 @@ body{
 }
 
 #ingredientsInput{
-    width: auto;
-    height: auto;
-    min-width: 22ch;
-    max-width: 400ch;
+    max-width: 100ch;
 }
 
 #allergensInput{
-    width: auto;
-    height: auto;
-    min-width: 22ch;
-    max-width: 400ch;
+    max-width: 100ch;
+}
+
+#tagsInput{
+    max-width: 100ch;
 }
 
 .dragText {
@@ -74,14 +81,14 @@ body{
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
+    
 #drop-area {
     width: 200px;
     height: 200px;
     margin: 10px auto;
     text-align: center;
     line-height: 200px;
-    border: 2px dashed #ccc;
+    border: 2px dashed #1a1a1abe;
     cursor: pointer;
   }
   
@@ -90,7 +97,7 @@ body{
 }
 
 #drop-area.drag-over {
-    background-color: #eeeeee80;
+    background-color: #13131380;
 }
 
 .preview-image {
@@ -107,4 +114,15 @@ body{
     margin: auto;
     margin-top: 20px;
     margin-bottom: 10px;
+}
+
+.styleTextInput{
+    field-sizing: content;
+    min-width: 22ch;
+    max-width: 64ch;
+    background-color: beige;
+    border-radius: 5px;
+    border: none;
+    font-family: "Italiana", serif;
+    font-weight: bold;
 }
