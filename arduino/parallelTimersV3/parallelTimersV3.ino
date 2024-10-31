@@ -1,5 +1,3 @@
-#include "Display.h"
-
 // pin naming
 const int redLed = 4;
 const int greenLed = 5;
@@ -28,12 +26,8 @@ unsigned long yellowStartTime = 0;
 // variable for cycle time management (used to check and update timers once per second)
 unsigned long lastCycleTime = millis() + 1100;
 
-// variables for previous input management
-int previousLeftInput = 1;
-int previousRightInput = 1;
-
 // variable for knowing which was the most recently activated timer
-int previouslyActivatedTimer = 0;
+// int previouslyActivatedTimer = 0;
 
 void setup() {
   pinMode(redLed,OUTPUT);
@@ -43,7 +37,7 @@ void setup() {
   pinMode(leftButton,INPUT_PULLUP);
   pinMode(rightButton,INPUT_PULLUP);
   pinMode(buzzer,OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(1000000);
 };
 
 // red timer start
@@ -80,7 +74,7 @@ unsigned long timerComplete(int timerLed, int timerTone, int timerId) {
   // timer reset once complete (pressing right button)
   if (digitalRead(rightButton) == 0 && digitalRead(leftButton) == 1) {
     digitalWrite(timerLed, LOW);
-    Serial.write(timerId);
+    Serial.println(timerId);
     return 0;
   };
 };
@@ -88,91 +82,72 @@ unsigned long timerComplete(int timerLed, int timerTone, int timerId) {
 void loop() {
   // setting a timer to the preassigned state based on serial input
   if (Serial.available() > 0) {
-    if (Serial.parseInt() == 0) {
+    int serialInput = Serial.parseInt();
+    Serial.println("CONFIRM");
+    if (serialInput == 0) {
       redStartTime = 1;
     };
-    if (Serial.parseInt() == 1) {
+    if (serialInput == 1) {
       greenStartTime = 1;
     };
-    if (Serial.parseInt() == 2) {
+    if (serialInput == 2) {
       blueStartTime = 1;
     };
-    if (Serial.parseInt() == 3) {
+    if (serialInput == 3) {
       yellowStartTime = 1;
     };
   };
 
-  // updating previous input to stop continous input on button hold
-  if (digitalRead(leftButton) == 1) {
-    previousLeftInput = 1;
-    // TEMP DEBOUNCE WITH DELAY ---------------------------------------------------------
-    delay(30);
-  };
-
-  // updating previous input to stop continous input on button hold
-  if (digitalRead(rightButton) == 1) {
-    previousRightInput = 1;
-    // TEMP DEBOUNCE WITH DELAY ---------------------------------------------------------
-    delay(30);
-  };
-
   // start timer (pressing left button)
-  if (digitalRead(leftButton) == 0 && previousLeftInput != digitalRead(leftButton) && digitalRead(rightButton) == 1)
+  if (digitalRead(leftButton) == 0 && digitalRead(rightButton) == 1)
   {
     // finding a pre-selected tiemr (1)
     if (redStartTime == 1) {
       // starting the timer
       redStartTime = redTimer();
       // setting it as the most recently activated timer (used for timer resets)
-      previouslyActivatedTimer = 0;
+      // previouslyActivatedTimer = 0;
     };
     if (greenStartTime == 1) {
       greenStartTime = greenTimer();
-      previouslyActivatedTimer = 1;
-    }; 
+      // previouslyActivatedTimer = 1;
+    };
     if (blueStartTime == 1) {
       blueStartTime = blueTimer();
-      previouslyActivatedTimer = 2;
-    }; 
+      // previouslyActivatedTimer = 2;
+    };
     if (yellowStartTime == 1) {
       yellowStartTime = yellowTimer();
-      previouslyActivatedTimer = 3;
+      // previouslyActivatedTimer = 3;
     };
-
-    previousLeftInput = 0;
-    // TEMP DEBOUNCE WITH DELAY ---------------------------------------------------------
-    delay(30);
   };
     
-  // reset timer (pressing left and right buttons together)
-  if ((digitalRead(leftButton) == 0 && digitalRead(rightButton) == 0) && (previousLeftInput == 1 || previousRightInput == 1))
-  {
-    // switch resets ONLY THE MOST RECENTLY ACTIVATED TIMER
-    switch (previouslyActivatedTimer)
-    {
-      case 0:
-          redStartTime = 1;
-          digitalWrite(redLed, LOW);
-          break;
-      case 1:
-          greenStartTime = 1;
-          digitalWrite(greenLed, LOW);
-          break;
-      case 2:
-          blueStartTime = 1;
-          digitalWrite(blueLed, LOW);
-          break;
-      case 3:
-          yellowStartTime = 1;
-          digitalWrite(yellowLed, LOW);
-          break;
-      default:
-          break;
-    }
-
-    previousLeftInput = 0;
-    previousRightInput = 0;
-  };
+  // // reset timer (pressing left and right buttons together)
+  // if (digitalRead(leftButton) == 0 && digitalRead(rightButton) == 0)
+  // {
+  //   // switch resets ONLY THE MOST RECENTLY ACTIVATED TIMER
+  //   switch (previouslyActivatedTimer)
+  //   {
+  //     case 0:
+  //         redStartTime = 1;
+  //         digitalWrite(redLed, LOW);
+  //         break;
+  //     case 1:
+  //         greenStartTime = 1;
+  //         digitalWrite(greenLed, LOW);
+  //         break;
+  //     case 2:
+  //         blueStartTime = 1;
+  //         digitalWrite(blueLed, LOW);
+  //         break;
+  //     case 3:
+  //         yellowStartTime = 1;
+  //         digitalWrite(yellowLed, LOW);
+  //         break;
+  //     default:
+  //         break;
+  //   }
+  // };
 
   // timer updates (1 time per second)
   if (millis() - lastCycleTime > 1000) {
