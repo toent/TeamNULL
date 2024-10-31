@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
+from enum import unique
 
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from werkzeug.utils import secure_filename
 
 from classes.Tags import Tags
@@ -363,6 +364,33 @@ def formatProductDetails(productList, doCapitalize, doLower):
     elif doLower:
         processedList = [item.strip().lower() for item in productList.split(",")]
     return processedList
+
+def countInstances(productList, product):
+    return productList.count(product)
+
+
+@app.route('/submit_order', methods=['POST'])
+def submit_order():
+    cart_data = request.json
+    products = []
+    orderLines = []
+    print(type(cart_data))
+
+    for prod in cart_data:
+        products.append(prod['name'])
+
+    uniqueProducts = set(products)
+    for prod in uniqueProducts:
+        orderLines.append(OrderLine(next(product for product in dataManager.products if product.name == prod), products.count(prod)))
+
+    newOrder = Order(orderLines, "Order from Client web page.", tableNumber)
+    dataManager.orders.append(newOrder)
+    dataManager.saveOrders()
+    dataManager.loadOrders()
+
+    # For example, save it to a database or handle it as needed
+    print(cart_data)  # Just to see the data in the console
+    return jsonify({'status': 'success', 'message': 'Order received'})
     
 if __name__ == '__main__':
     initialize()
