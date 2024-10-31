@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+        <title>Product Management</title>
+    
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/gSTYLE.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/productManagement.css') }}"> 
+    
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+    
+        <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}">
+
+        <script>
+            const placeholderImage = "{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.jpg') }}";
+            console.log("Image URL:", placeholderImage);
+        </script>
+
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="backGroundDiv">
+                <h1 class="headText">Product Management</h1>
+                <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
+                    <div class="inputField">
+                        <p class="smallText">Product to edit: </p>
+                        <select name="selectedProduct"> Product
+                            <option value="NewProduct">New Product</option>
+                            {% for product in productList %}
+                                <option value="{{product.name}}">{{product.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="recenter">
+                        <button type="submit"> Select Product </button>
+                    </div>
+                </form>
+                <form action="{{ url_for('manageProduct') }}" method="POST" enctype="multipart/form-data">
+                    <div class="inputField" id="name">
+                        <p class="smallText">Product Name: </p>
+                        <input type="text" name="productName" value="{{productEdit.name}}">                       
+                    </div>
+                    <div class="inputField" id="price">
+                        <p class="smallText">Product Price: </p>
+                        <input type="text" name="productPrice" value="{{productEdit.price}}">
+                    </div>
+                    <div class="specialField" id="ingredients">
+                        <p class="smallText">Product Ingredients: </p>
+                        <input type="text" id="ingredientsInput" name="productIngredients" oninput="resizeIngredients()" value="{{productEdit.ingredients}}" placeholder="i.e. Tomatoes, Herbs, Garlic, Mozzarella">
+
+                        <script>
+                            function resizeIngredients() {
+                                const inputField = document.getElementById('ingredientsInput');
+                                inputField.style.width = (inputField.value.length) + 'ch';
+                            }
+                        </script>
+
+                    </div>
+                    <div class="specialField" id="allergens">
+                        <p class="smallText">Product Allergens: </p>
+                        <input type="text" id="allergensInput" name="productAllergens" oninput="resizeAllergens()" value="{{productEdit.allergens}}" placeholder="i.e. Gluten, Milk">
+
+                        <script>
+                            function resizeAllergens() {
+                                const inputField = document.getElementById('allergensInput');
+                                inputField.style.width = (inputField.value.length) + 'ch';
+                            }
+                        </script>
+
+                    </div>
+                    <div class="specialField" id="image">
+                        <p class="smallText">Product Image: </p>
+                        <div class="inputField">
+                            <div id="drop-area">
+                                <p class="dragText">Drag here to upload</p>
+                             </div>
+                             <input type="file" id="file-input" name="productImage" hidden>
+                             <div id="preview-container"></div>
+                             <script src="{{ url_for('static', filename='js/dragAndDropUploader.js') }}"></script>
+                        </div>
+                    </div>
+                    <div class="specialField" id="tags">
+                        <p class="smallText">Product Tags: </p>
+                        <input type="text" id="tagsInput" name="productTags" oninput="resizeTags()" value="{{sourceTags}}" placeholder="i.e. tag-pizza, tag-vegetarian">
+                        <script>
+                            function resizeTags() {
+                                const inputField = document.getElementById('tagsInput');
+                                inputField.style.width = (inputField.value.length) + 'ch';
+                            }
+                        </script>
+                    </div>
+                    <div class="specialField">
+                        <p class="smallText">List of Existing Tags: </p>
+                        <select name="selectedProduct"> Tag
+                            <option>Tags</option>
+                            {% for tag in tagList %}
+                                <option value="{{tag}}">{{tag}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="createProductButton">
+                        <button type="submit"> Create Product </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,40 +1,36 @@
 #container {
     width: 100%;
-    height: 100%;
-    margin: 1%;
+    height: 100vh;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 16px;
+    padding: 1%;
+}
+
+.blockSubmitted, .blockReady{
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 300px;
+    height: 90%;
+    margin: 1%;
+    border-radius: 10px;
+    padding: 1%;
+    font-family: "Italiana";
+    font-weight: bold;
+    flex-grow: 0;
 }
 
 .blockSubmitted {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 300px;
-    height: 500px;
     border: 1px solid #b3e6ff;
     background-color: #cceeff;
-    margin: 1%;
-    border-radius: 10px;
-    padding: 1%;
-    font-family: "Italiana";
-    font-weight: bold;
 }
 
 .blockReady {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 300px;
-    height: 500px;
     border: 1px solid #b3ffb3;
     background-color: #ccffcc;
-    margin: 1%;
-    border-radius: 10px;
-    padding: 1%;
-    font-family: "Italiana";
-    font-weight: bold;
 }
 
 .topNav {
@@ -58,11 +54,12 @@
 
 main{
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 50px);  /* Full height minus header */
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 h2{
@@ -144,3 +141,13 @@ button:active {
     transform: scale(0.95);
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+header{
+    height: 50px;
+}
