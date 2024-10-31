@@ -163,6 +163,7 @@ def fohOrder():
         print(newOrder.toDict())
         dataManager.orders.append(newOrder)
         dataManager.saveOrders()
+        dataManager.loadOrders()
         fohOrderLineList.clear()
         return redirect(url_for("fohOverview"))  # Redirect to the overview page
 
@@ -212,9 +213,8 @@ def fohOverview():
     table8Status = "Finished"
     table9Status = "Finished"
 
-
     for order in dataManager.orders:
-        match order.table:
+        match int(order.table):
             case 1:
                 table1Status = tableStatusCheck(table1Status,order)
             case 2:
@@ -234,8 +234,6 @@ def fohOverview():
             case 9:
                 table9Status = tableStatusCheck(table9Status,order)
 
-    # order of highest to lowerst priority = order ready, order submitted, order finished
-    
     return render_template('fohOverview.html', table1Status = table1Status, table2Status = table2Status, table3Status = table3Status, table4Status = table4Status, table5Status = table5Status, table6Status = table6Status, table7Status = table7Status, table8Status = table8Status, table9Status = table9Status)
 
 

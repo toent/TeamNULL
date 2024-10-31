@@ -27,6 +27,7 @@ class DataManager:
         try:
             with open(self.orderFile, 'r') as file:
                 orders = json.load(file)
+                self.orders = []
                 for order in orders:
                     newOrder = Order([], '', 0)
                     newOrder.fromDict(order)
