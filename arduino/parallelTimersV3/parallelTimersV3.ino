@@ -80,42 +80,41 @@ unsigned long timerComplete(int timerLed, int timerTone, int timerId) {
   // timer reset once complete (pressing right button)
   if (digitalRead(rightButton) == 0 && digitalRead(leftButton) == 1) {
     digitalWrite(timerLed, LOW);
-    Serial.println(timerId);
+    Serial.write(timerId);
     return 0;
   };
 };
 
 void loop() {
   // setting a timer to the preassigned state based on serial input
-  // if (Serial.available() > 0) {
-    Display.show(Serial.readString());
-    if (Serial.readStringUntil('\n') == '0') {
+  if (Serial.available() > 0) {
+    if (Serial.parseInt() == 0) {
       redStartTime = 1;
-    }
-    else if (Serial.readStringUntil('\n') == '1') {
+    };
+    if (Serial.parseInt() == 1) {
       greenStartTime = 1;
-    }
-    else if (Serial.readStringUntil('\n') == '2') {
+    };
+    if (Serial.parseInt() == 2) {
       blueStartTime = 1;
-    }
-    else if (Serial.readStringUntil('\n') == '3') {
+    };
+    if (Serial.parseInt() == 3) {
       yellowStartTime = 1;
     };
-  // };
+  };
 
   // updating previous input to stop continous input on button hold
   if (digitalRead(leftButton) == 1) {
     previousLeftInput = 1;
     // TEMP DEBOUNCE WITH DELAY ---------------------------------------------------------
     delay(30);
-  }
+  };
 
   // updating previous input to stop continous input on button hold
   if (digitalRead(rightButton) == 1) {
     previousRightInput = 1;
     // TEMP DEBOUNCE WITH DELAY ---------------------------------------------------------
     delay(30);
-  }
+  };
 
   // start timer (pressing left button)
   if (digitalRead(leftButton) == 0 && previousLeftInput != digitalRead(leftButton) && digitalRead(rightButton) == 1)
@@ -126,24 +125,24 @@ void loop() {
       redStartTime = redTimer();
       // setting it as the most recently activated timer (used for timer resets)
       previouslyActivatedTimer = 0;
-    } 
-    else if (greenStartTime == 1) {
+    };
+    if (greenStartTime == 1) {
       greenStartTime = greenTimer();
       previouslyActivatedTimer = 1;
-    } 
-    else if (blueStartTime == 1) {
+    }; 
+    if (blueStartTime == 1) {
       blueStartTime = blueTimer();
       previouslyActivatedTimer = 2;
-    } 
-    else if (yellowStartTime == 1) {
+    }; 
+    if (yellowStartTime == 1) {
       yellowStartTime = yellowTimer();
       previouslyActivatedTimer = 3;
-    }
+    };
 
     previousLeftInput = 0;
     // TEMP DEBOUNCE WITH DELAY ---------------------------------------------------------
     delay(30);
-  }
+  };
     
   // reset timer (pressing left and right buttons together)
   if ((digitalRead(leftButton) == 0 && digitalRead(rightButton) == 0) && (previousLeftInput == 1 || previousRightInput == 1))
