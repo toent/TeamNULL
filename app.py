@@ -132,6 +132,7 @@ def fohOrder():
         print(newOrder.toDict())
         dataManager.orders.append(newOrder)
         dataManager.saveOrders()
+        dataManager.loadOrders()
         fohOrderLineList.clear()
         return redirect(url_for("fohOverview"))  # Redirect to the overview page
 
