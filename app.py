@@ -140,6 +140,7 @@ def fohOrder():
     newTableNumber = request.form.get('tableNumber')
     addedPizzaName = request.form.get("addedPizza")
     addedPizzaQuantity = max(-1, int(request.form.get("addedQuantity", 0)))
+    orderNotes = request.form.get('orderNotes')
 
     # Update the table number if provided
     if newTableNumber:
@@ -160,7 +161,10 @@ def fohOrder():
 
     # Finalize the order if it is done
     if isOrderDone and fohOrderLineList:
-        newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
+        if orderNotes == "" or orderNotes == None:
+            newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
+        else:
+            newOrder = Order(fohOrderLineList, orderNotes, tableNumber)
         print(newOrder.toDict())
         dataManager.orders.append(newOrder)
         dataManager.saveOrders()

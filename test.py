@@ -3,7 +3,7 @@ from classes.Order import Order
 from classes.OrderLine import OrderLine
 from classes.Product import Product
 
-#TESTING FOR DATA MANAGER
+#region TESTING FOR DATA MANAGER
 dataManager = DataManager()
 
 products = []
@@ -60,3 +60,15 @@ testSaveProducts()
 testLoadProducts()
 testSaveOrders()
 testLoadOrders()
+
+#endregion
+
+#region TESTING FOR ORDER
+
+def testOrder():
+    order = Order([OrderLine(dataManager.products[0], 2)], 'Please don''t let Marcos cook it', 4)
+    try:
+        assert order.total == 20.0
+        print("Order total test passed")
+    except:
+        print("Order total test failed")
