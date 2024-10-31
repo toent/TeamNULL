@@ -33,18 +33,23 @@ def serialInputHandler():
         print("------------------------------")
 
         # find the timer that became free and adding it to freeTimers
-        freeTimers.append(serialInput)
+        if serialInput != "CONFIRM":
+            freeTimers.append(serialInput)
 
-        # wiping the respective status list for the now finished timer
-        match (serialInput):
-            case 0:
-                redStatus.clear()
-            case 1:
-                greenStatus.clear()
-            case 2:
-                blueStatus.clear()
-            case 3:
-                yellowStatus.clear()
+            # wiping the respective status list for the now finished timer
+            match (serialInput):
+                case 0:
+                    redStatus.clear()
+                case 1:
+                    greenStatus.clear()
+                case 2:
+                    blueStatus.clear()
+                case 3:
+                    yellowStatus.clear()
+            return 0
+        
+        elif serialInput == "CONFIRM":
+            return 1
 
 # example of serial input
 # "red"
@@ -88,20 +93,28 @@ def productIdentifier(tempOrder):
                     match (freeTimers[0]):
                         case 0:
                             redStatus.extend(productIdentifier)
-                            # freeTimers.pop(0)
+                            freeTimers.pop(0)
                             productIdentifier.append(0)
                         case 1:
                             greenStatus.extend(productIdentifier)
-                            # freeTimers.pop(0) 
+                            freeTimers.pop(0) 
                             productIdentifier.append(1)
                         case 2:
                             blueStatus.extend(productIdentifier)
-                            # freeTimers.pop(0)
+                            freeTimers.pop(0)
                             productIdentifier.append(2)
                         case 3:                  
                             yellowStatus.extend(productIdentifier)
-                            # freeTimers.pop(0)
+                            freeTimers.pop(0)
                             productIdentifier.append(3)
+
+                serialConfirm = False
+
+                while serialConfirm == False:
+                    if serialInputHandler() == 1:
+                        serialConfirm = True
+                    else:
+                        continue
 
                 else:
                     print("----- NO TIMER FOUND -----")
