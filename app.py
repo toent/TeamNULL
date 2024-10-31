@@ -287,7 +287,7 @@ def manageProduct():
     productImage = request.files.get('productImage')
     productTags = request.form.get('productTags')
 
-    # convert ingredients, allergens and tags into proper format
+    # convert product details to the correct format
     if productIngredients:
         processedIngredients = formatProductDetails(productIngredients, True, False)
 
@@ -315,16 +315,24 @@ def manageProduct():
 
     # check if product is not an empty product -> make the product and add it to the products.json file
     if productName != None and productPrice != None and len(processedIngredients) > 0:
-        newProduct = Product(productName, productPrice, processedIngredients, processedAllergens, productImageLocation)
+        newProduct = Product(productName, float(productPrice), processedIngredients, processedAllergens, productImageLocation)
 
         existingProduct = next((product for product in dataManager.products if product.name == newProduct.name), None)
 
         if existingProduct:
             existingProductIndex = dataManager.products.index(existingProduct)
-            dataManager.products.remove(existingProduct)
-            dataManager.products.insert(existingProductIndex, existingProduct)
+            print(existingProduct.images)
+            print(newProduct.images)
+            if newProduct.images == "images/":
+                print("image check passed!")
+                newProduct.images = existingProduct.images
+
+            dataManager.products.pop(existingProductIndex)
+            dataManager.products.insert(existingProductIndex, newProduct)
         else:
             dataManager.products.append(newProduct)
+
+        dataManager.saveProducts()
 
         # check if tag is not duplicate and remove tags if they are not assigned to a product anymore 
         if processedTags:
@@ -332,7 +340,7 @@ def manageProduct():
                 print("test1")
                 if newProduct.name not in tags.tagDict[tag]:
                     print("test2")
-                    tags.tagDict[tag].append(newProduct.name)
+                    tags.tagDict[tag].append(newProduct.name)   
             for key in tags.tagDict:
                 print(f"test3 - {key}")
                 if newProduct.name in tags.tagDict[key] and key not in processedTags:
@@ -343,7 +351,7 @@ def manageProduct():
             tags.saveTags()
             
 
-        dataManager.saveProducts()
+        
         setupTagRels()
 
     return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict, sourceTags = sourceKeys)
@@ -355,9 +363,12 @@ def allowedImage(imageFileName):
 
 def formatProductDetails(productList, doCapitalize, doLower):
     processedList = []
-    if productList.startswith("[") and productList.endswith("]"):
-        productList = productList[1:-1].strip()
-    productList = productList.strip("'").strip('"')
+    charactersToRemove = ["'", '"', "[", "]"]
+    for i in str(productList):
+        if i in charactersToRemove:
+            productList = str(productList).replace(i, "")
+
+    print(productList)
     if doCapitalize:
         processedList = [item.strip().capitalize() for item in productList.split(",")]
     elif doLower:
