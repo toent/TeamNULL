@@ -12,9 +12,16 @@ function preventDefaults(e) {
 dropArea.addEventListener('dragover', preventDefaults);
 dropArea.addEventListener('dragenter', preventDefaults);
 dropArea.addEventListener('dragleave', preventDefaults);
+// Handling button file uploads
+fileInput.addEventListener('change', handleUpload);
 
 // Handling dropping files into the area
 dropArea.addEventListener('drop', handleDrop);
+
+function handleUpload(){
+  const fileList = this.files;
+  handleFiles(fileList);
+}
 
 function handleDrop(e) {
     e.preventDefault();

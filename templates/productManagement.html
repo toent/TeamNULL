@@ -30,7 +30,7 @@
                 <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
                     <div class="inputField">
                         <p class="smallText">Product to edit: </p>
-                        <select name="selectedProduct"> Product
+                        <select class="selectBoxStyle" name="selectedProduct"> Product
                             <option value="NewProduct">New Product</option>
                             {% for product in productList %}
                                 <option value="{{product.name}}">{{product.name}}</option>
@@ -61,13 +61,16 @@
                     </div>
                     <div class="specialField" id="image">
                         <p class="smallText">Product Image: </p>
-                        <div class="inputField">
-                            <div id="drop-area">
-                                <p class="dragText">Drag here to upload</p>
-                             </div>
-                             <input type="file" id="file-input" name="productImage" hidden>
-                             <div id="preview-container"></div>
-                             <script src="{{ url_for('static', filename='js/dragAndDropUploader.js') }}"></script>
+                        <div class="imageInputField">
+                            <div class="previewContainerPlacement">
+                                <div id="drop-area">
+                                    <p class="dragText">Drag here to upload</p>
+                                </div>
+                                <div id="preview-container"></div>
+                            </div>
+                            <label for="file-input" class="uploadButtonLabel">Upload Image</label>
+                            <input type="file" id="file-input" name="productImage">         
+                            <script src="{{ url_for('static', filename='js/dragAndDropUploader.js') }}"></script>
                         </div>
                     </div>
                     <div class="specialField" id="tags">
@@ -76,7 +79,7 @@
                     </div>
                     <div class="specialField">
                         <p class="smallText">List of Existing Tags: </p>
-                        <select name="selectedProduct"> Tag
+                        <select class="selectBoxStyle" name="selectedProduct"> Tag
                             <option>Tags</option>
                             {% for tag in tagList %}
                                 <option value="{{tag}}">{{tag}}</option>

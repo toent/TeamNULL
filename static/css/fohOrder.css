@@ -174,7 +174,11 @@ button{
 }
 
 .tag-pizza{
-    background-image: url(/static/images/buttonPizzaOverlay.png)
+    background-image: url(/static/images/buttonPizzaOverlay.png);
+}
+
+.tag-drinks{
+    background-image: url(/static/images/buttonDrinkOverlay.png);
 }
 
 @media only screen and (max-width: 800px){

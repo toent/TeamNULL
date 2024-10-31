@@ -53,6 +53,22 @@ button{
     margin-bottom: 10px;
 }
 
+.imageInputField{
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.previewContainerPlacement{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .headText{
     font-size: 50px;
 }
@@ -116,6 +132,23 @@ button{
     margin-bottom: 10px;
 }
 
+
+input[type="file"] {
+    display: none;
+}
+
+.uploadButtonLabel{
+    border: none;
+    border-radius: 5px;
+    background-color: beige;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: "Italiana", serif;
+    font-weight: bold;
+    font-size: 15px;
+}
+
 .styleTextInput{
     field-sizing: content;
     min-width: 22ch;
@@ -125,4 +158,25 @@ button{
     border: none;
     font-family: "Italiana", serif;
     font-weight: bold;
+}
+
+.selectBoxStyle{
+    position: relative;
+    font-family: "Italiana", serif;
+    font-weight: bold;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: beige;
+}
+
+
+.selectBoxStyle option{
+    position: relative;
+    font-family: "Italiana", serif;
+    font-weight: bold;
+    font-size: 15px;
+    border: 3px #303030;
+    border-radius: 5px;
+    background-color: beige;
 }
