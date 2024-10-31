@@ -1,11 +1,16 @@
 body {
   background: url(/static/images/fohBackground.jpg);
   background-repeat: no-repeat;
+  background-attachment: fixed;
   background-size: cover;
 }
 
 header {
   background-color: #ffde59ca;
+}
+
+.wrapper{
+  transform: scale(1, 1);
 }
 
 .table1, .table2, .table3, .table4, .table5, .table6, .table7, .table8, .table9, .Finished, .Ready, .Submitted {
@@ -146,4 +151,16 @@ header {
 .Finished {
   color: black;
   background-color: #ffde59ca;
+}
+
+@media only screen and (max-width: 800px){
+
+  .wrapper{
+    transform: scale(.5,.5);
+  }
+
+  .mainContainer{
+    width: 180%;
+    left: -40%;
+  }
 }
