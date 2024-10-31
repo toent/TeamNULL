@@ -284,8 +284,9 @@ button:hover {
 }
 
 .center-textCART {
-    position: relative; /* Establish a positioning context */
-    padding: 20px; /* Add some padding if needed */
-    border: 1px solid #ccc; /* Optional: Add a border for visibility */
-    height: 300px; /* Set a height for the container (or adjust based on your needs) */
+    position: relative; 
+    padding: 20px; 
+    border: 1px solid #ccc; 
+    height: 300px;
 }
+

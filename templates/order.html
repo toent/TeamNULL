@@ -25,22 +25,22 @@
     </div>
     <div class="center-text" id="center-text">
         <p>Your Cart</p>
-        <div class="cart-items"></div>
-        <p class="total-price-container">Total Price: <span class="total-price">0</span> &euro;</p>
     </div>
+    <div class="cart-items"></div>
+    <p class="total-price-container">Total Price: &euro; <span class="total-price">0</span> </p>
+</div>
 
-    <!-- Confirm Order Button to open modal -->
-    <button class="open-confirm-modal confirm-btn">Confirm Order</button>
+<!-- Confirm Order Button to open modal -->
+<button class="open-confirm-modal confirm-btn">Confirm Order</button>
 
-    <!-- The Modal -->
-    <div id="orderModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Order Confirmation</h2>
-            <p id="modal-message">Do you want to confirm your order?</p>
-            <!-- Confirm Button inside the Modal -->
-            <button id="modal-confirm-order" class="confirm-btn">Confirm Order</button>
-        </div>
+<!-- The Modal -->
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Order Confirmation</h2>
+        <p id="modal-message">Do you want to confirm your order?</p>
+        <!-- Confirm Button inside the Modal -->
+        <button id="modal-confirm-order" class="confirm-btn">Confirm Order</button>
     </div>
 </div>
 
@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     const cartItemsContainer = document.querySelector('.cart-items');
     const totalPriceDisplay = document.querySelector('.total-price');
-
     let totalPrice = 0;
 
     // Display each cart item and calculate total price
@@ -86,18 +85,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Confirm order and clear cart in modal
+    // Confirm order and send cart data to server
     modalConfirmButton.addEventListener('click', () => {
-        // Clear cart
-        localStorage.removeItem('cartItems');
-
-        
-        // Close modal and redirect or update the page as needed
-        modal.style.display = "none";
-        window.location.reload(); // Reload to clear the cart display
+        fetch('/submit_order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(cartItems)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Clear cart
+            localStorage.removeItem('cartItems');
+            // Close modal and reload page
+            modal.style.display = "none";
+            window.location.reload(); // Reload to clear the cart display
+        })
+        .catch(error => console.error('Error:', error));
     });
 });
 </script>
+
 
 </body>
 </html>

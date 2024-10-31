@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
+from enum import unique
 
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from werkzeug.utils import secure_filename
 
 from classes.Tags import Tags
@@ -10,12 +11,15 @@ from classes.Order import Order
 from classes.OrderLine import OrderLine
 from classes.Product import Product
 
-imageUploadFolder = '/static/images'
-allowedImageFiles = {'png', 'jpg', 'jpeg'}
+
 
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
+
+imageUploadFolder = os.path.join(app.root_path, 'static/images')
+allowedImageFiles = {'png', 'jpg', 'jpeg'}
+app.config['UPLOAD_FOLDER'] = imageUploadFolder
 
 dataManager = DataManager()
 
@@ -136,6 +140,7 @@ def fohOrder():
     newTableNumber = request.form.get('tableNumber')
     addedPizzaName = request.form.get("addedPizza")
     addedPizzaQuantity = max(-1, int(request.form.get("addedQuantity", 0)))
+    orderNotes = request.form.get('orderNotes')
 
     # Update the table number if provided
     if newTableNumber:
@@ -156,10 +161,14 @@ def fohOrder():
 
     # Finalize the order if it is done
     if isOrderDone and fohOrderLineList:
-        newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
+        if orderNotes == "" or orderNotes == None:
+            newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
+        else:
+            newOrder = Order(fohOrderLineList, orderNotes, tableNumber)
         print(newOrder.toDict())
         dataManager.orders.append(newOrder)
         dataManager.saveOrders()
+        dataManager.loadOrders()
         fohOrderLineList.clear()
         return redirect(url_for("fohOverview"))  # Redirect to the overview page
 
@@ -251,57 +260,153 @@ def markDone():
 
 @app.route('/manageproducts', methods=['POST', 'GET'])
 def manageProduct():
+    # preparing values
     processedIngredients = []
     processedAllergens = []
+    processedTags = []
     sourceProductDict = {}
+    sourceKeys = ""
+    productImageLocation = "images/"
     
+    # get and debug the selected product
     selectedProduct = request.form.get('selectedProduct')
     print(f"Selected Product: {selectedProduct}")
 
+    # loading existing, else load sample
     if selectedProduct != (None or "NewProduct"):
         for product in dataManager.products:
             if product.name == selectedProduct:
                  sourceProductDict = product
+                 keyList = productTagRel.keys()
+                 for key in keyList:
+                    if key == selectedProduct:
+                        sourceKeys = list(productTagRel[key])
     else:
         sourceProductDict = {"name": "NewProduct", "price": 0.00, "ingredients": "", "allergens": "", "images": "images/"}
-           
 
+    # getting all the form data from the client 
     productName = request.form.get('productName')
     productPrice = request.form.get('productPrice')
     productIngredients = request.form.get('productIngredients')
     productAllergens = request.form.get('productAllergens')
-    productImageName = request.form.get('productImage')
-    productImage = request.files['productImage']
+    productImage = request.files.get('productImage')
+    productTags = request.form.get('productTags')
 
-    # convert ingredients and allergens into proper format
+    # convert product details to the correct format
     if productIngredients:
-        processedIngredients = productIngredients.removeprefix("['").removesuffix("']").split(", ")
-        for i in range(len(processedIngredients)):
-            processedIngredients[i] = processedIngredients[i].capitalize()
+        processedIngredients = formatProductDetails(productIngredients, True, False)
 
     if productAllergens:
-        processedAllergens = productAllergens.removeprefix("['").removesuffix("']").split("', '")
-        for i in range(len(processedAllergens)):
-            processedAllergens[i] = processedAllergens[i].capitalize()
+        processedAllergens = formatProductDetails(productAllergens, True, False)
+        
+    if productTags:
+        processedTags = formatProductDetails(productTags, False, True)
 
     # DEBUGGING
     print(f"Product Name: {productName}")
-    print(f"Product Price: {productPrice}")
     print(f"Product Ingredients:{productIngredients}")
     print(f"Processed Ingredients: {processedIngredients}")
     print(f"Product Allergens:{productAllergens}")
     print(f"Processed Allergens: {processedAllergens}")
-    print(f"Product Image: {productImageName}")
+    print(f"Product Tags: {productTags}")
+    print(f"Processed Tags: {processedTags}")
 
-    if productImage and allowedImage(productImageName):
-        imageFileName = secure_filename(productImageName)
-        productImage.save(os.path.join(imageUploadFolder, imageFileName))
+    # save productimage to static/images/
+    if productImage and allowedImage(productImage.filename):
+        filename = secure_filename(productImage.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        productImage.save(filepath)
+        productImageLocation = productImageLocation + filename
 
-    return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict)
+    # check if product is not an empty product -> make the product and add it to the products.json file
+    if productName != None and productPrice != None and len(processedIngredients) > 0:
+        newProduct = Product(productName, float(productPrice), processedIngredients, processedAllergens, productImageLocation)
 
+        existingProduct = next((product for product in dataManager.products if product.name == newProduct.name), None)
+
+        if existingProduct:
+            existingProductIndex = dataManager.products.index(existingProduct)
+            print(existingProduct.images)
+            print(newProduct.images)
+            if newProduct.images == "images/":
+                print("image check passed!")
+                newProduct.images = existingProduct.images
+
+            dataManager.products.pop(existingProductIndex)
+            dataManager.products.insert(existingProductIndex, newProduct)
+        else:
+            dataManager.products.append(newProduct)
+
+        dataManager.saveProducts()
+
+        # check if tag is not duplicate and remove tags if they are not assigned to a product anymore 
+        if processedTags:
+            for tag in processedTags:
+                print("test1")
+                if newProduct.name not in tags.tagDict[tag]:
+                    print("test2")
+                    tags.tagDict[tag].append(newProduct.name)   
+            for key in tags.tagDict:
+                print(f"test3 - {key}")
+                if newProduct.name in tags.tagDict[key] and key not in processedTags:
+                    print(f"test4 - {key}")
+                    tags.tagDict[key].remove(newProduct.name)
+                    
+
+            tags.saveTags()
+            
+
+        
+        setupTagRels()
+
+    return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict, sourceTags = sourceKeys)
+
+# check if the imagefile has one of the required file extensions
 def allowedImage(imageFileName):
+    print(imageFileName)
     return '.' in imageFileName and imageFileName.rsplit('.', 1)[1].lower() in allowedImageFiles
 
+def formatProductDetails(productList, doCapitalize, doLower):
+    processedList = []
+    charactersToRemove = ["'", '"', "[", "]"]
+    for i in str(productList):
+        if i in charactersToRemove:
+            productList = str(productList).replace(i, "")
+
+    print(productList)
+    if doCapitalize:
+        processedList = [item.strip().capitalize() for item in productList.split(",")]
+    elif doLower:
+        processedList = [item.strip().lower() for item in productList.split(",")]
+    return processedList
+
+def countInstances(productList, product):
+    return productList.count(product)
+
+
+@app.route('/submit_order', methods=['POST'])
+def submit_order():
+    cart_data = request.json
+    products = []
+    orderLines = []
+    print(type(cart_data))
+
+    for prod in cart_data:
+        products.append(prod['name'])
+
+    uniqueProducts = set(products)
+    for prod in uniqueProducts:
+        orderLines.append(OrderLine(next(product for product in dataManager.products if product.name == prod), products.count(prod)))
+
+    newOrder = Order(orderLines, "Order from Client web page.", tableNumber)
+    dataManager.orders.append(newOrder)
+    dataManager.saveOrders()
+    dataManager.loadOrders()
+
+    # For example, save it to a database or handle it as needed
+    print(cart_data)  # Just to see the data in the console
+    return jsonify({'status': 'success', 'message': 'Order received'})
+    
 if __name__ == '__main__':
     initialize()
     app.run(debug=True)
