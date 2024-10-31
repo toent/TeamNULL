@@ -41,7 +41,7 @@
                         <button type="submit"> Select Product </button>
                     </div>
                 </form>
-                <form action="{{ url_for('manageProduct') }}" method="POST">
+                <form action="{{ url_for('manageProduct') }}" method="POST" enctype="multipart/form-data">
                     <div class="inputField" id="name">
                         <p class="smallText">Product Name: </p>
                         <input type="text" name="productName" value="{{productEdit.name}}">                       
@@ -87,7 +87,7 @@
                     </div>
                     <div class="specialField" id="tags">
                         <p class="smallText">Product Tags: </p>
-                        <input type="text" id="tagsInput" name="productIngrients" oninput="resizeTags()" placeholder="i.e. tag-pizza, tag-vegetarian">
+                        <input type="text" id="tagsInput" name="productTags" oninput="resizeTags()" value="{{sourceTags}}" placeholder="i.e. tag-pizza, tag-vegetarian">
                         <script>
                             function resizeTags() {
                                 const inputField = document.getElementById('tagsInput');
