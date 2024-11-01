@@ -1,4 +1,4 @@
-import serial
+from serial import Serial
 
 from classes.Tags import Tags
 from classes.DataManager import DataManager
@@ -18,15 +18,15 @@ blueStatus = []
 yellowStatus = []
 
 # defining serial com port
-arduino = serial.Serial('COM3',115200)
+ser = Serial(port='COM3',baudrate='9600')
 
 # function handling any serial inputs
 def serialInputHandler(timerToConfirm):
     print("----- CHECKING FOR SERIAL INPUT -----")
 
     # check if serial buffer has any inputs present, and decoding them when present
-    if arduino.in_waiting > 0:
-        serialInput = arduino.readline().decode("utf-8")
+    if ser.in_waiting > 0:
+        serialInput = ser.readline().decode("utf-8")
 
         print("----- SERIAL INPUT FOUND -----")
         print("INPUT:",serialInput)
@@ -91,14 +91,15 @@ def productTimerManager(tempOrder):
                     print("ID:",freeTimers[0])
                     print("-----------------------")
 
+                    sendData = str(freeTimers[0])
+
                     timerFound = True
 
             serialConfirm = False
             while serialConfirm == False:
                 # sending serial request
-                print("----- SENDING",str(freeTimers[0]),"TO ARDUINO -----")
-                writeStauts = arduino.write(freeTimers[0])
-                print("STATUS:",writeStauts)
+                print("----- SENDING",sendData,"TO ARDUINO -----")
+                ser.write(sendData.encode())
 
                 # checking for confirmation from the arduino of an assigned timer
                 if serialInputHandler(freeTimers[0]) == 1:

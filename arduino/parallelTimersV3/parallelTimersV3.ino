@@ -39,7 +39,7 @@ void setup() {
   pinMode(leftButton,INPUT_PULLUP);
   pinMode(rightButton,INPUT_PULLUP);
   pinMode(buzzer,OUTPUT);
-  Serial.begin(115200);
+  Serial.begin(9600);
 };
 
 // red timer start
