@@ -43,8 +43,8 @@
             </div>
             <div class="orderNotes">
                 <h3>Notes from Customer:</h3>
-                <p class="notes">{{ order.notes }}</p>
-            </div>
+                <p class="notes">{{ order.notes }}</p>  <!-- This will display the notes -->
+            </div>            
             <div class="doneButton">
                 <form action="{{ url_for('markDone') }}" method="post">
                     <input type="hidden" name="orderID" value="{{ order.orderID }}">
