@@ -1,0 +1,55 @@
+.navLink {
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    font-family: "Italiana";
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin: 0 1%;
+}
+
+.navLink.selected {
+    background-color: #FFFDD0;  /* Cream white */
+    color: black;
+    border-radius: 5px;  /* Smooth out the corners */
+    transform: scale(1.05);  /* Slightly enlarge */
+    padding: 0.2%;
+}
+
+.navLink:hover {
+    background-color: #FFFDD0;  /* Cream white */
+    color: black;
+    border-radius: 5px;  /* Smooth out the corners */
+    padding: 0.2%;
+    transform: scale(1.05);  /* Slightly enlarge */
+}
+
+header{
+    height: 50px;
+}
+
+@media (min-width: 600px) {
+    .center-text {
+        font-size: 40px;
+    }
+}
+
+.topNav {
+    width: calc(100% - 2%); /* Account for margin */
+    height: 50px;
+    background-color: #FFDA47;
+    text-align: center;
+    padding: 0.5%;
+    margin: 10px auto;  /* Auto-centering to maintain margin but avoid overflow */
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+
+
+.title {
+    font-size: 30px;
+    padding-right: 2%;
+    font-weight: bold;
+    color: black;
+    font-family: 'Italianno', cursive;
+}

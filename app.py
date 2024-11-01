@@ -217,6 +217,7 @@ def fohOverview():
     table7Status = "Finished"
     table8Status = "Finished"
     table9Status = "Finished"
+    currentPath = request.path
 
     for order in dataManager.orders:
         match int(order.table):
@@ -239,14 +240,15 @@ def fohOverview():
             case 9:
                 table9Status = tableStatusCheck(table9Status,order)
 
-    return render_template('fohOverview.html', table1Status = table1Status, table2Status = table2Status, table3Status = table3Status, table4Status = table4Status, table5Status = table5Status, table6Status = table6Status, table7Status = table7Status, table8Status = table8Status, table9Status = table9Status)
+    return render_template('fohOverview.html', table1Status = table1Status, table2Status = table2Status, table3Status = table3Status, table4Status = table4Status, table5Status = table5Status, table6Status = table6Status, table7Status = table7Status, table8Status = table8Status, table9Status = table9Status, currentPath=currentPath)
 
 
 @app.route('/orderDisplay', methods=['GET'])
 def orderDisplay():
+    currentPath = request.path
     openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted' or order.currentStatus == 'Ready']
     currentTime = datetime.now()
-    return render_template('orderDisplay.html', openOrders=openOrders, currentTime=currentTime)
+    return render_template('orderDisplay.html', openOrders=openOrders, currentTime=currentTime, currentPath=currentPath)
 
 
 @app.route('/markDone', methods=['Post'])
@@ -267,6 +269,7 @@ def manageProduct():
     sourceProductDict = {}
     sourceKeys = ""
     productImageLocation = "images/"
+    currentPath = request.path
     
     # get and debug the selected product
     selectedProduct = request.form.get('selectedProduct')
@@ -359,7 +362,7 @@ def manageProduct():
         
         setupTagRels()
 
-    return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict, sourceTags = sourceKeys)
+    return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict, sourceTags = sourceKeys, currentPath=currentPath)
 
 # check if the imagefile has one of the required file extensions
 def allowedImage(imageFileName):

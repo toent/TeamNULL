@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5">
+    <!--<meta http-equiv="refresh" content="5">-->
     <title>Front of House - Overview</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/fohOverviewStyle.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}">
 </head>
 <body>
+    <header>
+        <div class="topNav">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}" alt="Mario & Luigi's Pizzeria Logo" style="height: 50px; vertical-align: middle;">
+            </a>
+            <a class="title" href="{{ url_for('index') }}">Mario & Luigi's Pizzeria</a>
+        <a class="navLink {% if currentPath == url_for('orderDisplay') %}selected{% endif %}" href="{{ url_for('orderDisplay') }}">Order Display</a>
+        <a class="navLink {% if currentPath == url_for('fohOverview') %}selected{% endif %}" href="{{ url_for('fohOverview') }}">Table Overview</a>
+        <a class="navLink {% if currentPath == url_for('manageProduct') %}selected{% endif %}" href="{{ url_for('manageProduct') }}">Manage Products</a>
+        </div>
+    </header>
     <div class="wrapper">
         <div class="mainContainer">
             <div class="table1">

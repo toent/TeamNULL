@@ -33,7 +33,6 @@ button{
 
 .backGroundDiv{
     background-color: #ffde59ca;
-    display: flex;
     justify-content: center;
     margin: auto;
     width: 80%;
@@ -48,7 +47,6 @@ button{
     display: flex;
     flex-direction: row;
     justify-content:flex-start;
-    justify-content: center;
     align-items: center;
     margin-bottom: 10px;
 }
@@ -76,7 +74,7 @@ button{
 .specialField{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -179,4 +177,25 @@ input[type="file"] {
     border: 3px #303030;
     border-radius: 5px;
     background-color: beige;
+}
+
+.column {
+  float: left;
+  padding: 10px;
+  height: 100%;
+}
+
+.left, .right {
+  width: 30%;
+}
+
+.middle {
+  width: 40%;
+}
+
+.row:after {
+  width: 100%;
+  content: "";
+  display: table;
+  clear: both;
 }
