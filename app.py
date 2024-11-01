@@ -184,7 +184,7 @@ def fohOrder():
             fohOrderLineList.append(OrderLine(selectedPizza, addedPizzaQuantity))
 
     # Calculate the total price
-    priceTotal = sum(line.product.price * line.quantity for line in fohOrderLineList)
+    priceTotal = round(sum(line.product.price * line.quantity for line in fohOrderLineList), 2)
 
     # Render the template
     return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList, selectButtonClass=productTagRel)
@@ -260,7 +260,7 @@ def markDone():
         dataManager.saveOrders()
     return redirect(url_for('orderDisplay'))
 
-@app.route('/manageproducts', methods=['POST', 'GET'])
+@app.route('/manageProducts', methods=['POST', 'GET'])
 def manageProduct():
     # preparing values
     processedIngredients = []
