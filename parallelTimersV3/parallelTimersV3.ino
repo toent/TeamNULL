@@ -40,6 +40,7 @@ void setup() {
   pinMode(rightButton,INPUT_PULLUP);
   pinMode(buzzer,OUTPUT);
   Serial.begin(115200);
+  Display.show("");
 };
 
 // red timer start
@@ -139,43 +140,19 @@ void loop() {
     if (millis() - redStartTime > timerDuration && redStartTime > 1) {
       // setting timer to complete if time is elapsed
       redStartTime = timerComplete(redLed,redTone,1);
-    } 
-    // otherwise checking if timer is preassigned
-    else if (redStartTime == 1) {
-      // sending confirmation if preassinged
-      Serial.println(5);
-    };
-
+    }
     // elapsed time check for green timer (same as red timer)
     if (millis() - greenStartTime > timerDuration && greenStartTime > 1) {
       greenStartTime = timerComplete(greenLed,greenTone,2);
     }
-    // otherwise checking if timer is preassigned
-    else if (greenStartTime == 1) {
-      // sending confirmation if preassinged
-      Serial.println(6);
-    };
-
     // elapsed time check for blue timer (same as red timer)
     if (millis() - blueStartTime > timerDuration && blueStartTime > 1) {
       blueStartTime = timerComplete(blueLed,blueTone,3);
     }
-    // otherwise checking if timer is preassigned
-    else if (blueStartTime == 1) {
-      // sending confirmation if preassinged
-      Serial.println(7);
-    };
-
     // elapsed time check for yellow timer (same as red timer)
     if (millis() - yellowStartTime > timerDuration && yellowStartTime > 1) {
       yellowStartTime = timerComplete(yellowLed,yellowTone,4);
     }
-    // otherwise checking if timer is preassigned
-    else if (yellowStartTime == 1) {
-      // sending confirmation if preassinged
-      Serial.println(8);
-    };
-
     lastCycleTime = millis();
   };
 
@@ -185,15 +162,19 @@ void loop() {
     Display.show(serialInput);
     if (serialInput == 1 && redStartTime == 0) {
       redStartTime = 1;
+      Serial.println(5);
     };
     if (serialInput == 2 && greenStartTime == 0) {
       greenStartTime = 1;
+      Serial.println(6);
     };
     if (serialInput == 3 && blueStartTime == 0) {
       blueStartTime = 1;
+      Serial.println(7);
     };
     if (serialInput == 4 && yellowStartTime == 0) {
       yellowStartTime = 1;
+      Serial.println(8);
     };
   };
 }

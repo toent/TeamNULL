@@ -1,10 +1,15 @@
 import serial
+import time
 
-from classes.Tags import Tags
+# defining serial com port
+ser = serial.Serial(port="COM3",baudrate=115200,timeout=1)
+
+handshake = "9999"
+handshakeVerify = ser.write(bytes(handshake,"utf-8"))
+print("----- HANDSHAKE:",handshakeVerify,"-----")
+time.sleep(1)
+
 from classes.DataManager import DataManager
-from classes.Order import Order
-from classes.OrderLine import OrderLine
-from classes.Product import Product
 
 dataManager = DataManager()
 
@@ -17,23 +22,22 @@ greenStatus = []
 blueStatus = []
 yellowStatus = []
 
-# defining serial com port
-arduino = serial.Serial('COM3',115200)
-
 # function handling any serial inputs
 def serialInputHandler(timerToConfirm):
     print("----- CHECKING FOR SERIAL INPUT -----")
 
     # check if serial buffer has any inputs present, and decoding them when present
-    if arduino.in_waiting > 0:
-        serialInput = arduino.readline().decode("utf-8")
+    if ser.in_waiting > 0:
+        serialInput = int(ser.readline().decode("utf-8"))
+        time.sleep(1)
 
         print("----- SERIAL INPUT FOUND -----")
-        print("INPUT:",serialInput)
+        print("Input:",serialInput)
         print("------------------------------")
 
         # find the timer that became free and adding it to freeTimers
-        if int(serialInput) > 4:
+        if int(serialInput) <= 4:
+            print("----- COMPLETED TIMER",serialInput,"REGISTERED -----")
             freeTimers.append(serialInput)
 
             # wiping the respective status list for the now finished timer
@@ -48,7 +52,11 @@ def serialInputHandler(timerToConfirm):
                     yellowStatus.clear()
             return 0
         
-        elif serialInput == (str(timerToConfirm + 4)):
+        elif serialInput == (timerToConfirm):
+            print("----- INPUT CONFIRMATION FOUND -----")
+            print("A Type:",type(serialInput),"A Data:",serialInput)
+            print("B Type:",type(timerToConfirm),"B Data:",timerToConfirm)
+            print("------------------------------------")
             return 1
 
 # function to identify and send a cook request for the products of an input order
@@ -62,7 +70,7 @@ def productTimerManager(tempOrder):
 
     # find the quanitity of a product in the order
     for product in tempOrder.products:
-        for x in range(1,(product.quantity)):
+        for x in range(0,(product.quantity)):
             # create a temporary list to make product identifier strings containing:
             # tempOrder id, product name, # (out of total # of that product name in the order)
             productIdentifier = []
@@ -80,10 +88,11 @@ def productTimerManager(tempOrder):
             while timerFound == False :
                 print("----- CHECKING FOR TIMER -----")
                 print("FREE IDs:",freeTimers)
-                if len(freeTimers) < 0:
+                print("# OF TIMERS:",len(freeTimers))
+                if len(freeTimers) == 0:
                     print("----- NO TIMER FOUND -----")
                     # if there are no free timers, check for a free timer and try again
-                    serialInputHandler()
+                    serialInputHandler(9)
                     continue
 
                 else:
@@ -91,17 +100,21 @@ def productTimerManager(tempOrder):
                     print("ID:",freeTimers[0])
                     print("-----------------------")
 
+                    sendData = str(freeTimers[0])
+
                     timerFound = True
+
+
 
             serialConfirm = False
             while serialConfirm == False:
                 # sending serial request
-                print("----- SENDING",str(freeTimers[0]),"TO ARDUINO -----")
-                writeStauts = arduino.write(freeTimers[0])
-                print("STATUS:",writeStauts)
+                print("----- SENDING",sendData,"TO ARDUINO -----")
+                ser.write(bytes(sendData,"utf-8"))
+                time.sleep(1)
 
                 # checking for confirmation from the arduino of an assigned timer
-                if serialInputHandler(freeTimers[0]) == 1:
+                if serialInputHandler(freeTimers[0] + 4) == 1:
                     print("----- TIMER ASSIGNMENT CONFIRMATION RECIEVED -----")
                     # adding the status to the selected timer, removing the timer from freeTimers
                     match (freeTimers[0]):
@@ -140,8 +153,11 @@ for order in dataManager.orders:
     else:
         continue
 
+print("----- EXISTING ORDERS COMPLETE -----")
+
 # while loop to handle orders created after code start
 while True:
+    print("----- CHECKING FOR NEW ORDERS -----")
     if dataManagerLength < len(dataManager.orders):
         dataManagerLength = len(dataManager.orders)
 
@@ -150,3 +166,5 @@ while True:
         print("------------------------")
 
         productTimerManager(dataManager.orders[dataManagerLength])
+
+        serialInputHandler(9)
