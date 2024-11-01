@@ -17,7 +17,7 @@ from classes.Product import Product
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
-imageUploadFolder = os.path.join(app.root_path, 'static/images')
+imageUploadFolder = os.path.join(app.root_path, 'static/images/uploads')
 allowedImageFiles = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = imageUploadFolder
 
@@ -264,9 +264,11 @@ def manageProduct():
     processedIngredients = []
     processedAllergens = []
     processedTags = []
+    allImageNames = []
     sourceProductDict = {}
     sourceKeys = ""
-    productImageLocation = "images/"
+    imageToDelete = ""
+    productImageLocation = "images/uploads/"
     
     # get and debug the selected product
     selectedProduct = request.form.get('selectedProduct')
@@ -291,6 +293,11 @@ def manageProduct():
     productAllergens = request.form.get('productAllergens')
     productImage = request.files.get('productImage')
     productTags = request.form.get('productTags')
+    imageToDelete = request.form.get('imageForDeletion')
+    productToDelete = request.form.get('productForDeletion')
+
+    # get all the images
+    allImageNames = os.listdir(app.config['UPLOAD_FOLDER'])
 
     # convert product details to the correct format
     if productIngredients:
@@ -310,13 +317,16 @@ def manageProduct():
     print(f"Processed Allergens: {processedAllergens}")
     print(f"Product Tags: {productTags}")
     print(f"Processed Tags: {processedTags}")
+    print(f"Image to Delete: {imageToDelete}")
+    print(f"Product to Delete: {productToDelete}")
 
-    # save productimage to static/images/
+    # save productimage to static/images/uploads
     if productImage and allowedImage(productImage.filename):
         filename = secure_filename(productImage.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         productImage.save(filepath)
         productImageLocation = productImageLocation + filename
+        allImageNames = os.listdir(app.config['UPLOAD_FOLDER'])
 
     # check if product is not an empty product -> make the product and add it to the products.json file
     if productName != None and productPrice != None and len(processedIngredients) > 0:
@@ -328,7 +338,7 @@ def manageProduct():
             existingProductIndex = dataManager.products.index(existingProduct)
             print(existingProduct.images)
             print(newProduct.images)
-            if newProduct.images == "images/":
+            if newProduct.images == "images/" or newProduct.images == "images/uploads/":
                 print("image check passed!")
                 newProduct.images = existingProduct.images
 
@@ -342,33 +352,58 @@ def manageProduct():
         # check if tag is not duplicate and remove tags if they are not assigned to a product anymore 
         if processedTags:
             for tag in processedTags:
-                print("test1")
                 if newProduct.name not in tags.tagDict[tag]:
-                    print("test2")
                     tags.tagDict[tag].append(newProduct.name)   
             for key in tags.tagDict:
-                print(f"test3 - {key}")
                 if newProduct.name in tags.tagDict[key] and key not in processedTags:
-                    print(f"test4 - {key}")
                     tags.tagDict[key].remove(newProduct.name)
                     
-
             tags.saveTags()
-            
-
-        
+    
         setupTagRels()
 
-    return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict, sourceTags = sourceKeys)
+    if productToDelete != "" and productToDelete != None:
+        try:
+            for product in dataManager.products:
+                if product.name == productToDelete:
+                    dataManager.products.pop(dataManager.products.index(product))
+
+            for key in tags.tagDict:
+                if productToDelete in tags.tagDict[key]:
+                    tags.tagDict[key].remove(productToDelete)
+        except:
+            print("COULD NOT REMOVE PRODUCT OR PRODUCT NOT FOUND")
+        dataManager.saveProducts()
+        tags.saveTags()
+        setupTagRels()
+                      
+
+    # image deletion logic
+    if imageToDelete != "" and imageToDelete != None:
+        # try to find the image and try to delete it
+        try:
+            newPath = os.path.join(app.config['UPLOAD_FOLDER'], imageToDelete)
+            os.remove(newPath)
+        except:
+            print("COULD NOT REMOVE IMAGE OR IMAGE NOT FOUND")
+
+        # update image list
+        allImageNames = os.listdir(app.config['UPLOAD_FOLDER'])
+
+    return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict, sourceTags = sourceKeys, imageNameList=allImageNames)
+
+
 
 # check if the imagefile has one of the required file extensions
 def allowedImage(imageFileName):
     print(imageFileName)
     return '.' in imageFileName and imageFileName.rsplit('.', 1)[1].lower() in allowedImageFiles
 
+# Product detail formatter for the product manager
 def formatProductDetails(productList, doCapitalize, doLower):
     processedList = []
     charactersToRemove = ["'", '"', "[", "]"]
+    # check if any of the characters to remove are in productList, if so replace them with nothing effictively removing them
     for i in str(productList):
         if i in charactersToRemove:
             productList = str(productList).replace(i, "")
