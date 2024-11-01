@@ -5,7 +5,7 @@ body{
 }
 
 p{
-    font-family: 'Italianno', cursive;
+    font-family: "Italiana", serif;
     font-weight: bold;
 }
 
@@ -102,10 +102,11 @@ button{
 }
 
 .orderL > p{
-    font-size: 35px;
+    font-size: 25px;
     padding-right: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
+    font-family: "Italiana", serif;
 }
 
 .orderR{
@@ -167,10 +168,13 @@ button{
 .priceTotal{
     margin-top: 5px;
     margin-bottom: 5px;
+    font-family: "Italiana", serif;
+    font-size: 25px;
 }
 
 .tableNr{
     margin: 0px;
+    font-family: "Italiana", serif;
 }
 
 .tag-pizza{

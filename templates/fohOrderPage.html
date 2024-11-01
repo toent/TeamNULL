@@ -5,7 +5,8 @@
     <title>Front of House - Order Table</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gSTYLE.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/fohOrder.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fohOrder.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,9 +19,17 @@
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}">
 </head>
 <body>
-    <div class="topBar">
-        <a href="{{ url_for('fohOverview') }}"><img class="logoImage" src="{{url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png')}}"/></a>
-    </div>
+    <header>
+        <div class="topNav">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/marioLuigiPizzeriaTempLogoV2.png') }}" alt="Mario & Luigi's Pizzeria Logo" style="height: 50px; vertical-align: middle;">
+            </a>
+            <a class="title" href="{{ url_for('index') }}">Mario & Luigi's Pizzeria</a>
+        <a class="navLink {% if currentPath == url_for('orderDisplay') %}selected{% endif %}" href="{{ url_for('orderDisplay') }}">Order Display</a>
+        <a class="navLink {% if currentPath == url_for('fohOverview') %}selected{% endif %}" href="{{ url_for('fohOverview') }}">Table Overview</a>
+        <a class="navLink {% if currentPath == url_for('manageProduct') %}selected{% endif %}" href="{{ url_for('manageProduct') }}">Manage Products</a>
+        </div>
+    </header>
     <div class="wrapper">
         <div class="orderScreen">
             <div class="orderListing">

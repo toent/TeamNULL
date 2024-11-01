@@ -49,25 +49,6 @@ body {
     background-color: #ccffcc;
 }
 
-.topNav {
-    width: 100%;
-    height: 50px;
-    background-color: #e9d276;
-    text-align: center;
-    padding: 0.5%;
-    margin: 10px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-}
-
-.title {
-    font-size: 30px;
-    font-weight: bold;
-    color: black;
-    font-family: 'Italianno', cursive;
-}
-
 main{
     width: 100%;
     height: calc(100vh - 50px);  /* Full height minus header */
@@ -157,6 +138,10 @@ button:active {
     transform: scale(0.95);
 }
 
-header{
-    height: 50px;
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
+
