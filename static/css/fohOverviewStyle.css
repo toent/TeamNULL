@@ -5,12 +5,8 @@ body {
   background-size: cover;
 }
 
-header {
-  background-color: #ffde59ca;
-}
-
 .wrapper{
-  transform: scale(1, 1);
+  /*transform: scale(1, 1);*/
 }
 
 .table1, .table2, .table3, .table4, .table5, .table6, .table7, .table8, .table9, .Finished, .Ready, .Submitted {
@@ -19,12 +15,11 @@ header {
 
 .mainContainer {
   display: flex;
-  position: absolute;
-  top: 5%;
-  left: 5%;
-  height: 90vh;
-  width: 90vw;
-  background-color: #e9d276;
+  margin-left: 0.6%;
+  margin-top: 2%;
+  height: 85vh;
+  width: 95vw;
+  background-color: rgba(254, 240, 202, 0.7);
   border-radius: 8px;
 }
 
@@ -34,7 +29,7 @@ header {
   height: 150px;
   width: 450px;
   left: 15%;
-  top: 10%;
+  top: 14%;
   border-radius: 8px;
 }
 
@@ -44,7 +39,7 @@ header {
   height: 150px;
   width: 450px;
   left: 55%;
-  top: 10%;
+  top: 14%;
   border-radius: 8px;
 }
 
@@ -150,7 +145,7 @@ header {
 /* specific style for tables with a finished order or no orders */
 .Finished {
   color: black;
-  background-color: #ffde59ca;
+  background-color: white;
 }
 
 @media only screen and (max-width: 800px){
