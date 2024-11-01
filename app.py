@@ -184,7 +184,7 @@ def fohOrder():
             fohOrderLineList.append(OrderLine(selectedPizza, addedPizzaQuantity))
 
     # Calculate the total price
-    priceTotal = sum(line.product.price * line.quantity for line in fohOrderLineList)
+    priceTotal = round(sum(line.product.price * line.quantity for line in fohOrderLineList), 2)
 
     # Render the template
     return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList, selectButtonClass=productTagRel)
@@ -260,7 +260,7 @@ def markDone():
         dataManager.saveOrders()
     return redirect(url_for('orderDisplay'))
 
-@app.route('/manageproducts', methods=['POST', 'GET'])
+@app.route('/manageProducts', methods=['POST', 'GET'])
 def manageProduct():
     # preparing values
     processedIngredients = []
@@ -426,7 +426,10 @@ def countInstances(productList, product):
 def submit_order():
     try:
         # Retrieve JSON data from request
-        cart_data = request.json  # This should be a list of dictionaries
+        data = request.json
+        cart_data = data.get('cartItems', [])
+        notes = data.get('notes', '')  # Retrieve the notes
+
         print("Received cart_data:", cart_data)  # Print to verify the structure
 
         # Ensure cart_data is a list (or dict) and not a plain string
@@ -449,7 +452,7 @@ def submit_order():
         for prod in uniqueProducts:
             orderLines.append(OrderLine(next(product for product in dataManager.products if product.name == prod), products.count(prod)))
 
-        newOrder = Order(orderLines, "Order from Client web page.", tableNumber)
+        newOrder = Order(orderLines, notes, tableNumber)  # Pass notes to the order
         dataManager.orders.append(newOrder)
         dataManager.saveOrders()
         dataManager.loadOrders()
@@ -460,6 +463,7 @@ def submit_order():
     except Exception as e:
         print("Error in submit_order:", str(e))
         return jsonify({"error": "An error occurred while processing the order"}), 500
+
     
 if __name__ == '__main__':
     initialize()
