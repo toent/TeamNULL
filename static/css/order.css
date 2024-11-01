@@ -208,6 +208,26 @@ input[type="tel"]:focus {
     font-family: "Italiana", serif;
 }
 
+/*Back button*/
+.back-button {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+.back-button:hover {
+    background-color: #ddd;
+}
+
 /* Responsive design adjustments */
 @media (min-width: 600px) {
     .center-text {
