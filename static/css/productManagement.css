@@ -35,6 +35,7 @@ button{
     background-color: #ffde59ca;
     justify-content: center;
     margin: auto;
+    margin-bottom: 30px;
     width: 80%;
     flex-direction: column;
     flex-wrap: wrap;
@@ -163,6 +164,7 @@ input[type="file"] {
     font-family: "Italiana", serif;
     font-weight: bold;
     font-size: 15px;
+    text-align: center;
     border: none;
     border-radius: 5px;
     background-color: beige;

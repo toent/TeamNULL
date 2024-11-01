@@ -47,6 +47,7 @@
         <div class="pizza-card">
             <img src="{{ url_for('static', filename=pizza.images) }}" alt="{{ pizza.name }} Image" class="pizza-image">
             <div class="pizza-info">
+                <span>{{ pizza.name}}</span>
                 <p>Ingredients: {{ pizza.ingredients | join(', ') }}</p> 
                 <div class="details">
                     <span>Allergens</span>

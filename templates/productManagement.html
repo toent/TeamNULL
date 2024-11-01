@@ -37,7 +37,7 @@
         </div>
     </header>
         <div class="wrapper">
-            <div class="backGroundDiv">
+            <div class="backGroundDiv" id="ProductManagement">
                 <div class="row">
                     <div class="column left"><p></p></div>
                     <div class="column middle">
@@ -69,45 +69,73 @@
                                 <p class="smallText">Product Ingredients: </p>
                                 <input class="styleTextInput" type="text" id="ingredientsInput" name="productIngredients" value="{{productEdit.ingredients}}" placeholder="i.e. Tomatoes, Herbs, Garlic, Mozzarella">
 
-                            </div>
-                            <div class="specialField" id="allergens">
-                                <p class="smallText">Product Allergens: </p>
-                                <input class="styleTextInput" type="text" id="allergensInput" name="productAllergens" value="{{productEdit.allergens}}" placeholder="i.e. Gluten, Milk">
-                            </div>
-                            <div class="specialField" id="image">
-                                <p class="smallText">Product Image: </p>
-                                <div class="imageInputField">
-                                    <div class="previewContainerPlacement">
-                                        <div id="drop-area">
-                                            <p class="dragText">Drag here to upload</p>
-                                        </div>
-                                        <div id="preview-container"></div>
-                                    </div>
-                                    <label for="file-input" class="uploadButtonLabel">Upload Image</label>
-                                    <input type="file" id="file-input" name="productImage">
-                                    <script src="{{ url_for('static', filename='js/dragAndDropUploader.js') }}"></script>
-                                </div>
-                            </div>
-                            <div class="specialField" id="tags">
-                                <p class="smallText">Product Tags: </p>
-                                <input class="styleTextInput" type="text" id="tagsInput" name="productTags" value="{{sourceTags}}" placeholder="i.e. tag-pizza, tag-vegetarian">
-                            </div>
-                            <div class="specialField">
-                                <p class="smallText">List of Existing Tags: </p>
-                                <select class="selectBoxStyle" name="selectedProduct"> Tag
-                                    <option>Tags</option>
-                                    {% for tag in tagList %}
-                                        <option value="{{tag}}">{{tag}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="createProductButton">
-                                <button type="submit"> Create Product </button>
-                            </div>
-                        </form>
                     </div>
-                    <div class="column right"><p></p></div>
-                </div>
+                    <div class="specialField" id="allergens">
+                        <p class="smallText">Product Allergens: </p>
+                        <input class="styleTextInput" type="text" id="allergensInput" name="productAllergens" value="{{productEdit.allergens}}" placeholder="i.e. Gluten, Milk">
+                    </div>
+                    <div class="specialField" id="image">
+                        <p class="smallText">Product Image: </p>
+                        <div class="imageInputField">
+                            <div class="previewContainerPlacement">
+                                <div id="drop-area">
+                                    <p class="dragText">Drag here to upload</p>
+                                </div>
+                                <div id="preview-container"></div>
+                            </div>
+                            <label for="file-input" class="uploadButtonLabel">Upload Image</label>
+                            <input type="file" id="file-input" name="productImage">         
+                            <script src="{{ url_for('static', filename='js/dragAndDropUploader.js') }}"></script>
+                        </div>
+                    </div>
+                    <div class="specialField" id="tags">
+                        <p class="smallText">Product Tags: </p>
+                        <input class="styleTextInput" type="text" id="tagsInput" name="productTags" value="{{sourceTags}}" placeholder="i.e. tag-pizza, tag-vegetarian">
+                    </div>
+                    <div class="specialField">
+                        <p class="smallText">List of Existing Tags: </p>
+                        <select class="selectBoxStyle" name="selectedProduct"> Tag
+                            <option>Tags</option>
+                            {% for tag in tagList %}
+                                <option value="{{tag}}">{{tag}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="createProductButton">
+                        <button type="submit"> Create Product </button>
+                    </div>
+                </form>
+            </div>
+            <div class="backGroundDiv" id="FileManagement">
+                <h1 class="headText">File & Data Management</h1>
+                <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
+                    <div class="inputField">
+                        <p class="smallText">Image to Delete: </p>
+                        <select class="selectBoxStyle" name="imageForDeletion"> Image
+                            <option value="">Select Image</option>
+                            {% for image in imageNameList %}
+                                <option value="{{image}}">{{image}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="recenter">
+                        <button type="submit"> Delete Image </button>
+                    </div>
+                </form>
+                <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
+                    <div class="inputField">
+                        <p class="smallText">Product to Delete: </p>
+                        <select class="selectBoxStyle" name="productForDeletion"> Product
+                            <option value="">Select Product</option>
+                            {% for product in productList %}
+                                <option value="{{product.name}}">{{product.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="recenter">
+                        <button type="submit"> Delete Product </button>
+                    </div>
+                </form>
             </div>
         </div>
     </body>
