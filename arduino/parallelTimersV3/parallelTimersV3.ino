@@ -1,3 +1,5 @@
+#include "Display.h"
+
 // pin naming
 const int redLed = 4;
 const int greenLed = 5;
@@ -37,7 +39,7 @@ void setup() {
   pinMode(leftButton,INPUT_PULLUP);
   pinMode(rightButton,INPUT_PULLUP);
   pinMode(buzzer,OUTPUT);
-  Serial.begin(1000000);
+  Serial.begin(115200);
 };
 
 // red timer start
@@ -80,26 +82,8 @@ unsigned long timerComplete(int timerLed, int timerTone, int timerId) {
 };
 
 void loop() {
-  // setting a timer to the preassigned state based on serial input
-  if (Serial.available() > 0) {
-    int serialInput = Serial.parseInt();
-    Serial.println("CONFIRM");
-    if (serialInput == 0) {
-      redStartTime = 1;
-    };
-    if (serialInput == 1) {
-      greenStartTime = 1;
-    };
-    if (serialInput == 2) {
-      blueStartTime = 1;
-    };
-    if (serialInput == 3) {
-      yellowStartTime = 1;
-    };
-  };
-
   // start timer (pressing left button)
-  if (digitalRead(leftButton) == 0 && digitalRead(rightButton) == 1)
+  if (digitalRead(leftButton) == 0)
   {
     // finding a pre-selected tiemr (1)
     if (redStartTime == 1) {
@@ -154,22 +138,62 @@ void loop() {
     // elapsed time check for red timer
     if (millis() - redStartTime > timerDuration && redStartTime > 1) {
       // setting timer to complete if time is elapsed
-      redStartTime = timerComplete(redLed,redTone,0);
+      redStartTime = timerComplete(redLed,redTone,1);
+    } 
+    // otherwise checking if timer is preassigned
+    else if (redStartTime == 1) {
+      // sending confirmation if preassinged
+      Serial.println(5);
     };
 
     // elapsed time check for green timer (same as red timer)
     if (millis() - greenStartTime > timerDuration && greenStartTime > 1) {
-      greenStartTime = timerComplete(greenLed,greenTone,1);
+      greenStartTime = timerComplete(greenLed,greenTone,2);
+    }
+    // otherwise checking if timer is preassigned
+    else if (greenStartTime == 1) {
+      // sending confirmation if preassinged
+      Serial.println(6);
     };
 
     // elapsed time check for blue timer (same as red timer)
     if (millis() - blueStartTime > timerDuration && blueStartTime > 1) {
-      blueStartTime = timerComplete(blueLed,blueTone,2);
+      blueStartTime = timerComplete(blueLed,blueTone,3);
+    }
+    // otherwise checking if timer is preassigned
+    else if (blueStartTime == 1) {
+      // sending confirmation if preassinged
+      Serial.println(7);
     };
 
     // elapsed time check for yellow timer (same as red timer)
     if (millis() - yellowStartTime > timerDuration && yellowStartTime > 1) {
-      yellowStartTime = timerComplete(yellowLed,yellowTone,3);
+      yellowStartTime = timerComplete(yellowLed,yellowTone,4);
+    }
+    // otherwise checking if timer is preassigned
+    else if (yellowStartTime == 1) {
+      // sending confirmation if preassinged
+      Serial.println(8);
+    };
+
+    lastCycleTime = millis();
+  };
+
+  // setting a timer to the preassigned state based on serial input
+  if (Serial.available() > 0) {
+    int serialInput = Serial.parseInt();
+    Display.show(serialInput);
+    if (serialInput == 1 && redStartTime == 0) {
+      redStartTime = 1;
+    };
+    if (serialInput == 2 && greenStartTime == 0) {
+      greenStartTime = 1;
+    };
+    if (serialInput == 3 && blueStartTime == 0) {
+      blueStartTime = 1;
+    };
+    if (serialInput == 4 && yellowStartTime == 0) {
+      yellowStartTime = 1;
     };
   };
 }

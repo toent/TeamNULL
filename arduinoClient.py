@@ -10,7 +10,7 @@ dataManager = DataManager()
 
 dataManagerLength = len(dataManager.orders)
 
-freeTimers = [0,1,2,3]
+freeTimers = [1,2,3,4]
 
 redStatus = []
 greenStatus = []
@@ -18,44 +18,41 @@ blueStatus = []
 yellowStatus = []
 
 # defining serial com port
-arduino = serial.Serial('COM3',9600)
+arduino = serial.Serial('COM3',115200)
 
 # function handling any serial inputs
-def serialInputHandler():
+def serialInputHandler(timerToConfirm):
     print("----- CHECKING FOR SERIAL INPUT -----")
 
     # check if serial buffer has any inputs present, and decoding them when present
     if arduino.in_waiting > 0:
-        serialInput = arduino.readline().decode().strip()
+        serialInput = arduino.readline().decode("utf-8")
 
         print("----- SERIAL INPUT FOUND -----")
         print("INPUT:",serialInput)
         print("------------------------------")
 
         # find the timer that became free and adding it to freeTimers
-        if serialInput != "CONFIRM":
+        if int(serialInput) > 4:
             freeTimers.append(serialInput)
 
             # wiping the respective status list for the now finished timer
             match (serialInput):
-                case 0:
-                    redStatus.clear()
                 case 1:
-                    greenStatus.clear()
+                    redStatus.clear()
                 case 2:
-                    blueStatus.clear()
+                    greenStatus.clear()
                 case 3:
+                    blueStatus.clear()
+                case 4:
                     yellowStatus.clear()
             return 0
         
-        elif serialInput == "CONFIRM":
+        elif serialInput == (str(timerToConfirm + 4)):
             return 1
 
-# example of serial input
-# "red"
-
 # function to identify and send a cook request for the products of an input order
-def productIdentifier(tempOrder):
+def productTimerManager(tempOrder):
     # store the tempOrder's id for product tracking
     tempOrderId = tempOrder.orderID
 
@@ -78,48 +75,59 @@ def productIdentifier(tempOrder):
             print(productIdentifier)
             print("------------------------------")
 
+            timerFound = False
             # looping until a free timer is found, and when found assigning the timer and storing the product info for that timer
-            while len(productIdentifier) <= 3:
+            while timerFound == False :
                 print("----- CHECKING FOR TIMER -----")
                 print("FREE IDs:",freeTimers)
-                if len(freeTimers) > 0:
+                if len(freeTimers) < 0:
+                    print("----- NO TIMER FOUND -----")
+                    # if there are no free timers, check for a free timer and try again
+                    serialInputHandler()
+                    continue
+
+                else:
                     print("----- TIMER FOUND -----")
                     print("ID:",freeTimers[0])
                     print("-----------------------")
 
-                    print("----- SENDING",freeTimers[0],"TO ARDUINO -----")
-                    arduino.write(freeTimers[0])
+                    timerFound = True
 
+            serialConfirm = False
+            while serialConfirm == False:
+                # sending serial request
+                print("----- SENDING",str(freeTimers[0]),"TO ARDUINO -----")
+                writeStauts = arduino.write(freeTimers[0])
+                print("STATUS:",writeStauts)
+
+                # checking for confirmation from the arduino of an assigned timer
+                if serialInputHandler(freeTimers[0]) == 1:
+                    print("----- TIMER ASSIGNMENT CONFIRMATION RECIEVED -----")
+                    # adding the status to the selected timer, removing the timer from freeTimers
                     match (freeTimers[0]):
-                        case 0:
+                        case 1:
                             redStatus.extend(productIdentifier)
                             freeTimers.pop(0)
-                            productIdentifier.append(0)
-                        case 1:
+                            print("----- MOVINGTO NEXT PRODUCT -----")
+                        case 2:
                             greenStatus.extend(productIdentifier)
                             freeTimers.pop(0) 
-                            productIdentifier.append(1)
-                        case 2:
+                            print("----- MOVINGTO NEXT PRODUCT -----")
+                        case 3:
                             blueStatus.extend(productIdentifier)
                             freeTimers.pop(0)
-                            productIdentifier.append(2)
-                        case 3:                  
+                            print("----- MOVINGTO NEXT PRODUCT -----")
+                        case 4:                  
                             yellowStatus.extend(productIdentifier)
                             freeTimers.pop(0)
-                            productIdentifier.append(3)
-
-                serialConfirm = False
-
-                while serialConfirm == False:
-                    if serialInputHandler() == 1:
-                        serialConfirm = True
-                    else:
-                        continue
+                            print("----- MOVINGTO NEXT PRODUCT -----")  
+                    
+                    # breaking the loop
+                    serialConfirm = True
 
                 else:
-                    print("----- NO TIMER FOUND -----")
-                    # if there are no free timers, check for a free timer and try again
-                    serialInputHandler()
+                    # trying again if no confirmation is recieved
+                    print("----- AWAITING TIMER ASSIGNEMENT CONFRIMATION -----")
                     continue
 
 # for loop to check orders stored prior to code start for any submitted orders
@@ -128,7 +136,7 @@ for order in dataManager.orders:
         print("----- EXISTING SUBMITTED ORDER FOUND -----")
         print("ORDER:",order)
         print("------------------------------------------")
-        productIdentifier(order)
+        productTimerManager(order)
     else:
         continue
 
@@ -141,4 +149,4 @@ while True:
         print(dataManager.orders[dataManagerLength])
         print("------------------------")
 
-        productIdentifier(dataManager.orders[dataManagerLength])
+        productTimerManager(dataManager.orders[dataManagerLength])
