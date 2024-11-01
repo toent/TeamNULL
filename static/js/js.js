@@ -6,7 +6,7 @@ setTimeout(function() {
     setTimeout(function() {
         document.getElementById('boxes').classList.add('show-boxes');
     }, 1000);
-}, 3000);
+}, 1500);
 
 // Function to show the boxes on scroll if necessary
 window.addEventListener('scroll', function() {
@@ -64,11 +64,23 @@ function updateCartDetailsDisplay() {
     if (cartItems.length === 0) {
         cartDetailsDisplay.innerHTML = '<p>Your cart is empty.</p>';
     } else {
-        cartDetailsDisplay.innerHTML = cartItems.map(item => `
+        cartDetailsDisplay.innerHTML = cartItems.map((item, index) => `
             <div class="cart-item">
                 <strong>${item.name}</strong><br>
-                <strong>Price: ${item.price} &euro;</strong><br>
+                <span>Price: ${item.price} &euro;</span><br>
+                <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
             </div>
         `).join('');
     }
+}
+
+// Function to remove an item from the cart
+function removeFromCart(index) {
+    cartItems.splice(index, 1); // Remove item at the specified index
+    cartCount = cartItems.length; // Update cart count
+    cartCountDisplay.textContent = cartCount; // Update cart count display
+
+    // Save updated cartItems to localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    updateCartDetailsDisplay(); // Refresh the cart display
 }
