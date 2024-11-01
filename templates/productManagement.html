@@ -25,7 +25,7 @@
     </head>
     <body>
         <div class="wrapper">
-            <div class="backGroundDiv">
+            <div class="backGroundDiv" id="ProductManagement">
                 <h1 class="headText">Product Management</h1>
                 <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
                     <div class="inputField">
@@ -88,6 +88,37 @@
                     </div>
                     <div class="createProductButton">
                         <button type="submit"> Create Product </button>
+                    </div>
+                </form>
+            </div>
+            <div class="backGroundDiv" id="FileManagement">
+                <h1 class="headText">File & Data Management</h1>
+                <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
+                    <div class="inputField">
+                        <p class="smallText">Image to Delete: </p>
+                        <select class="selectBoxStyle" name="imageForDeletion"> Image
+                            <option value="">Select Image</option>
+                            {% for image in imageNameList %}
+                                <option value="{{image}}">{{image}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="recenter">
+                        <button type="submit"> Delete Image </button>
+                    </div>
+                </form>
+                <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
+                    <div class="inputField">
+                        <p class="smallText">Product to Delete: </p>
+                        <select class="selectBoxStyle" name="productForDeletion"> Product
+                            <option value="">Select Product</option>
+                            {% for product in productList %}
+                                <option value="{{product.name}}">{{product.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="recenter">
+                        <button type="submit"> Delete Product </button>
                     </div>
                 </form>
             </div>
