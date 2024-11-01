@@ -70,13 +70,14 @@ button{
 
 .headText{
     font-size: 50px;
+    font-family: "Italiana", serif;
 }
 
 .specialField{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
 }
 
 #ingredientsInput{
@@ -150,13 +151,15 @@ input[type="file"] {
 
 .styleTextInput{
     field-sizing: content;
-    min-width: 22ch;
-    max-width: 64ch;
+    width: 90%;
+    padding-top: 2%;
+    padding-bottom: 2%;
     background-color: beige;
     border-radius: 5px;
     border: none;
     font-family: "Italiana", serif;
     font-weight: bold;
+    con
 }
 
 .selectBoxStyle{
@@ -164,10 +167,13 @@ input[type="file"] {
     font-family: "Italiana", serif;
     font-weight: bold;
     font-size: 15px;
-    text-align: center;
+    text-align: flex-start;
     border: none;
     border-radius: 5px;
     background-color: beige;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    margin-right: 1%;
 }
 
 
@@ -188,7 +194,7 @@ input[type="file"] {
 }
 
 .left, .right {
-  width: 30%;
+  width: 48%;
 }
 
 .middle {
@@ -200,4 +206,13 @@ input[type="file"] {
   content: "";
   display: table;
   clear: both;
+}
+
+.submitButton {
+    cursor: pointer;
+    font-family: "Italiana", serif;
+    width: 90%;
+    margin-top: 1.5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
 }
