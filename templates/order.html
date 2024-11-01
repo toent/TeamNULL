@@ -96,22 +96,25 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     modalConfirmButton.addEventListener('click', () => {
-        fetch('/submit_order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(cartItems)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            localStorage.removeItem('cartItems');
-            modal.style.display = "none";
-            window.location.reload();
-        })
-        .catch(error => console.error('Error:', error));
-    });
+    const excludeIngredients = document.getElementById('exclude-ingredients').value;
+
+    fetch('/submit_order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cartItems, notes: excludeIngredients }) // Include notes in the payload
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        localStorage.removeItem('cartItems');
+        modal.style.display = "none";
+        window.location.reload();
+    })
+    .catch(error => console.error('Error:', error));
+});
+
 });
 
 </script>
