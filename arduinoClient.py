@@ -1,5 +1,16 @@
-import serial
+import os
 import time
+from enum import unique
+import serial
+
+from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
+from werkzeug.utils import secure_filename
+
+from classes.Tags import Tags
+from classes.DataManager import DataManager
+from classes.Order import Order
+from classes.OrderLine import OrderLine
+from classes.Product import Product
 
 # defining serial com port
 ser = serial.Serial(port="COM3",baudrate=115200,timeout=1)
@@ -8,8 +19,6 @@ handshake = "9999"
 handshakeVerify = ser.write(bytes(handshake,"utf-8"))
 print("----- HANDSHAKE:",handshakeVerify,"-----")
 time.sleep(1)
-
-from classes.DataManager import DataManager
 
 dataManager = DataManager()
 
@@ -158,6 +167,8 @@ print("----- EXISTING ORDERS COMPLETE -----")
 # while loop to handle orders created after code start
 while True:
     print("----- CHECKING FOR NEW ORDERS -----")
+    dataManager.loadOrders()
+
     if dataManagerLength < len(dataManager.orders):
         dataManagerLength = len(dataManager.orders)
 
