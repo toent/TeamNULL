@@ -27,11 +27,12 @@
         <p>Your Cart</p>
     </div>
     <div class="cart-items"></div>
+    <label for="exclude-ingredients">Message</label>
+        <textarea id="exclude-ingredients" name="exclude_ingredients" placeholder="e.g., no onions, no mushrooms"></textarea>
     <p class="total-price-container">Total Price: &euro; <span class="total-price">0</span> </p>
-</div>
-
-<!-- Confirm Order Button to open modal -->
+    <!-- Confirm Order Button to open modal -->
 <button class="open-confirm-modal confirm-btn">Confirm Order</button>
+</div>
 
 <!-- The Modal -->
 <div id="orderModal" class="modal">
@@ -46,46 +47,53 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // Elements for cart display
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     const cartItemsContainer = document.querySelector('.cart-items');
     const totalPriceDisplay = document.querySelector('.total-price');
+    const excludeIngredients = document.getElementById('exclude-ingredients').value;
     let totalPrice = 0;
 
-    // Display each cart item and calculate total price
-    cartItemsContainer.innerHTML = cartItems.map(item => {
+    // Group items by name and calculate quantities
+    const groupedItems = cartItems.reduce((acc, item) => {
+        if (acc[item.name]) {
+            acc[item.name].quantity += 1;
+            acc[item.name].price += item.price; // Assuming item.price is the unit price
+        } else {
+            acc[item.name] = { ...item, quantity: 1 };
+        }
+        return acc;
+    }, {});
+
+    // Display each grouped item in the cart
+    cartItemsContainer.innerHTML = Object.values(groupedItems).map(item => {
         totalPrice += item.price;
         return `<div class="cart-item">
-                    <strong>${item.name}</strong><br>
-                    Price: ${item.price} &euro;
+                    <strong>${item.name} x${item.quantity}</strong><br>
+                    <strong>Price: ${item.price.toFixed(2)} &euro;</strong>
                 </div>`;
     }).join('');
     totalPriceDisplay.textContent = totalPrice.toFixed(2);
 
-    // Modal handling elements
+    // Rest of the modal and order confirmation code...
     const modal = document.getElementById("orderModal");
     const closeModalButton = modal.querySelector(".close");
     const openModalButton = document.querySelector(".open-confirm-modal");
     const modalConfirmButton = document.getElementById("modal-confirm-order");
 
-    // Open modal on "Confirm Order" button click
     openModalButton.addEventListener('click', () => {
         modal.style.display = "block";
     });
 
-    // Close modal when "X" is clicked
     closeModalButton.addEventListener('click', () => {
         modal.style.display = "none";
     });
 
-    // Close modal if clicked outside of content
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
     };
 
-    // Confirm order and send cart data to server
     modalConfirmButton.addEventListener('click', () => {
         fetch('/submit_order', {
             method: 'POST',
@@ -97,15 +105,14 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            // Clear cart
             localStorage.removeItem('cartItems');
-            // Close modal and reload page
             modal.style.display = "none";
-            window.location.reload(); // Reload to clear the cart display
+            window.location.reload();
         })
         .catch(error => console.error('Error:', error));
     });
 });
+
 </script>
 
 

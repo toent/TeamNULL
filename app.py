@@ -386,26 +386,42 @@ def countInstances(productList, product):
 
 @app.route('/submit_order', methods=['POST'])
 def submit_order():
-    cart_data = request.json
-    products = []
-    orderLines = []
-    print(type(cart_data))
+    try:
+        # Retrieve JSON data from request
+        cart_data = request.json  # This should be a list of dictionaries
+        print("Received cart_data:", cart_data)  # Print to verify the structure
 
-    for prod in cart_data:
-        products.append(prod['name'])
+        # Ensure cart_data is a list (or dict) and not a plain string
+        if not isinstance(cart_data, list):
+            return jsonify({"error": "Invalid data format, expected a list of items"}), 400
 
-    uniqueProducts = set(products)
-    for prod in uniqueProducts:
-        orderLines.append(OrderLine(next(product for product in dataManager.products if product.name == prod), products.count(prod)))
+        products = []
+        orderLines = []
 
-    newOrder = Order(orderLines, "Order from Client web page.", tableNumber)
-    dataManager.orders.append(newOrder)
-    dataManager.saveOrders()
-    dataManager.loadOrders()
+        # Loop through cart_data to process each product
+        for prod in cart_data:
+            # Check that prod is a dictionary
+            if isinstance(prod, dict) and 'name' in prod:
+                products.append(prod['name'])
+            else:
+                return jsonify({"error": "Invalid item format in cart_data"}), 400
 
-    # For example, save it to a database or handle it as needed
-    print(cart_data)  # Just to see the data in the console
-    return jsonify({'status': 'success', 'message': 'Order received'})
+        # Continue with the rest of the order processing logic
+        uniqueProducts = set(products)
+        for prod in uniqueProducts:
+            orderLines.append(OrderLine(next(product for product in dataManager.products if product.name == prod), products.count(prod)))
+
+        newOrder = Order(orderLines, "Order from Client web page.", tableNumber)
+        dataManager.orders.append(newOrder)
+        dataManager.saveOrders()
+        dataManager.loadOrders()
+
+        print("Processed order data:", cart_data)  # To check final data
+        return jsonify({'status': 'success', 'message': 'Order received'})
+
+    except Exception as e:
+        print("Error in submit_order:", str(e))
+        return jsonify({"error": "An error occurred while processing the order"}), 500
     
 if __name__ == '__main__':
     initialize()
