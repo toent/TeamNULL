@@ -19,7 +19,7 @@ body {
   margin-top: 2%;
   height: 85vh;
   width: 95vw;
-  background-color: rgba(254, 240, 202, 0.7);
+  background-color: #ffde59ca;
   border-radius: 8px;
 }
 
@@ -133,13 +133,13 @@ body {
 /* specific style for tables with a submitted order */
 .Submitted {
   color: black;
-  background-color: #cceeff;  
+  background-color: #abdff9;  
 }
 
 /* fpecific style for tables with a ready order */
 .Ready {
   color: black;
-  background-color: #ccffcc;
+  background-color: #98ec98;
 }
 
 /* specific style for tables with a finished order or no orders */

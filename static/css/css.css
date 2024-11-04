@@ -149,10 +149,14 @@ button:active {
     font-weight: bold;
 }
 
-.modify-btn {
-    background-color: white;
-    font-weight: bold;
+.price-order {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px; /* Space between price and button */
+    font-size: 18px; /* Adjust font size if needed */
 }
+
 
 button:hover {
     background-color: #f1f1f1;
