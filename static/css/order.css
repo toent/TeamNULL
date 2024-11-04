@@ -201,24 +201,36 @@ input[type="tel"]:focus {
     font-family: "Italiana", serif;
 }
 
-/*Back button*/
+/* Back button */
 .back-button {
     position: absolute;
-    top: 15px;
+    top: 10px;
     left: 10px;
     background-color: #f4f4f4;
     color: #333;
-    padding: 15px 25px;
+    padding: 12px 20px; /* Reduced padding */
     border: none;
     border-radius: 8px;
-    font-size: 40px;
+    font-size: 24px; /* Adjusted font size */
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.3s;
 }
+
+/* Hover effect */
 .back-button:hover {
     background-color: #ddd;
+}
+
+/* Adjustments for small screens */
+@media (max-width: 600px) {
+    .back-button {
+        top: 8px;
+        left: 8px;
+        padding: 10px 18px;
+        font-size: 20px;
+    }
 }
 
 /* Responsive design adjustments */
