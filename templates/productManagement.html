@@ -61,7 +61,6 @@
                             <div class="specialField" id="ingredients">
                                 <p class="smallText">Product Ingredients: </p>
                                 <input class="styleTextInput" type="text" id="ingredientsInput" name="productIngredients" value="{{productEdit.ingredients}}" placeholder="i.e. Tomatoes, Herbs, Garlic, Mozzarella">
-
                     </div>
                     <div class="specialField" id="allergens">
                         <p class="smallText">Product Allergens: </p>
@@ -102,7 +101,7 @@
                         <h1 class="headText">File & Data Management</h1>
                         <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
                             <div class="inputField">
-                                <p class="smallText">Image to Delete: </p>
+                                <p class="smallText2">Image to Delete: </p>
                                 <select class="selectBoxStyle" name="imageForDeletion"> Image
                                     <option value="">Select Image</option>
                                     {% for image in imageNameList %}
@@ -115,7 +114,7 @@
                         </form>
                         <form action="{{ url_for('manageProduct') }}" enctype="multipart/form-data" method="POST">
                             <div class="inputField">
-                                <p class="smallText">Product to Delete: </p>
+                                <p class="smallText2">Product to Delete: </p>
                                 <select class="selectBoxStyle" name="productForDeletion"> Product
                                     <option value="">Select Product</option>
                                     {% for product in productList %}

@@ -27,8 +27,8 @@
         <div class="center-text" id="center-text">
             <p>Your Cart</p>
         </div>
-        <div class="cart-items"></div>
-        <label for="exclude-ingredients">Message</label>
+        <div class="cart-items"></div><br>
+        <label for="exclude-ingredients"><strong>Message</strong></label>
         <textarea id="exclude-ingredients" name="exclude_ingredients" placeholder="e.g., no onions, no mushrooms"></textarea>
         <p class="total-price-container">Total Price: &euro; <span class="total-price">0</span> </p>
         <!-- Confirm Order Button to open modal -->
@@ -68,8 +68,8 @@
         cartItemsContainer.innerHTML = Object.values(groupedItems).map(item => {
             totalPrice += item.price;
             return `<div class="cart-item">
-                        <strong>${item.name} x${item.quantity}</strong><br>
-                        <strong>Price: ${item.price.toFixed(2)} &euro;</strong>
+                        <strong>${item.name}</strong> <strong style="color: red;"> x${item.quantity}</strong>
+                        <strong style="float: right;">Price: ${item.price.toFixed(2)} &euro;</strong>
                     </div>`;
         }).join('');
         totalPriceDisplay.textContent = totalPrice.toFixed(2);
