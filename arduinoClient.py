@@ -22,7 +22,7 @@ time.sleep(1)
 
 dataManager = DataManager()
 
-dataManagerLength = len(dataManager.orders)
+dataManagerLength = len(dataManager.orders) - 1
 
 freeTimers = [1,2,3,4]
 
@@ -169,13 +169,17 @@ while True:
     print("----- CHECKING FOR NEW ORDERS -----")
     dataManager.loadOrders()
 
-    if dataManagerLength < len(dataManager.orders):
-        dataManagerLength = len(dataManager.orders)
+    if dataManagerLength < len(dataManager.orders) - 1:
+        print("----- NEW ORDERS DETECTED -----")
+        dataManagerPreviousLength = dataManagerLength
+        dataManagerLength = len(dataManager.orders) - 1
 
-        print("----- LATEST ORDER -----")
-        print(dataManager.orders[dataManagerLength])
-        print("------------------------")
+        for x in range(dataManagerPreviousLength,dataManagerLength):
+            tempOrder = dataManager.orders[x]
+            
+            print("----- ORDER FOUND -----")
+            print("ORDER:",tempOrder)
+            print("------------------------------------------")
+            productTimerManager(tempOrder)
 
-        productTimerManager(dataManager.orders[dataManagerLength])
-
-        serialInputHandler(9)
+    time.sleep(5)

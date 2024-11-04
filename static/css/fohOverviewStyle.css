@@ -133,13 +133,13 @@ body {
 /* specific style for tables with a submitted order */
 .Submitted {
   color: black;
-  background-color: lightgrey;  
+  background-color: #cceeff;  
 }
 
 /* fpecific style for tables with a ready order */
 .Ready {
-  color: lightgrey;
-  background-color: #008000;
+  color: black;
+  background-color: #ccffcc;
 }
 
 /* specific style for tables with a finished order or no orders */
