@@ -32,13 +32,13 @@ unsigned long lastCycleTime = millis() + 1100;
 // int previouslyActivatedTimer = 0;
 
 void setup() {
-  pinMode(redLed,OUTPUT);
-  pinMode(greenLed,OUTPUT);
-  pinMode(blueLed,OUTPUT);
-  pinMode(yellowLed,OUTPUT);
-  pinMode(leftButton,INPUT_PULLUP);
-  pinMode(rightButton,INPUT_PULLUP);
-  pinMode(buzzer,OUTPUT);
+  pinMode(redLed, OUTPUT);
+  pinMode(greenLed, OUTPUT);
+  pinMode(blueLed, OUTPUT);
+  pinMode(yellowLed, OUTPUT);
+  pinMode(leftButton, INPUT_PULLUP);
+  pinMode(rightButton, INPUT_PULLUP);
+  pinMode(buzzer, OUTPUT);
   Serial.begin(115200);
   Display.show("");
 };
@@ -72,7 +72,7 @@ unsigned long yellowTimer() {
 unsigned long timerComplete(int timerLed, int timerTone, int timerId) {
   // cycling the LED and buzzer on and off each check
   digitalWrite(timerLed, !digitalRead(timerLed));
-  tone(buzzer,timerTone, toneLength);
+  tone(buzzer, timerTone, toneLength);
 
   // timer reset once complete (pressing right button)
   if (digitalRead(rightButton) == 0 && digitalRead(leftButton) == 1) {
@@ -84,8 +84,7 @@ unsigned long timerComplete(int timerLed, int timerTone, int timerId) {
 
 void loop() {
   // start timer (pressing left button)
-  if (digitalRead(leftButton) == 0)
-  {
+  if (digitalRead(leftButton) == 0) {
     // finding a pre-selected tiemr (1)
     if (redStartTime == 1) {
       // starting the timer
@@ -106,7 +105,7 @@ void loop() {
       // previouslyActivatedTimer = 3;
     };
   };
-    
+
   // // reset timer (pressing left and right buttons together)
   // if (digitalRead(leftButton) == 0 && digitalRead(rightButton) == 0)
   // {
@@ -139,19 +138,19 @@ void loop() {
     // elapsed time check for red timer
     if (millis() - redStartTime > timerDuration && redStartTime > 1) {
       // setting timer to complete if time is elapsed
-      redStartTime = timerComplete(redLed,redTone,1);
+      redStartTime = timerComplete(redLed, redTone, 1);
     }
     // elapsed time check for green timer (same as red timer)
     if (millis() - greenStartTime > timerDuration && greenStartTime > 1) {
-      greenStartTime = timerComplete(greenLed,greenTone,2);
+      greenStartTime = timerComplete(greenLed, greenTone, 2);
     }
     // elapsed time check for blue timer (same as red timer)
     if (millis() - blueStartTime > timerDuration && blueStartTime > 1) {
-      blueStartTime = timerComplete(blueLed,blueTone,3);
+      blueStartTime = timerComplete(blueLed, blueTone, 3);
     }
     // elapsed time check for yellow timer (same as red timer)
     if (millis() - yellowStartTime > timerDuration && yellowStartTime > 1) {
-      yellowStartTime = timerComplete(yellowLed,yellowTone,4);
+      yellowStartTime = timerComplete(yellowLed, yellowTone, 4);
     }
     lastCycleTime = millis();
   };
