@@ -59,15 +59,8 @@ h2 {
     background-color: #e9d276;
     margin-bottom: 20px; 
 }
-
-.pizza-image {
-    width: 300px;
-    height: auto;
-    float: right; 
-    margin-left: 20px;
-    border-radius: 8px;
-    position: relative;
-    top: -250px;
+.total-price{
+    font-size: larger;
 }
 
 /* Input and label styles */
@@ -212,13 +205,13 @@ input[type="tel"]:focus {
 .back-button {
     position: absolute;
     top: 15px;
-    left: 15px;
+    left: 10px;
     background-color: #f4f4f4;
     color: #333;
     padding: 15px 25px;
     border: none;
     border-radius: 8px;
-    font-size: 20px;
+    font-size: 40px;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
