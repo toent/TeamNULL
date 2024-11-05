@@ -281,13 +281,17 @@ def manageProduct():
     if selectedProduct != (None or "NewProduct"):
         for product in dataManager.products:
             if product.name == selectedProduct:
-                 sourceProductDict = product
-                 keyList = productTagRel.keys()
-                 for key in keyList:
+                sourceProductDict = product
+                sourceProductDict.ingredients = formatSourceInfo(sourceProductDict.ingredients)
+                sourceProductDict.allergens = formatSourceInfo(sourceProductDict.allergens)
+                keyList = productTagRel.keys()
+                for key in keyList:
                     if key == selectedProduct:
-                        sourceKeys = list(productTagRel[key])
-    else:
-        sourceProductDict = {"name": "NewProduct", "price": 0.00, "ingredients": "", "allergens": "", "images": "images/"}
+                       sourceKeys = list(productTagRel[key])
+
+                sourceKeys = formatSourceInfo(sourceKeys)        
+    else:   
+        sourceProductDict = {"name": "NewProduct", "price": 0.00, "ingredients": "", "allergens": "", "images": "images/uploads"}
 
     # getting all the form data from the client 
     productName = request.form.get('productName')
@@ -328,7 +332,9 @@ def manageProduct():
         filename = secure_filename(productImage.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         productImage.save(filepath)
-        productImageLocation = productImageLocation + filename
+        print(productImageLocation)
+        productImageLocation = (productImageLocation + filename).replace("\\", "/")
+        print(productImageLocation)
         allImageNames = os.listdir(app.config['UPLOAD_FOLDER'])
 
     # check if product is not an empty product -> make the product and add it to the products.json file
@@ -417,6 +423,13 @@ def formatProductDetails(productList, doCapitalize, doLower):
     elif doLower:
         processedList = [item.strip().lower() for item in productList.split(",")]
     return processedList
+
+def formatSourceInfo(sourceInfo):
+    charactersToRemove = ["'", '"', "[", "]"]
+    for i in str(sourceInfo):
+        if i in charactersToRemove:
+            sourceInfo = str(sourceInfo).replace(i, "")
+    return sourceInfo
 
 def countInstances(productList, product):
     return productList.count(product)
