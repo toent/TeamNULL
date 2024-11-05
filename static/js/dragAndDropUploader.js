@@ -1,6 +1,7 @@
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('file-input');
 const placeholderIcon = placeholderImage;
+var previewImages = document.getElementsByClassName('preview-image');
 
 // Utility function to prevent default browser behavior
 function preventDefaults(e) {
@@ -18,60 +19,68 @@ fileInput.addEventListener('change', handleUpload);
 // Handling dropping files into the area
 dropArea.addEventListener('drop', handleDrop);
 
-function handleUpload(){
+function handleUpload() {
   const fileList = this.files;
-  handleFiles(fileList);
+
+  if (previewImages.length < 1 && fileList.length < 2) {
+    handleFiles(fileList);
+  } else {
+    fileInput.value = '';
+    clearPreviews();
+  }
 }
 
 function handleDrop(e) {
-    e.preventDefault();
+  e.preventDefault();
   
-    // Getting the list of dragged files
-    const files = e.dataTransfer.files;
-  
-    // Checking if there are any files
-    if (files.length < 2) {
-      // Assigning the files to the hidden input from the first step
-      fileInput.files = files;
-  
-      // Processing the files for previews (next step)
-      handleFiles(files);
-    }
+  const files = e.dataTransfer.files;
+
+  if (previewImages.length < 1 && files.length < 2) {
+    handleFiles(files);
+  } else {
+    fileInput.value = ''; 
+    clearPreviews();
+  }
 }
-  
+
 function handleFiles(files) {
-    for (const file of files) {
-      // Initializing the FileReader API and reading the file
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-  
-      // Once the file has been loaded, fire the processing
-      reader.onloadend = function (e) {
-        const preview = document.createElement('img');
-  
-        if (isValidFileType(file)) {
-          preview.src = e.target.result;
-        } else {
-          preview.src = placeholderIcon;
-        }
-  
-        // Apply styling
-        preview.classList.add('preview-image');
-        const previewContainer = document.getElementById('preview-container');
-        previewContainer.appendChild(preview);
-      };
-    }
+  for (const file of files) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = function (e) {
+      const preview = document.createElement('img');
+
+      if (isValidFileType(file)) {
+        preview.src = e.target.result;
+      } else {
+        fileInput.value = '';
+        clearPreviews();
+        return;
+      }
+
+      preview.classList.add('preview-image');
+      document.getElementById('preview-container').appendChild(preview);
+    };
+  }
 }
-  
+
+function clearPreviews() {
+  for (let i = 0; i < previewImages.length; i++) {
+    previewImages.item(i).remove();   
+  }
+  fileInput.value = '';
+}
+
 function isValidFileType(file) {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    return allowedTypes.includes(file.type);
+  const allowedTypes = ['image/jpeg', 'image/png'];
+  return allowedTypes.includes(file.type);
 }
 
 dropArea.addEventListener('dragover', () => {
-    dropArea.classList.add('drag-over');
+  dropArea.classList.add('drag-over');
 });
-  
+
 dropArea.addEventListener('dragleave', () => {
-    dropArea.classList.remove('drag-over');
+  dropArea.classList.remove('drag-over');
 });
