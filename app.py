@@ -467,4 +467,4 @@ def submit_order():
     
 if __name__ == '__main__':
     initialize()
-    app.run(debug=True)
+    app.run(host="0.0.0.0",debug=True)
