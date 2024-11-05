@@ -11,32 +11,34 @@ from classes.Order import Order
 from classes.OrderLine import OrderLine
 from classes.Product import Product
 
-
-
-
+# Initialize the Flask application
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
+# Set up the image upload folder and allowed file types
 imageUploadFolder = os.path.join(app.root_path, 'static/images/uploads')
 allowedImageFiles = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = imageUploadFolder
 
+# Initialize the DataManager class
 dataManager = DataManager()
 
+# Initialize the Tags class
 tags = Tags()
 productTagRel = {}
 
+# Initialize the Front of House Order Line List
 fohOrderLineList = []
-
 tableNumber = 1
 
 
+# Initializes the application with hardcoded data for demo purposes
 def initialize():
     """
     This method will initialize the application. It currently has a hardcoded dataset for testing purposes.
     """
-    # If there are no products in the data manager, add some.
-    if len(dataManager.products) < 1:
+    # Initialize products if none exist
+    if not dataManager.products:
         dataManager.products = [
             Product("Pepperoni", 10.0, ['Tomatoes, Garlic, Herbs, Mozzarella, Pepperoni'], ['gluten', 'milk'],
                     'images/pepperoni.jpeg'),
@@ -45,52 +47,48 @@ def initialize():
             Product("Neapolitan", 10.0, ['San Marzano tomatoes, Mozzarella di bufala, Fresh basil, Olive oil'],
                     ['gluten', 'milk'], 'images/Neapolitan.jpeg'),
             Product("Romana", 10.0, ['Tomatoes, Mozzarella, Oregano, Anchovies (or other toppings)'],
-                    ['gluten', 'milk'],
-                    'images/Romana.jpg')
+                    ['gluten', 'milk'], 'images/Romana.jpg')
         ]
-        dataManager.saveProducts()  # Save the products to the products.json file.
+        dataManager.saveProducts()
 
-    # If there are no orders in the data manager, add some.
-    if len(dataManager.orders) < 1:
+    # Initialize orders if none exist
+    if not dataManager.orders:
         dataManager.orders = [
-            Order([OrderLine(dataManager.products[0], 2)], 'Please don''t let Marcos cook it', 4),
-            Order([OrderLine(dataManager.products[1], 1)], 'Please don''t let Marcos cook it', 5),
-            Order([OrderLine(dataManager.products[2], 3)], 'Please don''t let Marcos cook it', 6),
-            Order([OrderLine(dataManager.products[3], 4), OrderLine(dataManager.products[2], 2)], 'Please don''t let Marcos cook it', 7),
-            Order([OrderLine(dataManager.products[2], 2), OrderLine(dataManager.products[1], 3)], 'Please don''t let Marcos cook it', 8),
+            Order([OrderLine(dataManager.products[0], 2)], 'Please don\'t let Marcos cook it', 4),
+            Order([OrderLine(dataManager.products[1], 1)], 'Please don\'t let Marcos cook it', 5),
+            Order([OrderLine(dataManager.products[2], 3)], 'Please don\'t let Marcos cook it', 6),
+            Order([OrderLine(dataManager.products[3], 4), OrderLine(dataManager.products[2], 2)],
+                  'Please don\'t let Marcos cook it', 7),
+            Order([OrderLine(dataManager.products[2], 2), OrderLine(dataManager.products[1], 3)],
+                  'Please don\'t let Marcos cook it', 8)
         ]
-        # Change the status of the orders.
-        dataManager.orders[0].nextStatus()
-        dataManager.orders[0].nextStatus()
-        dataManager.orders[1].nextStatus()
-        dataManager.orders[2].nextStatus()
-        dataManager.saveOrders()  # Save the orders to the orders.json file.
+        for order in dataManager.orders[:3]:
+            order.nextStatus()
+        dataManager.saveOrders()
 
-    # If there are no tags found, add some
-    if len(tags.tagDict) < 1:
+    # Initialize tags if none exist
+    if not tags.tagDict:
         tags.tagDict = {
-            "tag-pizza": ["Margherita", "Pepperoni", "Neapolitan", "Romana"],   #these are all object tags which all will have their own icon in the foh order screen, therefore always leave them before the content tags
+            "tag-pizza": ["Margherita", "Pepperoni", "Neapolitan", "Romana"],
             "tag-pasta": ["Bolognese", "Carbonara"],
             "tag-salad": ["Caesar"],
             "tag-desert": ["Gelato"],
             "tag-drinks": ["Cola", "Fanta", "Sprite", "Milkshake"],
             "tag-starter": ["Carpaccio", "Tomato Soup", "Mushroom Soup"],
-            "tag-vegetarian": ["Margherita", "Neapolitan", "Romana"]            #the content tags start from here (vegetarian)
+            "tag-vegetarian": ["Margherita", "Neapolitan", "Romana"]
         }
         tags.saveTags()
 
     # Setup relations between products and tags
-
     setupTagRels()
-
     print(productTagRel)
 
+
+# Set up the relations between products and tags
 def setupTagRels():
     for product in dataManager.products:
-        productTagRel[product.name] = []
-        for tag, product_list in tags.tagDict.items():
-            if product.name in product_list:
-                productTagRel[product.name].append(tag)
+        productTagRel[product.name] = [tag for tag, product_list in tags.tagDict.items() if
+                                       product.name in product_list]
     return productTagRel
 
 @app.route('/')
@@ -106,17 +104,12 @@ def order():
         selected_pizza = next((pizza for pizza in dataManager.products if pizza.name == pizza_name), None)
 
         if selected_pizza:
-            pizza_price = selected_pizza.price
-            pizza_image = selected_pizza.images
-            # Get the quantity from the form (default to 1 if not provided)
-            quantity = request.form.get('quantity', 1, type=int)
-
             # Pass all necessary data to the order_summary template
-            return render_template('order.html', 
-                                   pizza_name=pizza_name, 
-                                   pizza_price=pizza_price, 
-                                   quantity=quantity, 
-                                   pizza_image=pizza_image)
+            return render_template('order.html',
+                                   pizza_name=pizza_name,
+                                   pizza_price=selected_pizza.price,
+                                   quantity=request.form.get('quantity', 1, type=int),
+                                   pizza_image=selected_pizza.images)
         else:
             flash("Pizza not found!")
             return redirect(url_for('index'))
@@ -129,7 +122,7 @@ def order():
 def fohOrder():
     global tableNumber
 
-    # Initialize variables from tag class    
+    # Initialize variables from tag class
     filteredProducts = list(dataManager.products)
     filterKeys = tags.tagKeys
     filterDict = tags.tagDict
@@ -150,10 +143,8 @@ def fohOrder():
     print(f"Table Number: {tableNumber}, Added Pizza: {addedPizzaName}, Added Quantity: {addedPizzaQuantity}")
 
     # Filter products if a valid tag is selected
-    if currentTag and currentTag in filterKeys:
-        # Create a new list with products that match the filter
+    if currentTag in filterKeys:
         filteredProducts = [product for product in dataManager.products if product.name in filterDict[currentTag]]
-    # If no valid tag is provided, filteredProducts will stay as all products by default
     print(filteredProducts)
 
     # Retrieve selected pizza
@@ -161,21 +152,18 @@ def fohOrder():
 
     # Finalize the order if it is done
     if isOrderDone and fohOrderLineList:
-        if orderNotes == "" or orderNotes == None:
-            newOrder = Order(fohOrderLineList, "Order from the Front of House", tableNumber)
-        else:
-            newOrder = Order(fohOrderLineList, orderNotes, tableNumber)
+        orderNotes = orderNotes or "Order from the Front of House"
+        newOrder = Order(fohOrderLineList, orderNotes, tableNumber)
         print(newOrder.toDict())
         dataManager.orders.append(newOrder)
         dataManager.saveOrders()
         dataManager.loadOrders()
         fohOrderLineList.clear()
-        return redirect(url_for("fohOverview"))  # Redirect to the overview page
+        return redirect(url_for("fohOverview"))
 
     # Handle pizza addition to the order
     if selectedPizza and addedPizzaQuantity != 0:
         existingOrderLine = next((line for line in fohOrderLineList if line.product.name == selectedPizza.name), None)
-
         if existingOrderLine:
             existingOrderLine.quantity += addedPizzaQuantity
             if existingOrderLine.quantity <= 0:
@@ -187,7 +175,10 @@ def fohOrder():
     priceTotal = round(sum(line.product.price * line.quantity for line in fohOrderLineList), 2)
 
     # Render the template
-    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber, filteredProducts=filteredProducts, orderList=fohOrderLineList, selectButtonClass=productTagRel)
+    return render_template('fohOrderPage.html', priceTotal=priceTotal, tableNumber=tableNumber,
+                           filteredProducts=filteredProducts, orderList=fohOrderLineList,
+                           selectButtonClass=productTagRel)
+
 
 @app.route('/modify', methods=['POST'])
 def modify():
@@ -205,48 +196,24 @@ def tableStatusCheck(tempTableStatus,tempOrder):
     
     return tempTableStatus
 
-# route for the FoH table overview page 
+# route for the FoH table overview page
 @app.route('/fohOverview', methods=['POST', 'GET'])
 def fohOverview():
-    table1Status = "Finished"
-    table2Status = "Finished"
-    table3Status = "Finished"
-    table4Status = "Finished"
-    table5Status = "Finished"
-    table6Status = "Finished"
-    table7Status = "Finished"
-    table8Status = "Finished"
-    table9Status = "Finished"
+    tableStatus = {i: "Finished" for i in range(1, 10)}
     currentPath = request.path
 
     for order in dataManager.orders:
-        match int(order.table):
-            case 1:
-                table1Status = tableStatusCheck(table1Status,order)
-            case 2:
-                table2Status = tableStatusCheck(table2Status,order)
-            case 3:
-                table3Status = tableStatusCheck(table3Status,order)
-            case 4:
-                table4Status = tableStatusCheck(table4Status,order)
-            case 5:
-                table5Status = tableStatusCheck(table5Status,order)
-            case 6:
-                table6Status = tableStatusCheck(table6Status,order)
-            case 7:
-                table7Status = tableStatusCheck(table7Status,order)
-            case 8:
-                table8Status = tableStatusCheck(table8Status,order)
-            case 9:
-                table9Status = tableStatusCheck(table9Status,order)
+        tableStatus[int(order.table)] = tableStatusCheck(tableStatus[int(order.table)], order)
 
-    return render_template('fohOverview.html', table1Status = table1Status, table2Status = table2Status, table3Status = table3Status, table4Status = table4Status, table5Status = table5Status, table6Status = table6Status, table7Status = table7Status, table8Status = table8Status, table9Status = table9Status, currentPath=currentPath)
+    return render_template('fohOverview.html', **{f'table{i}Status': status for i, status in tableStatus.items()},
+                           currentPath=currentPath)
 
 
 @app.route('/orderDisplay', methods=['GET'])
 def orderDisplay():
     currentPath = request.path
-    openOrders = [order for order in dataManager.orders if order.currentStatus == 'Submitted' or order.currentStatus == 'Ready']
+    openOrders = [order for order in dataManager.orders if
+                  order.currentStatus == 'Submitted' or order.currentStatus == 'Ready']
     currentTime = datetime.now()
     return render_template('orderDisplay.html', openOrders=openOrders, currentTime=currentTime, currentPath=currentPath)
 
@@ -260,19 +227,18 @@ def markDone():
         dataManager.saveOrders()
     return redirect(url_for('orderDisplay'))
 
+
 @app.route('/manageProducts', methods=['POST', 'GET'])
 def manageProduct():
     # preparing values
     processedIngredients = []
     processedAllergens = []
     processedTags = []
-    allImageNames = []
-    sourceProductDict = {}
     sourceKeys = ""
     currentPath = request.path
-    imageToDelete = ""
+    sourceProductDict = {}
     productImageLocation = "images/uploads/"
-    
+
     # get and debug the selected product
     selectedProduct = request.form.get('selectedProduct')
     print(f"Selected Product: {selectedProduct}")
@@ -281,7 +247,7 @@ def manageProduct():
     if selectedProduct != (None or "NewProduct"):
         for product in dataManager.products:
             if product.name == selectedProduct:
-                sourceProductDict = product
+                sourceProductDict = Product(product.name, product.price, product.ingredients, product.allergens, product.images)
                 sourceProductDict.ingredients = formatSourceInfo(sourceProductDict.ingredients)
                 sourceProductDict.allergens = formatSourceInfo(sourceProductDict.allergens)
                 keyList = productTagRel.keys()
@@ -289,11 +255,12 @@ def manageProduct():
                     if key == selectedProduct:
                        sourceKeys = list(productTagRel[key])
 
-                sourceKeys = formatSourceInfo(sourceKeys)        
-    else:   
+                sourceKeys = formatSourceInfo(sourceKeys)
+
+    else:
         sourceProductDict = {"name": "NewProduct", "price": 0.00, "ingredients": "", "allergens": "", "images": "images/uploads"}
 
-    # getting all the form data from the client 
+    # getting all the form data from the client
     productName = request.form.get('productName')
     productPrice = request.form.get('productPrice')
     productIngredients = request.form.get('productIngredients')
@@ -316,18 +283,7 @@ def manageProduct():
     if productTags:
         processedTags = formatProductDetails(productTags, False, True)
 
-    # DEBUGGING
-    print(f"Product Name: {productName}")
-    print(f"Product Ingredients:{productIngredients}")
-    print(f"Processed Ingredients: {processedIngredients}")
-    print(f"Product Allergens:{productAllergens}")
-    print(f"Processed Allergens: {processedAllergens}")
-    print(f"Product Tags: {productTags}")
-    print(f"Processed Tags: {processedTags}")
-    print(f"Image to Delete: {imageToDelete}")
-    print(f"Product to Delete: {productToDelete}")
-
-    # save productimage to static/images/uploads
+    # save product image to static/images/uploads
     if productImage and allowedImage(productImage.filename):
         filename = secure_filename(productImage.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -338,45 +294,37 @@ def manageProduct():
         allImageNames = os.listdir(app.config['UPLOAD_FOLDER'])
 
     # check if product is not an empty product -> make the product and add it to the products.json file
-    if productName != None and productPrice != None and len(processedIngredients) > 0:
-        newProduct = Product(productName, float(productPrice), processedIngredients, processedAllergens, productImageLocation)
-
+    if productName and productPrice and processedIngredients:
+        newProduct = Product(productName, float(productPrice), processedIngredients, processedAllergens,
+                             productImageLocation)
         existingProduct = next((product for product in dataManager.products if product.name == newProduct.name), None)
 
         if existingProduct:
             existingProductIndex = dataManager.products.index(existingProduct)
-            print(existingProduct.images)
-            print(newProduct.images)
-            if newProduct.images == "images/" or newProduct.images == "images/uploads/":
-                print("image check passed!")
+            if newProduct.images in ["images/", "images/uploads/"]:
                 newProduct.images = existingProduct.images
-
-            dataManager.products.pop(existingProductIndex)
-            dataManager.products.insert(existingProductIndex, newProduct)
+            dataManager.products[existingProductIndex] = newProduct
         else:
             dataManager.products.append(newProduct)
 
         dataManager.saveProducts()
 
-        # check if tag is not duplicate and remove tags if they are not assigned to a product anymore 
+        # check if tag is not duplicate and remove tags if they are not assigned to a product anymore
         if processedTags:
             for tag in processedTags:
                 if newProduct.name not in tags.tagDict[tag]:
-                    tags.tagDict[tag].append(newProduct.name)   
+                    tags.tagDict[tag].append(newProduct.name)
             for key in tags.tagDict:
                 if newProduct.name in tags.tagDict[key] and key not in processedTags:
                     tags.tagDict[key].remove(newProduct.name)
-                    
+
             tags.saveTags()
 
         setupTagRels()
 
-    if productToDelete != "" and productToDelete != None:
+    if productToDelete:
         try:
-            for product in dataManager.products:
-                if product.name == productToDelete:
-                    dataManager.products.pop(dataManager.products.index(product))
-
+            dataManager.products = [product for product in dataManager.products if product.name != productToDelete]
             for key in tags.tagDict:
                 if productToDelete in tags.tagDict[key]:
                     tags.tagDict[key].remove(productToDelete)
@@ -386,17 +334,13 @@ def manageProduct():
         tags.saveTags()
         setupTagRels()
 
-
     # image deletion logic
-    if imageToDelete != "" and imageToDelete != None:
-        # try to find the image and try to delete it
+    if imageToDelete:
         try:
             newPath = os.path.join(app.config['UPLOAD_FOLDER'], imageToDelete)
             os.remove(newPath)
         except:
             print("COULD NOT REMOVE IMAGE OR IMAGE NOT FOUND")
-
-        # update image list
         allImageNames = os.listdir(app.config['UPLOAD_FOLDER'])
 
     return render_template('productManagement.html', productList=dataManager.products, tagList=tags.tagKeys, productEdit = sourceProductDict, sourceTags = sourceKeys, imageNameList=allImageNames)
@@ -425,11 +369,8 @@ def formatProductDetails(productList, doCapitalize, doLower):
     return processedList
 
 def formatSourceInfo(sourceInfo):
-    charactersToRemove = ["'", '"', "[", "]"]
-    for i in str(sourceInfo):
-        if i in charactersToRemove:
-            sourceInfo = str(sourceInfo).replace(i, "")
-    return sourceInfo
+    charactersToRemove = {"'", '"', "[", "]"}
+    return ''.join(char for char in str(sourceInfo) if char not in charactersToRemove)
 
 def countInstances(productList, product):
     return productList.count(product)
@@ -463,7 +404,8 @@ def submit_order():
         # Continue with the rest of the order processing logic
         uniqueProducts = set(products)
         for prod in uniqueProducts:
-            orderLines.append(OrderLine(next(product for product in dataManager.products if product.name == prod), products.count(prod)))
+            orderLines.append(OrderLine(next(product for product in dataManager.products if product.name == prod),
+                                        products.count(prod)))
 
         newOrder = Order(orderLines, notes, tableNumber)  # Pass notes to the order
         dataManager.orders.append(newOrder)
@@ -477,7 +419,7 @@ def submit_order():
         print("Error in submit_order:", str(e))
         return jsonify({"error": "An error occurred while processing the order"}), 500
 
-    
+
 if __name__ == '__main__':
     initialize()
-    app.run(host="0.0.0.0",debug=True)
+    app.run(host="0.0.0.0", debug=True)
