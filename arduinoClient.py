@@ -67,7 +67,7 @@ def serialInputHandler(timerToConfirm):
             print("B Type:",type(timerToConfirm),"B Data:",timerToConfirm)
             print("------------------------------------")
             return 1
-
+        
 # function to identify and send a cook request for the products of an input order
 def productTimerManager(tempOrder):
     # store the tempOrder's id for product tracking
@@ -160,7 +160,10 @@ for order in dataManager.orders:
         print("------------------------------------------")
         productTimerManager(order)
     else:
+        serialInputHandler(9)
         continue
+
+    time.sleep(1)
 
 print("----- EXISTING ORDERS COMPLETE -----")
 
@@ -181,5 +184,7 @@ while True:
             print("ORDER:",tempOrder)
             print("------------------------------------------")
             productTimerManager(tempOrder)
+    else:
+        serialInputHandler(9)
 
     time.sleep(5)
