@@ -46,6 +46,10 @@ p {
     }
 }
 
+button{
+    color:black;
+}
+
 /* Scroll settings */
 html, body {
     height: 100%; /* Allow scrolling */
