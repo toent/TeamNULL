@@ -256,7 +256,6 @@ def manageProduct():
                        sourceKeys = list(productTagRel[key])
 
                 sourceKeys = formatSourceInfo(sourceKeys)
-
     else:
         sourceProductDict = {"name": "NewProduct", "price": 0.00, "ingredients": "", "allergens": "", "images": "images/uploads"}
 
@@ -293,9 +292,17 @@ def manageProduct():
         print(productImageLocation)
         allImageNames = os.listdir(app.config['UPLOAD_FOLDER'])
 
+    
+    try:
+        productPrice = float(productPrice)
+    except:
+        print("ERROR: COULD NOT CONVERT PRICE TO FLOAT")
+
+    print(type(productPrice))
+
     # check if product is not an empty product -> make the product and add it to the products.json file
-    if productName and productPrice and processedIngredients:
-        newProduct = Product(productName, float(productPrice), processedIngredients, processedAllergens,
+    if productName and productPrice and processedIngredients and processedTags and type(productPrice) == float:
+        newProduct = Product(productName.capitalize(), float(productPrice), processedIngredients, processedAllergens,
                              productImageLocation)
         existingProduct = next((product for product in dataManager.products if product.name == newProduct.name), None)
 
@@ -304,7 +311,7 @@ def manageProduct():
             if newProduct.images in ["images/", "images/uploads/"]:
                 newProduct.images = existingProduct.images
             dataManager.products[existingProductIndex] = newProduct
-        else:
+        elif productImage and allowedImage(productImage.filename):
             dataManager.products.append(newProduct)
 
         dataManager.saveProducts()
